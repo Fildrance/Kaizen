@@ -1,0 +1,71 @@
+version: "3"
+
+volumes:
+ dbdata:
+ rabbitdata:
+
+networks:
+ frontend:
+ backend:
+
+services:
+
+ kaizen-skills-db:
+  image: "postgres"
+  volumes: 
+   - dbdata:/var/lib/postgresql/data
+  networks:
+   - backend
+  environment:
+   - POSTGRES_USER=uliss
+   - POSTGRES_PASSWORD=lOTUzZsAqSQW2gVf
+   - POSTGRES_DB=my_db
+
+ kaizen-rabbit:
+  image: "rabbitmq:3-management"
+  networks:
+   - backend
+  hostname: rabbit
+  environment:
+   - RABBITMQ_DEFAULT_USER=Nora 
+   - RABBITMQ_DEFAULT_PASS=xTJD0eNCwADZJ4go
+  volumes:
+   - rabbitdata:/var/lib/rabbitmq
+  ports:
+  # manager ui is used only for debugging.
+   - 8081:15672
+
+ kaizen-api-gateway:
+  image: kaizen-api-gateway
+  build:
+   context: .
+   dockerfile: Dockerfile.dev
+  ports:
+   - 80:80
+   # is used for debugging only
+   - 443:433
+  environment:
+   # debug settings start 
+   - ASPNETCORE_ENVIRONMENT=Production
+   - ASPNETCORE_URLS=http://+:80
+   # debug settings end
+   - DBHOST=skill-db
+   - DBPORT=5432
+   - DBUSER=uliss
+   - DBPASSWORD=lOTUzZsAqSQW2gVf
+   - RABBITUSER=Nora
+   - RABBITPASSWORD=xTJD0eNCwADZJ4go
+  networks:
+   - backend
+  volumes:
+   # direct binding is used for faster restart and debugging
+   - type: bind
+     source: ./logs
+     target: /app/logs
+   - type: bind
+     source: ./dist
+     target: /app
+   - ~/.vsdbg:/remote_debugger:rw
+  depends_on:
+   - skill-db
+   - rabbit
