@@ -11,6 +11,7 @@ networks:
 services:
 
  kaizen-skills-db:
+  container_name: "kaizen-skills-db"
   image: "postgres"
   volumes: 
    - dbdata:/var/lib/postgresql/data
@@ -22,10 +23,11 @@ services:
    - POSTGRES_DB=my_db
 
  kaizen-rabbit:
+  container_name: "kaizen-rabbit"
   image: "rabbitmq:3-management"
   networks:
    - backend
-  hostname: rabbit
+  hostname: kaizen-rabbit
   environment:
    - RABBITMQ_DEFAULT_USER=Nora 
    - RABBITMQ_DEFAULT_PASS=xTJD0eNCwADZJ4go
@@ -36,6 +38,7 @@ services:
    - 8082:15672
 
  kaizen-front:
+  container_name: "kaizen-front"
   image: kaizen-front
   build:
    context: ../.
@@ -56,6 +59,7 @@ services:
    - kaizen-api-gateway
   
  kaizen-api-gateway:
+  container_name: kaizen-api-gateway
   hostname: kaizen-api-gateway
   image: kaizen-api-gateway
   build:
@@ -75,6 +79,7 @@ services:
    - DBPASSWORD=lOTUzZsAqSQW2gVf
    - RABBITUSER=Nora
    - RABBITPASSWORD=xTJD0eNCwADZJ4go
+   - RABBITHOST=kaizen-rabbit
   networks:
    - backend
    - frontend
