@@ -33,15 +33,35 @@ services:
    - rabbitdata:/var/lib/rabbitmq
   ports:
   # manager ui is used only for debugging.
-   - 8081:15672
+   - 8082:15672
 
+ kaizen-front:
+  image: kaizen-front
+  build:
+   context: ../.
+   dockerfile: ../src/Kaizen.Ui.Angular/Dockerfile
+  volumes:
+   - ../../src/Kaizen.Ui.Angular/templates:/etc/nginx/templates
+   # mounting with bind to translate changes faster w/o reboot
+   - type: bind
+     source: ../../src/Kaizen.Ui.Angular/dist/kaizen
+     target: /usr/share/nginx/html
+  ports: 
+   - 80:80
+  networks: 
+   - frontend
+  environment: 
+   - API_URL=http://kaizen-api-gateway/api
+  depends_on:
+   - kaizen-api-gateway
+  
  kaizen-api-gateway:
+  hostname: kaizen-api-gateway
   image: kaizen-api-gateway
   build:
-   context: .
-   dockerfile: Dockerfile.dev
+   context: ../../src/Kaizen.ApiGateway
+   dockerfile: Dockerfile
   ports:
-   - 80:80
    # is used for debugging only
    - 443:433
   environment:
@@ -57,15 +77,15 @@ services:
    - RABBITPASSWORD=xTJD0eNCwADZJ4go
   networks:
    - backend
+   - frontend
   volumes:
    # direct binding is used for faster restart and debugging
    - type: bind
-     source: ./logs
+     source: ../../src/Kaizen.ApiGateway/logs
      target: /app/logs
    - type: bind
-     source: ./dist
+     source: ../../src/Kaizen.ApiGateway/bin/Debug/netcoreapp3.1
      target: /app
    - ~/.vsdbg:/remote_debugger:rw
   depends_on:
-   - skill-db
-   - rabbit
+   - kaizen-rabbit
