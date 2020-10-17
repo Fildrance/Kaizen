@@ -10,8 +10,6 @@ namespace Kaizen.Skill.Service.Consumers
 {
 	public class SkillCategoryCreateConsumer : IConsumer<SkillCategoryCreateContract>
 	{
-		static readonly ILogger Logger = LogManager.GetLogger(typeof(SkillCategoryCreateConsumer).FullName);
-
 		private SkillRepository _repository;
 		private IMapper _mapper;
 
@@ -24,12 +22,8 @@ namespace Kaizen.Skill.Service.Consumers
 		public async Task Consume(ConsumeContext<SkillCategoryCreateContract> context)
 		{
 
-			//var mapped = _mapper.Map<SkillCategoryEntity>(context.Message);
-			//await _repository.Add(mapped);
-
-			// todo: replace with call to base!
-
-			Logger.Info(context.Message.Name);
+			var mapped = _mapper.Map<SkillCategoryEntity>(context.Message);
+			await _repository.Add(mapped);
 
 			await Task.CompletedTask;
 		}

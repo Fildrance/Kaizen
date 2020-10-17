@@ -1,10 +1,12 @@
 using AutoMapper;
 using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Kaizen.Skill.Api;
 using Kaizen.Skill.Service.Consumers;
 using Kaizen.Skill.Service.DAL;
+using Kaizen.Skill.Service.DAL.Configuration;
 using MassTransit;
 using MassTransit.Context;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +34,8 @@ namespace Kaizen.Skill.Service
 
 		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
+			container.Kernel.Resolver.AddSubResolver(new CollectionResolver(container.Kernel, true));
+
 			// setup mass transit to log to nlog
 			LogContext.ConfigureCurrentLogContext(new NLogLoggerFactory());
 
@@ -50,12 +54,13 @@ namespace Kaizen.Skill.Service
 			var scanThisAssembly = Classes.FromAssemblyInThisApplication(GetType().Assembly);
 
 			container.Register(
-				Component.For<DbContext>().ImplementedBy<DbContext>(),
+				Component.For<DbContext>().ImplementedBy<CustomDbContext>(),
 				Component.For<DbContextOptions>().Instance(builder.Options),
 				Component.For<IMapper>().UsingFactoryMethod(context => new MapperConfiguration(map => map.AddProfiles(context.ResolveAll<Profile>())).CreateMapper()).LifestyleSingleton(),
 				Component.For<SkillRepository>().ImplementedBy<SkillRepository>(),
 				scanThisAssembly.BasedOn(consumerInterface).WithService.FromInterface().WithServiceSelf(),
-				scanThisAssembly.BasedOn<Profile>().WithService.Base()
+				scanThisAssembly.BasedOn<Profile>().WithService.Base(),
+				scanThisAssembly.BasedOn<IContextConfiguration>().WithService.FromInterface()
 			);
 		}
 

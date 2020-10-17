@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Kaizen.Skill.Service.DAL
 {
-    public class SkillRepository
+	public class SkillRepository
     {
         public SkillRepository(DbContext context)
         {
@@ -16,9 +15,10 @@ namespace Kaizen.Skill.Service.DAL
         protected DbContext Context { get; }
         protected DbSet<SkillCategoryEntity> SkillCategories { get; }
 
-        public ValueTask<EntityEntry<SkillCategoryEntity>> Add(SkillCategoryEntity entity)
+        public async Task Add(SkillCategoryEntity entity)
         {
-            return SkillCategories.AddAsync(entity);
+            await SkillCategories.AddAsync(entity);
+            await Context.SaveChangesAsync();
         }
 
         public Task Remove(SkillCategoryEntity entity)

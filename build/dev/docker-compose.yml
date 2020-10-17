@@ -1,7 +1,7 @@
 version: "3"
 
 volumes:
- dbdata:
+ skilldata:
  rabbitdata:
 
 networks:
@@ -84,13 +84,13 @@ services:
   container_name: "kaizen-skills-db"
   image: "postgres"
   volumes: 
-    - dbdata:/var/lib/postgresql/data
+    - skilldata:/var/lib/postgresql/data
   networks:
     - backend
   environment:
     - POSTGRES_USER=uliss
     - POSTGRES_PASSWORD=lOTUzZsAqSQW2gVf
-    - POSTGRES_DB=my_db
+    - POSTGRES_DB=SkillDb
 
  kaizen-skills:
   container_name: kaizen-skills
@@ -107,8 +107,9 @@ services:
    - ASPNETCORE_ENVIRONMENT=Production
    - ASPNETCORE_URLS=http://+:80
    # debug settings end
-   - DBHOST=skill-db
+   - DBHOST=kaizen-skills-db
    - DBPORT=5432
+   - DBNAME=SkillDb
    - DBUSER=uliss
    - DBPASSWORD=lOTUzZsAqSQW2gVf
    - RABBITUSER=Nora
@@ -116,7 +117,6 @@ services:
    - RABBITHOST=kaizen-rabbit
   networks:
    - backend
-   - frontend
   volumes:
    # direct binding is used for faster restart and debugging
    - type: bind
