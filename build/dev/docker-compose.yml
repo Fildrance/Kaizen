@@ -10,18 +10,6 @@ networks:
 
 services:
 
- kaizen-skills-db:
-  container_name: "kaizen-skills-db"
-  image: "postgres"
-  volumes: 
-   - dbdata:/var/lib/postgresql/data
-  networks:
-   - backend
-  environment:
-   - POSTGRES_USER=uliss
-   - POSTGRES_PASSWORD=lOTUzZsAqSQW2gVf
-   - POSTGRES_DB=my_db
-
  kaizen-rabbit:
   container_name: "kaizen-rabbit"
   image: "rabbitmq:3-management"
@@ -65,9 +53,55 @@ services:
   build:
    context: ../../src/Kaizen.ApiGateway
    dockerfile: Dockerfile
-  ports:
+  #ports:
    # is used for debugging only
-   - 443:433
+   #- 443:433
+  environment:
+   # debug settings start 
+   - ASPNETCORE_ENVIRONMENT=Production
+   - ASPNETCORE_URLS=http://+:80
+   # debug settings end
+   - RABBITUSER=Nora
+   - RABBITPASSWORD=xTJD0eNCwADZJ4go
+   - RABBITHOST=kaizen-rabbit
+  networks:
+   - backend
+   - frontend
+  volumes:
+   # direct binding is used for faster restart and debugging
+   - type: bind
+     source: ../../src/Kaizen.ApiGateway/logs
+     target: /app/logs
+   - type: bind
+     source: ../../src/Kaizen.ApiGateway/bin/Debug/netcoreapp3.1
+     target: /app
+   - ~/.vsdbg:/remote_debugger:rw
+  depends_on:
+   - kaizen-rabbit
+
+
+ kaizen-skills-db:
+  container_name: "kaizen-skills-db"
+  image: "postgres"
+  volumes: 
+    - dbdata:/var/lib/postgresql/data
+  networks:
+    - backend
+  environment:
+    - POSTGRES_USER=uliss
+    - POSTGRES_PASSWORD=lOTUzZsAqSQW2gVf
+    - POSTGRES_DB=my_db
+
+ kaizen-skills:
+  container_name: kaizen-skills
+  hostname: kaizen-skills
+  image: kaizen-skills
+  build:
+   context: ../../src/Kaizen.Skill/Kaizen.Skill.Service
+   dockerfile: Dockerfile
+  #ports:
+   # is used for debugging only
+   #- 443:433
   environment:
    # debug settings start 
    - ASPNETCORE_ENVIRONMENT=Production
@@ -86,11 +120,12 @@ services:
   volumes:
    # direct binding is used for faster restart and debugging
    - type: bind
-     source: ../../src/Kaizen.ApiGateway/logs
+     source: ../../src/Kaizen.Skill/Kaizen.Skill.Service/logs
      target: /app/logs
    - type: bind
-     source: ../../src/Kaizen.ApiGateway/bin/Debug/netcoreapp3.1
+     source: ../../src/Kaizen.Skill/Kaizen.Skill.Service/bin/Debug/netcoreapp3.1
      target: /app
    - ~/.vsdbg:/remote_debugger:rw
   depends_on:
    - kaizen-rabbit
+   - kaizen-skills-db

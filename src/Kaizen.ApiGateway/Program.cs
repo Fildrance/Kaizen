@@ -1,28 +1,23 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog;
+using NLog.Config;
 using NLog.Web;
 
 namespace Kaizen.ApiGateway
 {
-    public class Program
+	public class Program
     {
         public static void Main(string[] args)
         {
             var curDir = Directory.GetCurrentDirectory();
-            System.Console.WriteLine(curDir);
-            var currentFolderFiles =  Directory.GetFiles(curDir);
-            foreach (var item in currentFolderFiles)
-            {
-                System.Console.WriteLine(item);
-            }
-            var logger = NLogBuilder.ConfigureNLog(Path.Combine(curDir,"nlog.config")).GetCurrentClassLogger();
+            var nlogFilePath = Path.Combine(curDir, "nlog.config");
+            var cfg = new XmlLoggingConfiguration(nlogFilePath);
+            LogManager.Configuration = cfg;
+            var logger = LogManager.GetLogger(typeof(Program).FullName);
             try
             {
                 logger.Debug("init main");
@@ -49,7 +44,7 @@ namespace Kaizen.ApiGateway
                 }).ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    logging.SetMinimumLevel(LogLevel.Trace);
+                    logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
                 }).UseNLog();
     }
 }

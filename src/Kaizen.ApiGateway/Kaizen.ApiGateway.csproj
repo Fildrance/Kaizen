@@ -11,5 +11,9 @@
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Kaizen.Skill\Kaizen.Skill.Api\Kaizen.Skill.Api.csproj" />
+  </ItemGroup>
+
 
 </Project>

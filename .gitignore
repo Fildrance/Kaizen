@@ -354,4 +354,4 @@ package-lock.json
 **/dist
 
 # Visual paradigm
-*.vpp.bak*
+*.vpp.*
