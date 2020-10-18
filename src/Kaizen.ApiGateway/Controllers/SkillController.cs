@@ -1,42 +1,32 @@
-﻿using Kaizen.Skill.Api;
-using Kaizen.Skill.Api.Create;
+﻿using Kaizen.Skill.Api.Create;
+using Kaizen.Skill.Api.Items;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
-using System;
 using System.Threading.Tasks;
 
 namespace Kaizen.ApiGateway.Controllers
 {
 	[ApiController]
-	public class SkillController : ControllerBase
-	{
-		private static readonly ILogger Logger = LogManager.GetLogger(typeof(SkillController).FullName);
+    public class SkillController : ControllerBase
+    {
+        private static readonly ILogger Logger = LogManager.GetLogger(typeof(SkillController).FullName);
 
-		ISendEndpointProvider _sendEndpointProvider;
+        IRequestClient<SkillCategoryCreateContract> _client;
 
-		public SkillController(ISendEndpointProvider sendEndpointProvider)
-		{
-			_sendEndpointProvider = sendEndpointProvider;
-		}
-
-        [HttpGet]
-        [Route("api/skill-category")]
-        public async Task<int> Get()
+        public SkillController(IRequestClient<SkillCategoryCreateContract> client)
         {
-            // todo: replace with actual call
-            Logger.Info("goin to start sendin stuff");
+            _client = client;
+        }
 
-            var ep = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:" + SkillConstants.IncomingQueueName));
-            var contract = new SkillCategoryCreateContract
-            {
-                Name = "cat1"
-            };
-            await ep.Send(contract);
-
-            Logger.Info("sent SEND");
-
-            return -1;
+        [HttpPost]
+        [Route("api/skill-category")]
+        public async Task<SkillCategoryItem> Create(SkillCategoryCreateContract contract)
+        {
+            Logger.Trace("Received request to create SkillCategory.");
+            var resp = await _client.GetResponse<SkillCategoryItem>(contract);
+            Logger.Trace($"Received response - created SkillCategory with id {resp.Message.Id}.");
+            return resp.Message;
         }
     }
 }

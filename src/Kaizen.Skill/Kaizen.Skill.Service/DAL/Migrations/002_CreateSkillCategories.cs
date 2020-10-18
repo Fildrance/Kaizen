@@ -19,7 +19,7 @@ namespace Kaizen.Skill.Service.DAL.Migrations
         public override void Down()
         {
             throw new NotSupportedException();
-        }
+        }   
     }
 
 }

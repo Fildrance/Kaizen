@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using Castle.Windsor;
+using Castle.Windsor.MsDependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -31,13 +33,18 @@ namespace Kaizen.ApiGateway
             }
             finally
             {
-                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
-                NLog.LogManager.Shutdown();
+				// Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+				LogManager.Shutdown();
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            var rabbitHost = Environment.GetEnvironmentVariable("RABBITHOST");
+            var rabbitUser = Environment.GetEnvironmentVariable("RABBITUSER");
+            var rabbitPassword = Environment.GetEnvironmentVariable("RABBITPASSWORD");
+
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
@@ -45,6 +52,12 @@ namespace Kaizen.ApiGateway
                 {
                     logging.ClearProviders();
                     logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
-                }).UseNLog();
+                }).UseNLog()
+                .UseServiceProviderFactory(hbc => new WindsorServiceProviderFactory())
+                .ConfigureContainer<IWindsorContainer>((hbc, builder) =>
+                {
+                    builder.Install(new KaizenApiGatewayInstaller(rabbitHost, rabbitUser, rabbitPassword));
+                });
+        }
     }
 }

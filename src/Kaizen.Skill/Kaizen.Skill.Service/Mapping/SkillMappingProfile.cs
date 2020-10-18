@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
 using Kaizen.Skill.Api.Create;
+using Kaizen.Skill.Api.Items;
 using Kaizen.Skill.Service.DAL;
 
 namespace Kaizen.Skill.Service.Mapping
 {
-	public class SkillMappingProfile : Profile
-	{
-		public SkillMappingProfile()
-		{
-			CreateMap<SkillCategoryCreateContract, SkillCategoryEntity>();
-		}
-	}
+    public class SkillMappingProfile : Profile
+    {
+        public SkillMappingProfile()
+        {
+            CreateMap<SkillCategoryCreateContract, SkillCategoryEntity>();
+            CreateMap<SkillCategoryEntity, SkillCategoryItem>();
+        }
+    }
 }

@@ -7,15 +7,34 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./root.component.scss']
 })
 export class RootComponent implements OnInit {
-  public temps = 'loading temps...';
+
+  public temps = 'no data...';
+
   constructor(private client: HttpClient) {
 
   }
   public ngOnInit(): void {
-    this.client.get<Array<{ temperatureC: number }>>('/api/weather')
+
+  }
+
+  public doStuff(): void {
+    const contract: SkillCategoryCreateContract = { Name: 'n1', ShortDescription: 'this is short description' };
+    this.client.post<SkillCategoryItem>('/api/skill-category', contract)
       .subscribe(x => {
-        const joined = x.map(t => t.temperatureC.toString()).join(',');
-        this.temps = joined;
+        console.log('i got data');
+        console.log(x);
+        this.temps = x.Name;
       });
   }
+}
+
+export interface SkillCategoryItem {
+  Id: number;
+  Name: string;
+  ShortDescription: string;
+}
+
+export interface SkillCategoryCreateContract {
+  Name: string;
+  ShortDescription: string;
 }

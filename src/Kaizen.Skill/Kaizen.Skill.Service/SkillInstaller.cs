@@ -1,84 +1,55 @@
-using AutoMapper;
 using Castle.MicroKernel.Registration;
-using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Kaizen.Common.Container;
 using Kaizen.Skill.Api;
 using Kaizen.Skill.Service.Consumers;
 using Kaizen.Skill.Service.DAL;
-using Kaizen.Skill.Service.DAL.Configuration;
 using MassTransit;
-using MassTransit.Context;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 
 namespace Kaizen.Skill.Service
 {
-	public class SkillInstaller : IWindsorInstaller
+	public class SkillInstaller : CommonInstaller
 	{
-		public static readonly LoggerFactory DbLoggerFactory = new LoggerFactory(new[] { new NLogLoggerProvider() });
-
 		private string _rabbitHost;
 		private string _rabbitUser;
 		private string _rabbitPassword;
-		private string _connectionString;
 
 		public SkillInstaller(string rabbitHost, string rabbitUser, string rabbitPassword, string connectionString)
 		{
 			_rabbitHost = rabbitHost;
 			_rabbitUser = rabbitUser;
 			_rabbitPassword = rabbitPassword;
-			_connectionString = connectionString;
+
+			this.BusFactory = (busContext, container) => MyBusFactory(container);
+
+			this.UseMassTransit = true;
+			this.ScanConsumers = true;
+			this.UsingMapper = true;
+			this.UsingDatabase = true;
+			this.ConnectionString = connectionString;
+			this.RootAssembly = GetType().Assembly;
 		}
 
-		public void Install(IWindsorContainer container, IConfigurationStore store)
+		protected override void InstallMore(IWindsorContainer container, IConfigurationStore store)
 		{
-			container.Kernel.Resolver.AddSubResolver(new CollectionResolver(container.Kernel, true));
-
-			// setup mass transit to log to nlog
-			LogContext.ConfigureCurrentLogContext(new NLogLoggerFactory());
-
-			container.AddMassTransit(x =>
-			{
-				x.AddBus(x => BusFactory(container));
-				x.AddConsumersFromContainer(container);
-			});
-
-			var builder = new DbContextOptionsBuilder();
-
-			builder.UseNpgsql(_connectionString);
-			builder.UseLoggerFactory(DbLoggerFactory);
-
-			var consumerInterface = typeof(IConsumer<>);
-			var scanThisAssembly = Classes.FromAssemblyInThisApplication(GetType().Assembly);
-
 			container.Register(
-				Component.For<DbContext>().ImplementedBy<CustomDbContext>(),
-				Component.For<DbContextOptions>().Instance(builder.Options),
-				Component.For<IMapper>().UsingFactoryMethod(context => new MapperConfiguration(map => map.AddProfiles(context.ResolveAll<Profile>())).CreateMapper()).LifestyleSingleton(),
-				Component.For<SkillRepository>().ImplementedBy<SkillRepository>(),
-				scanThisAssembly.BasedOn(consumerInterface).WithService.FromInterface().WithServiceSelf(),
-				scanThisAssembly.BasedOn<Profile>().WithService.Base(),
-				scanThisAssembly.BasedOn<IContextConfiguration>().WithService.FromInterface()
+				Component.For<SkillRepository>().ImplementedBy<SkillRepository>()
 			);
 		}
 
-		public IBusControl BusFactory(IWindsorContainer container)
+		public IBusControl MyBusFactory(IWindsorContainer container)
 		{
-			return Bus.Factory.CreateUsingRabbitMq(config =>
-			{
-				config.Host(_rabbitHost, host =>
+			return BusFactoryCore(
+				container,
+				_rabbitHost,
+				_rabbitUser,
+				_rabbitPassword,
+				(cfg, container) =>
 				{
-					host.Username(_rabbitUser);
-					host.Password(_rabbitPassword);
-				});
-
-				config.ReceiveEndpoint(SkillConstants.IncomingQueueName, endpoint =>
-				{
-					endpoint.Consumer<SkillCategoryCreateConsumer>(container);
-				});
-			});
+					cfg.ReceiveEndpoint(SkillConstants.IncomingQueueName, endpoint => endpoint.Consumer<SkillCategoryCreateConsumer>(container));
+				}
+			);
 		}
 	}
 }
