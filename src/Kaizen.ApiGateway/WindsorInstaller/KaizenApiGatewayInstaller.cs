@@ -1,7 +1,10 @@
-﻿using Castle.MicroKernel.Registration;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using FluentValidation;
 using Kaizen.Common.Service;
 using Kaizen.Skill.Api;
 using Kaizen.Skill.Api.Create;
@@ -9,7 +12,7 @@ using MassTransit;
 
 namespace Kaizen.ApiGateway.WindsorInstaller
 {
-    internal class KaizenApiGatewayInstaller : IWindsorInstaller
+	internal class KaizenApiGatewayInstaller : IWindsorInstaller
 	{
 		private string _rabbitHost;
 		private string _rabbitUser;
@@ -38,11 +41,15 @@ namespace Kaizen.ApiGateway.WindsorInstaller
 							x.Password(_rabbitPassword);
 						}
 					);
-
+					cfg.UseSendFilter(typeof(ValidatingSendFilter<>), context);
 				});
 				x.AddRequestClient<SkillCategoryCreateContract>(RabbitUriHelper.QueueUri(SkillConstants.IncomingQueueName));
 			});
 
+			container.Register(
+				Component.For<IReadOnlyCollection<IValidator>>().UsingFactoryMethod(kernel => kernel.ResolveAll<IValidator>().ToArray()).LifestyleSingleton()
+			);
+			
 			// to recieve messages we have to start bus (this includes receiving responses).
 			container.Resolve<IBusControl>().Start();
 		}
