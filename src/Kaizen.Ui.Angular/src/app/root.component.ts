@@ -1,40 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, HostBinding } from '@angular/core';
+import { ScreenService, AppInfoService } from './shared/services';
 
 @Component({
   selector: 'app-root',
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss']
 })
-export class RootComponent implements OnInit {
+export class RootComponent {
 
-  public temps = 'no data...';
-
-  constructor(private client: HttpClient) {
-
-  }
-  public ngOnInit(): void {
-
+  @HostBinding('class') get getClass() {
+    return Object.keys(this.screen.sizes)
+      .filter(cl => this.screen.sizes[cl]).join(' ');
   }
 
-  public doStuff(): void {
-    const contract: SkillCategoryCreateContract = { Name: 'n1', ShortDescription: 'this is short description' };
-    this.client.post<SkillCategoryItem>('/api/skill-category', contract)
-      .subscribe(x => {
-        console.log('i got data');
-        console.log(x);
-        this.temps = x.Name;
-      });
-  }
-}
+  constructor( private screen: ScreenService, public appInfo: AppInfoService) { }
 
-export interface SkillCategoryItem {
-  Id: number;
-  Name: string;
-  ShortDescription: string;
-}
-
-export interface SkillCategoryCreateContract {
-  Name: string;
-  ShortDescription: string;
 }
