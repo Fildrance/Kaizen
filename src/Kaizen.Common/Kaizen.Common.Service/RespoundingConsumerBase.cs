@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using MassTransit;
 
-namespace Kaizen.Common
+namespace Kaizen.Common.Service
 {
     /// <summary> Basic class for <see cref="IConsumer"/> that will response on request. Wraps default MassTransit methods into simpler to understand way of interaction.</summary>
     /// <typeparam name="TRequest">Type of input contract - request.</typeparam>

@@ -39,6 +39,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Kaizen.Common\Kaizen.Common.DAL\Kaizen.Common.DAL.csproj" />
+    <ProjectReference Include="..\..\Kaizen.Common\Kaizen.Common.Service\Kaizen.Common.Service.csproj" />
     <ProjectReference Include="..\Kaizen.Skill.Api\Kaizen.Skill.Api.csproj" />
   </ItemGroup>
 

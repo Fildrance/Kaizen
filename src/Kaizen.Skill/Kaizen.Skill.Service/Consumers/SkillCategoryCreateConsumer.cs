@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Kaizen.Common;
+using Kaizen.Common.Service;
 using Kaizen.Skill.Api.Create;
 using Kaizen.Skill.Api.Items;
 using Kaizen.Skill.Service.DAL;

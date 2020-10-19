@@ -7,6 +7,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using FluentMigrator.Runner.Processors;
 using Kaizen.Common.DAL;
 using Kaizen.Common.DAL.Configuration;
 using MassTransit;
@@ -32,8 +33,9 @@ namespace Kaizen.Common.Container
         public Assembly RootAssembly { get; set; }
         public bool ScanConsumers { get; set; }
         public bool UseMassTransit { get; set; }
-        public Func<IBusRegistrationContext, IWindsorContainer,  IBusControl> BusFactory { get; set; }
+        public Func<IBusRegistrationContext, IWindsorContainer, IBusControl> BusFactory { get; set; }
         public Action<IWindsorContainerBusConfigurator> ConfigBus { get; set; }
+        public bool UsingFluentMigrator { get; set; }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
@@ -64,7 +66,7 @@ namespace Kaizen.Common.Container
         }
 
         protected virtual IBusControl BusFactoryCore(
-            IWindsorContainer container, 
+            IWindsorContainer container,
             string rabbitHost,
             string rabbitUser,
             string rabbitPassword,
@@ -79,8 +81,8 @@ namespace Kaizen.Common.Container
                     host.Password(rabbitPassword);
                 });
 
-				configure?.Invoke(config, container);
-			});
+                configure?.Invoke(config, container);
+            });
         }
 
         private IEnumerable<IRegistration> GenerateRegistrations(IWindsorContainer container)
@@ -112,6 +114,13 @@ namespace Kaizen.Common.Container
                 yield return Component.For<DbContextOptions>().Instance(builder.Options);
 
                 yield return scanThisAssembly.BasedOn<IContextConfiguration>().WithService.FromInterface();
+
+                if (UsingFluentMigrator)
+                {
+                    container.Kernel.Register(
+                        Component.For<ProcessorOptions>().ImplementedBy<ProcessorOptions>().OnCreate(x => x.ConnectionString = ConnectionString)
+                    );
+                }
             }
             if (UsingMapper)
             {

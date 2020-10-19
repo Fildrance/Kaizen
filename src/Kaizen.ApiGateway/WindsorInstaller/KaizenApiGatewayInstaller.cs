@@ -2,14 +2,14 @@
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Kaizen.Common.Service;
 using Kaizen.Skill.Api;
 using Kaizen.Skill.Api.Create;
 using MassTransit;
-using System;
 
-namespace Kaizen.ApiGateway
+namespace Kaizen.ApiGateway.WindsorInstaller
 {
-	internal class KaizenApiGatewayInstaller : IWindsorInstaller
+    internal class KaizenApiGatewayInstaller : IWindsorInstaller
 	{
 		private string _rabbitHost;
 		private string _rabbitUser;
@@ -40,9 +40,7 @@ namespace Kaizen.ApiGateway
 					);
 
 				});
-				var serviceAddress = new Uri("queue:" + SkillConstants.IncomingQueueName);
-				
-				x.AddRequestClient<SkillCategoryCreateContract>(serviceAddress);
+				x.AddRequestClient<SkillCategoryCreateContract>(RabbitUriHelper.QueueUri(SkillConstants.IncomingQueueName));
 			});
 
 			// to recieve messages we have to start bus (this includes receiving responses).

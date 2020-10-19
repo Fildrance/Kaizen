@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Kaizen.Common\Kaizen.Common.Service\Kaizen.Common.Service.csproj" />
     <ProjectReference Include="..\Kaizen.Skill\Kaizen.Skill.Api\Kaizen.Skill.Api.csproj" />
   </ItemGroup>
 
