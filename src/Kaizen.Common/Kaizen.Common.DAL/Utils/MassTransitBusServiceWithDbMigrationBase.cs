@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using FluentMigrator.Runner;
@@ -19,7 +19,9 @@ namespace Kaizen.Common.Utils
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            СurrentLogger.Info("Starting migrations.");
             _migrationRunner.MigrateUp();
+            СurrentLogger.Info("Finished with migrations");
 
             return base.ExecuteAsync(stoppingToken);
         }

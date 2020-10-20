@@ -8,7 +8,10 @@ using FluentValidation;
 using Kaizen.Common.Service;
 using Kaizen.Skill.Api;
 using Kaizen.Skill.Api.Create;
+using Kaizen.Skill.Api.Deactivate;
 using MassTransit;
+using MassTransit.Context;
+using NLog.Extensions.Logging;
 
 namespace Kaizen.ApiGateway.WindsorInstaller
 {
@@ -27,6 +30,9 @@ namespace Kaizen.ApiGateway.WindsorInstaller
 
 		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
+			// setup mass transit to log to nlog
+			LogContext.ConfigureCurrentLogContext(new NLogLoggerFactory());
+
 			container.Kernel.Resolver.AddSubResolver(new CollectionResolver(container.Kernel, true));
 
 			container.AddMassTransit(x =>
@@ -44,6 +50,7 @@ namespace Kaizen.ApiGateway.WindsorInstaller
 					cfg.UseSendFilter(typeof(ValidatingSendFilter<>), context);
 				});
 				x.AddRequestClient<SkillCategoryCreateContract>(RabbitUriHelper.QueueUri(SkillConstants.IncomingQueueName));
+				x.AddRequestClient<SkillCategoryChangeActiveContract>(RabbitUriHelper.QueueUri(SkillConstants.IncomingQueueName));
 			});
 
 			container.Register(

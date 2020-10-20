@@ -10,7 +10,7 @@ namespace Kaizen.Skill.Api.WindsorInstaller
 		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
 			container.Register(
-				Classes.FromAssembly(GetType().Assembly).BasedOn<IValidator>().WithService.DefaultInterfaces()
+				Classes.FromAssembly(GetType().Assembly).BasedOn<IValidator>().WithServiceAllInterfaces()
 			);
 		}
 	}

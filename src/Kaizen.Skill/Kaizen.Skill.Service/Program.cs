@@ -28,7 +28,10 @@ namespace Kaizen.Skill.Service
 
             await ServiceHelper.ExecuteInNlogWrap(
                 programType.FullName,
-                () => ServiceDALHelper.CreateConsoleHostWithMigratorAndRun<SkillService>(new SkillInstaller(rabbitHost, rabbitUser, rabbitPassword, _connectionString))
+                () => {
+                    var skillInstaller = new SkillInstaller(rabbitHost, rabbitUser, rabbitPassword, _connectionString);
+                    return ServiceDALHelper.CreateConsoleHostWithMigratorAndRun<SkillService>(skillInstaller);
+                }
             );
         }
     }

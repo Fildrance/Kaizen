@@ -51,7 +51,13 @@ namespace Kaizen.Skill.Service.WindsorInstaller
 				_rabbitPassword,
 				(cfg, container) =>
 				{
-					cfg.ReceiveEndpoint(SkillConstants.IncomingQueueName, endpoint => endpoint.Consumer<SkillCategoryCreateConsumer>(container));
+					cfg.ReceiveEndpoint(SkillConstants.IncomingQueueName, 
+						endpoint =>
+						{
+							endpoint.Consumer<SkillCategoryCreateConsumer>(container);
+							endpoint.Consumer<SkillCategoryChangeActiveConsumer>(container);
+						}
+					);
 				}
 			);
 		}

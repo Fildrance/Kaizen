@@ -7,17 +7,14 @@ using System.Threading.Tasks;
 
 namespace Kaizen.ApiGateway.Middleware
 {
-    /// <summary> Middleware that packages business exception into data-package for client. </summary>
+	/// <summary> Middleware that packages business exception into data-package for client. </summary>
 	public class ValidationExceptionPackagingMiddleware
     {
         private const string ValidationErrorProblemType = "ValidationError";
 
         private readonly RequestDelegate _next;
 
-        public ValidationExceptionPackagingMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
+        public ValidationExceptionPackagingMiddleware(RequestDelegate next) => _next = next;
 
         public async Task InvokeAsync(HttpContext context)
         {
@@ -39,7 +36,6 @@ namespace Kaizen.ApiGateway.Middleware
 
                     var jsonString = JsonSerializer.Serialize(problem);
                     await context.Response.WriteAsync(jsonString);
-
                 }
             }
         }

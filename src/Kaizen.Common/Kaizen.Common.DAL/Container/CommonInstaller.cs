@@ -86,10 +86,10 @@ namespace Kaizen.Common.DAL.Container
 
 		private IEnumerable<IRegistration> GenerateRegistrations(IWindsorContainer container)
 		{
-			var scanThisAssembly = Classes.FromAssemblyInThisApplication(RootAssembly);
-
 			// setup mass transit to log to nlog
 			LogContext.ConfigureCurrentLogContext(new NLogLoggerFactory());
+
+			var scanThisAssembly = Classes.FromAssemblyInThisApplication(RootAssembly);
 
 			if (ScanConsumers)
 			{

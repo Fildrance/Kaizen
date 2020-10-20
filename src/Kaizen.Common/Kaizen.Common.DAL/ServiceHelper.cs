@@ -5,6 +5,7 @@ using Kaizen.Common.Service;
 using Microsoft.Extensions.DependencyInjection;
 using FluentMigrator.Runner;
 using System.Reflection;
+using NLog.Extensions.Logging;
 
 namespace Kaizen.Common.DAL
 {
@@ -22,8 +23,7 @@ namespace Kaizen.Common.DAL
 						// Define the assembly containing the migrations
 						.ScanIn(Assembly.GetEntryAssembly()).For.Migrations())
 						// Enable logging to console in the FluentMigrator way
-						.AddLogging(lb => lb.AddFluentMigratorConsole()
-					),
+						.AddLogging(lb => lb.AddNLog()),
 				installers
 			);
 		}

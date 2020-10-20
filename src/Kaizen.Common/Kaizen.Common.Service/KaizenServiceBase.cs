@@ -1,7 +1,8 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.Extensions.Hosting;
+using NLog;
 
 namespace Kaizen.Common.Service
 {
@@ -14,10 +15,13 @@ namespace Kaizen.Common.Service
         }
 
         protected IBusControl Bus { get; }
+        protected abstract ILogger СurrentLogger{get;}
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            return Bus.StartAsync(stoppingToken);
+            return Bus.StartAsync(stoppingToken).ContinueWith(x=>{
+                СurrentLogger.Info("Started bus.");
+            });
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
