@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 
-namespace Kaizen.Common.DAL
+namespace Kaizen.Common.DAL.Repository
 {
     /// <summary> Custom db-context that can be used in reusable way. Consumes all configurations that DI Container will pass.</summary>
     public class CustomDbContext : DbContext

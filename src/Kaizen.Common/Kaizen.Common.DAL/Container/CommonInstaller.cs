@@ -7,8 +7,8 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Kaizen.Common.DAL;
 using Kaizen.Common.DAL.Configuration;
+using Kaizen.Common.DAL.Repository;
 using MassTransit;
 using MassTransit.Context;
 using MassTransit.RabbitMqTransport;
@@ -18,7 +18,7 @@ using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using IRegistration = Castle.MicroKernel.Registration.IRegistration;
 
-namespace Kaizen.Common.Container
+namespace Kaizen.Common.DAL.Container
 {
 	// todo: change to composite pattern and collect installation parts.
 	/// <summary> Common installer for service assembly. Can help with using postgres db, scans and creating automapper, scan of mass-transit consumers and creating bus. </summary>

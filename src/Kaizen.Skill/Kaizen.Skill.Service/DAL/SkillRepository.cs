@@ -1,41 +1,23 @@
-using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Kaizen.Common.DAL.Discover;
+using Kaizen.Common.DAL.Discover.EntityExtractor;
+using Kaizen.Skill.Api.Selector;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kaizen.Skill.Service.DAL
 {
-	public class SkillRepository
-    {
-        public SkillRepository(DbContext context)
-        {
-            Context = context ?? throw new ArgumentNullException(nameof(context));
-            SkillCategories = Context.Set<SkillCategoryEntity>();
-        }
+	public class SkillRepository : DiscoveringRepositoryBase<SkillCategorySelector, SkillCategoryEntity, int>
+	{
+		public SkillRepository(
+			DbContext context,
+			IEnumerable<IAdditionalExtractConfiguration<SkillCategorySelector, SkillCategoryEntity>> additionalExtractConfiguration
+		) : base(context, additionalExtractConfiguration)
+		{
+		}
 
-        protected DbContext Context { get; }
-        protected DbSet<SkillCategoryEntity> SkillCategories { get; }
-
-        public async Task Add(SkillCategoryEntity entity)
-        {
-            await SkillCategories.AddAsync(entity);
-            await Context.SaveChangesAsync();
-        }
-
-        public Task Remove(SkillCategoryEntity entity)
-        {
-            SkillCategories.Remove(entity);
-            return Context.SaveChangesAsync();
-        }
-
-        public Task Update(SkillCategoryEntity entity)
-        {
-            Context.Update(entity);
-            return Context.SaveChangesAsync();
-        }
-
-        public Task<SkillCategoryEntity> GetById(int id)
-        {
-            return SkillCategories.FirstAsync(x => x.Id == id);
-        }
-    }
+		protected override void DoConfigureExtractor(EntityExtractorBuilder<SkillCategorySelector, SkillCategoryEntity> builder)
+		{
+			builder.AddDiscoverRule(x => x.Id.HasValue, x => GetById(x.Id.Value));
+		}
+	}
 }
