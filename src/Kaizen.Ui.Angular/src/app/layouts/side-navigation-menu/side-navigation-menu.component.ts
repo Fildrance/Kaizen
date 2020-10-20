@@ -1,8 +1,8 @@
 import { Component, NgModule, Output, Input, EventEmitter, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { DxTreeViewModule, DxTreeViewComponent } from 'devextreme-angular/ui/tree-view';
-import { navigation } from '../../../app-navigation';
 
 import * as events from 'devextreme/events';
+import { navigation } from '../../../app/app-navigation';
 
 @Component({
   selector: 'app-side-navigation-menu',

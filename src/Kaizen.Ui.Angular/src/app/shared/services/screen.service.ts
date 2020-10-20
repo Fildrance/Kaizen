@@ -11,14 +11,14 @@ export class ScreenService {
       .subscribe(() => this.changed.next());
   }
 
-  private isLargeScreen() {
+  private isLargeScreen(): boolean {
     const isLarge = this.breakpointObserver.isMatched(Breakpoints.Large);
     const isXLarge = this.breakpointObserver.isMatched(Breakpoints.XLarge);
 
     return isLarge || isXLarge;
   }
 
-  public get sizes() {
+  public get sizes(): { 'screen-x-small': boolean, 'screen-small': boolean, 'screen-medium': boolean, 'screen-large': boolean } {
     return {
       'screen-x-small': this.breakpointObserver.isMatched(Breakpoints.XSmall),
       'screen-small': this.breakpointObserver.isMatched(Breakpoints.Small),
