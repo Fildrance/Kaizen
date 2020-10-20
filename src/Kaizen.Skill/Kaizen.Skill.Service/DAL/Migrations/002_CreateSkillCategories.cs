@@ -13,7 +13,8 @@ namespace Kaizen.Skill.Service.DAL.Migrations
             Create.Table(TableName).InSchema(CreateSkillSchema.SchemaName)
                 .WithColumn("Id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("Name").AsString(511).NotNullable()
-                .WithColumn("ShortDescription").AsString(2000).Nullable();
+                .WithColumn("ShortDescription").AsString(2000).Nullable()
+                .WithColumn("IsActive").AsBoolean().NotNullable();
         }
 
         public override void Down()

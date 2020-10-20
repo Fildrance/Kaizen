@@ -10,11 +10,12 @@ using System.Threading.Tasks;
 
 namespace Kaizen.Skill.Service.Consumers
 {
-    public class SkillCategoryCreateConsumer : RespoundingConsumerBase<SkillCategoryCreateContract, SkillCategoryItem>
+	public class SkillCategoryCreateConsumer : RespoundingConsumerBase<SkillCategoryCreateContract, SkillCategoryItem>
 	{
 		private readonly static ILogger Logger = LogManager.GetLogger(typeof(SkillCategoryCreateConsumer).FullName);
-		private SkillRepository _repository;
-		private IMapper _mapper;
+
+		private readonly SkillRepository _repository;
+		private readonly IMapper _mapper;
 
 		public SkillCategoryCreateConsumer(SkillRepository repository, IMapper mapper)
 		{
@@ -26,6 +27,7 @@ namespace Kaizen.Skill.Service.Consumers
         {
 			Logger.Trace($"Received contract to create SkillCategory, name is {message.Name}.");
             var mapped = _mapper.Map<SkillCategoryEntity>(context.Message);
+			mapped.IsActive = true;
 			await _repository.Add(mapped);
 			Logger.Trace($"Created record for SkillCategory, id = {mapped.Id}.");
 			return _mapper.Map<SkillCategoryItem>(mapped);

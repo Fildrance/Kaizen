@@ -1,10 +1,8 @@
-﻿using System;
-using Kaizen.Skill.Api;
-
-namespace Kaizen.Skill.Api.Items
+﻿namespace Kaizen.Skill.Api.Items
 {
-    public class SkillCategoryItem : SkillBase
+	public class SkillCategoryItem : SkillBase
     {
         public int Id { get; set; }
+        public bool IsActive { get; set; }
     }
 }

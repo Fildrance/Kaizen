@@ -1,10 +1,11 @@
+using Kaizen.Common.DAL.Repository;
+
 namespace Kaizen.Skill.Service.DAL
 {
-    public class SkillBaseEntity
+    public class SkillBaseEntity: EntityBase<int>
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
         public string ShortDescription { get; set; }
-    }
+		public bool IsActive { get; set; }
+	}
 }
