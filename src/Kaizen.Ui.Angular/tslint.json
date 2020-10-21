@@ -24,7 +24,7 @@
     "import-spacing": true,
     "indent": {
       "options": [
-        "spaces"
+        "tabs"
       ]
     },
     "max-classes-per-file": false,
@@ -139,13 +139,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "app",
+      "kai",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "app",
+      "kai",
       "kebab-case"
     ]
   }

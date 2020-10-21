@@ -4,23 +4,26 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { RootComponent } from './root.component';
+import { SideNavInnerToolbarModule } from './layouts/side-nav-inner-toolbar/side-nav-inner-toolbar.component';
+import { SingleCardModule } from './layouts/single-card/single-card.component';
+import { ScreenService } from './shared/services/screen.service';
+import { AppInfoService } from './shared/services/app-info.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { SideNavInnerToolbarModule, SingleCardModule } from './layouts';
-
-import { ScreenService, AppInfoService } from './shared/services';
 
 @NgModule({
-  declarations: [
-    RootComponent
-  ],
-  imports: [
-    BrowserModule,
-    SideNavInnerToolbarModule,
-    SingleCardModule,
-    AppRoutingModule,
-    HttpClientModule
-  ],
-  providers: [ScreenService, AppInfoService],
-  bootstrap: [RootComponent]
+	declarations: [
+		RootComponent
+	],
+	imports: [
+		BrowserModule,
+		SideNavInnerToolbarModule,
+		SingleCardModule,
+		AppRoutingModule,
+		HttpClientModule,
+		NgbModule
+	],
+	providers: [ScreenService, AppInfoService],
+	bootstrap: [RootComponent]
 })
 export class RootModule { }
