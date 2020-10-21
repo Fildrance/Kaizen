@@ -7,11 +7,11 @@ using NLog;
 
 namespace Kaizen.Skill.Service
 {
-    internal class SkillService : MassTransitBusServiceWithDbMigrationBase
+    internal class SkillBackgroundService : MassTransitBusServiceWithDbMigrationBase
     {
-        private static readonly ILogger Logger = LogManager.GetLogger(typeof(SkillService).FullName);
+        private static readonly ILogger Logger = LogManager.GetLogger(typeof(SkillBackgroundService).FullName);
 
-        public SkillService(IBusControl bus, IMigrationRunner migrationRunner) : base(bus, migrationRunner)
+        public SkillBackgroundService(IBusControl bus, IMigrationRunner migrationRunner) : base(bus, migrationRunner)
         {
         }
 

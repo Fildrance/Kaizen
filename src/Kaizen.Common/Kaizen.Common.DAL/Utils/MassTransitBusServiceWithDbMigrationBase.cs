@@ -8,7 +8,7 @@ using Kaizen.Common.Service;
 namespace Kaizen.Common.Utils
 {
 	/// <summary> Base class for background services that use mass-transit bus and relational database with fluent migrator.</summary>
-	public abstract class MassTransitBusServiceWithDbMigrationBase : MassTransitBusServiceBase
+	public abstract class MassTransitBusServiceWithDbMigrationBase : MassTransitBusBackgroundServiceBase
     {
         private readonly IMigrationRunner _migrationRunner;
 

@@ -8,6 +8,7 @@ using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Kaizen.Common.DAL.Configuration;
+using Kaizen.Common.DAL.Discover.EntityExtractor;
 using Kaizen.Common.DAL.Repository;
 using MassTransit;
 using MassTransit.Context;
@@ -109,9 +110,14 @@ namespace Kaizen.Common.DAL.Container
 				builder.UseNpgsql(ConnectionString);
 				builder.UseLoggerFactory(DbLoggerFactory);
 
+				var repoType = typeof(IRepository<,>);
+
 				yield return Component.For<DbContext>().ImplementedBy<CustomDbContext>();
 				yield return Component.For<DbContextOptions>().Instance(builder.Options);
-
+				yield return Component.For(typeof(IFilterAdapter<,>)).ImplementedBy(typeof(GenericFilterAdapter<,>));
+				yield return scanThisAssembly.BasedOn(typeof(IFilterAdapterConcrete<,>)).WithServiceAllInterfaces();
+				yield return scanThisAssembly.BasedOn(repoType).WithServiceFromInterface(repoType);
+				yield return scanThisAssembly.BasedOn(typeof(IAdditionalExtractConfiguration<,>)).WithService.DefaultInterfaces();
 				yield return scanThisAssembly.BasedOn<IContextConfiguration>().WithService.FromInterface();
 
 				if (UsingFluentMigrator)

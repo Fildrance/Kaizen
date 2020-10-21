@@ -7,9 +7,9 @@ using NLog;
 namespace Kaizen.Common.Service
 {
     /// <summary> Base class for background services that use mass-transit bus.</summary>
-    public abstract class MassTransitBusServiceBase : BackgroundService
+    public abstract class MassTransitBusBackgroundServiceBase : BackgroundService
     {
-        protected MassTransitBusServiceBase(IBusControl bus)
+        protected MassTransitBusBackgroundServiceBase(IBusControl bus)
         {
             Bus = bus;
         }

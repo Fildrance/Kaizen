@@ -11,10 +11,10 @@ namespace Kaizen.Skill.Service.Consumers
 {
 	public class SkillCategoryChangeActiveConsumer : RespoundingConsumerBase<SkillCategoryChangeActiveContract, SkillCategoryItem>
 	{
-		private readonly SkillRepository _repository;
+		private readonly ISkillRepository _repository;
 		private readonly IMapper _mapper;
 
-		public SkillCategoryChangeActiveConsumer(SkillRepository repository, IMapper mapper)
+		public SkillCategoryChangeActiveConsumer(ISkillRepository repository, IMapper mapper)
 		{
 			_repository = repository ?? throw new ArgumentNullException(nameof(repository));
 			_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

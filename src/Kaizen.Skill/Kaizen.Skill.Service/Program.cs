@@ -30,7 +30,7 @@ namespace Kaizen.Skill.Service
                 programType.FullName,
                 () => {
                     var skillInstaller = new SkillInstaller(rabbitHost, rabbitUser, rabbitPassword, _connectionString);
-                    return ServiceDALHelper.CreateConsoleHostWithMigratorAndRun<SkillService>(skillInstaller);
+                    return ServiceDALHelper.CreateConsoleHostWithMigratorAndRun<SkillBackgroundService>(skillInstaller);
                 }
             );
         }

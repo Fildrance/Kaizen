@@ -19,5 +19,10 @@ namespace Kaizen.Common.DAL.Discover
 		/// <returns>Found entity or null if entity not found.</returns>
 		[CanBeNull]
 		Task<TEntity> DiscoverAsync([NotNull] TSelector selector);
+
+		/// <summary>
+		/// Prepares discoverer for work.
+		/// </summary>
+		void ConfigureExtractor();
 	}
 }
