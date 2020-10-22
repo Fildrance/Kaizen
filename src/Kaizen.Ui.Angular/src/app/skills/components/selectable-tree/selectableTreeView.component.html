@@ -1,17 +1,22 @@
 <dx-tree-view
-    #treeView
-    [dataSource]="dataSource"
-    itemsExpr="Items"
-    selectionMode="single"
-    selectedExpr="IsSelected"
-    expandedExpr="IsExpanded"
-    showCheckBoxesMode="none"
-    selectByClick="true"
+	#treeView
+	[dataSource]="dataSource"
+	itemsExpr="Items"
+	selectionMode="single"
+	selectedExpr="IsSelected"
+	expandedExpr="IsExpanded"
+	showCheckBoxesMode="none"
+	(onItemSelectionChanged)="selectedChanged($event)"
+	selectByClick="true"
 >
-    <div *dxTemplate="let data of 'item'">
-        <span [ngClass]="{'unsaved':!(data.Name && data.Id), 'inactive':data.IsActive===false}">
-            {{data.Name || 'Новая запись'}} {{data.Id?'':'(не сохранено)'}}
-            {{data.IsActive===false? '(не активно)':''}}
-        </span>
-    </div>
+	<div *dxTemplate="let data of 'item'">
+		<div (click)="selectedChange.emit(data);" class="tree-node-container">
+			<span
+				[ngClass]="{'unsaved':!(data.Name && data.Id), 'inactive':data.IsActive===false, 'selected':data.IsSelected}"
+			>
+				{{data.Name || 'New record'}} {{data.Id?'':'(not saved)'}}
+				{{data.IsActive===false? '(inactive)':''}}
+			</span>
+		</div>
+	</div>
 </dx-tree-view>

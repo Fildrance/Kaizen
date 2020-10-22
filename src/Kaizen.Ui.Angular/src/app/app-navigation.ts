@@ -1,7 +1,7 @@
 export const navigation = [
 	{
 		text: 'Home',
-		path: '/home',
+		path: '/admin',
 		icon: 'home'
 	}
 ];

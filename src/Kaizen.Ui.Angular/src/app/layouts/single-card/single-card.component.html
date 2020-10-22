@@ -1,5 +1,10 @@
-<div class="content-block">
-  <div class="dx-card responsive-paddings">
-    <ng-content></ng-content>
-  </div>
+<div class="content-block dx-theme-material-typography">
+	<div class="dx-card">
+		<div class="kai__card__header">
+			<h4>{{headerText}}</h4>
+		</div>
+		<div class="kai__card__body">
+			<ng-content></ng-content>
+		</div>
+	</div>
 </div>
