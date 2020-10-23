@@ -2,18 +2,18 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Kaizen.Common.DAL.Container;
-using Kaizen.Common.DAL.Repository;
+using Kaizen.Common.Service;
 using Kaizen.Skill.Api;
-using Kaizen.Skill.Api.Filter;
-using Kaizen.Skill.Service.Consumers;
 using Kaizen.Skill.Service.DAL;
 using MassTransit;
-using Microsoft.EntityFrameworkCore;
+using NLog;
 
 namespace Kaizen.Skill.Service.WindsorInstaller
 {
 	public class SkillInstaller : CommonInstaller
 	{
+		private static readonly ILogger Logger = LogManager.GetLogger(typeof(SkillInstaller).FullName);
+
 		private string _rabbitHost;
 		private string _rabbitUser;
 		private string _rabbitPassword;
@@ -35,8 +35,10 @@ namespace Kaizen.Skill.Service.WindsorInstaller
 			ConnectionString = connectionString;
 			RootAssembly = GetType().Assembly;
 		}
+
 		protected override void InstallMore(IWindsorContainer container, IConfigurationStore store)
 		{
+			container.Register(Component.For<ISkillRepository>().ImplementedBy<SkillRepository>().OnCreate(x => x.ConfigureExtractor()));
 		}
 
 		public IBusControl MyBusFactory(IWindsorContainer container)
@@ -46,16 +48,7 @@ namespace Kaizen.Skill.Service.WindsorInstaller
 				_rabbitHost,
 				_rabbitUser,
 				_rabbitPassword,
-				(cfg, container) =>
-				{
-					cfg.ReceiveEndpoint(SkillConstants.IncomingQueueName,
-						endpoint =>
-						{
-							endpoint.Consumer<SkillCategoryCreateConsumer>(container);
-							endpoint.Consumer<SkillCategoryChangeActiveConsumer>(container);
-						}
-					);
-				}
+				(cfg, container) => cfg.AllServiceConsumersToEndpoint(SkillConstants.IncomingQueueName, container, RootAssembly, Logger)
 			);
 		}
 	}

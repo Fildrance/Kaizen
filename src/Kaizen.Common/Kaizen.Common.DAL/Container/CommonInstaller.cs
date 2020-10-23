@@ -96,7 +96,7 @@ namespace Kaizen.Common.DAL.Container
 			{
 				var consumerInterface = typeof(IConsumer<>);
 
-				yield return scanThisAssembly.BasedOn(consumerInterface).WithService.FromInterface().WithServiceSelf();
+				yield return scanThisAssembly.BasedOn(consumerInterface).WithService.AllInterfaces().WithServiceSelf();
 			}
 			if (UsingDatabase)
 			{
@@ -110,13 +110,10 @@ namespace Kaizen.Common.DAL.Container
 				builder.UseNpgsql(ConnectionString);
 				builder.UseLoggerFactory(DbLoggerFactory);
 
-				var repoType = typeof(IRepository<,>);
-
 				yield return Component.For<DbContext>().ImplementedBy<CustomDbContext>();
 				yield return Component.For<DbContextOptions>().Instance(builder.Options);
 				yield return Component.For(typeof(IFilterAdapter<,>)).ImplementedBy(typeof(GenericFilterAdapter<,>));
 				yield return scanThisAssembly.BasedOn(typeof(IFilterAdapterConcrete<,>)).WithServiceAllInterfaces();
-				yield return scanThisAssembly.BasedOn(repoType).WithServiceFromInterface(repoType);
 				yield return scanThisAssembly.BasedOn(typeof(IAdditionalExtractConfiguration<,>)).WithService.DefaultInterfaces();
 				yield return scanThisAssembly.BasedOn<IContextConfiguration>().WithService.FromInterface();
 

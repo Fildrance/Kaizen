@@ -30,9 +30,17 @@ namespace Kaizen.ApiGateway.Controllers
 
 		[HttpGet]
 		[Route("api/skill-category/list")]
-		public Task<Page<SkillCategoryItem>> List(SkillCategoryFilterContract filter)
+		public Task<Page<SkillCategoryItem>> List([FromQuery]SkillCategoryFilterContract filter)
 		{
+			filter = filter ?? new SkillCategoryFilterContract();
 			return _service.Query(filter);
+		}
+
+		[HttpPut]
+		[Route("api/skill-category")]
+		public Task<SkillCategoryItem> Update(SkillCategoryUpdateContract contract)
+		{
+			return _service.Update(contract);
 		}
 	}
 }
