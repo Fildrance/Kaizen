@@ -123,19 +123,18 @@ export class SkillManagerComponent implements OnDestroy {
 	private save(): void {
 		let observable: Observable<SkillCategoryItem>;
 		if (this.Selected.Id) {
-			const contract: SkillCategoryCreateContract = {
-				Name: this.Selected.Name,
-				ShortDescription: this.Selected.ShortDescription
-			};
-			observable = this.client.create(contract);
-		} else {
 			const contract: SkillCategoryUpdateContract = {
 				ToUpdate: { Id: this.Selected.Id },
 				Name: this.Selected.Name,
 				ShortDescription: this.Selected.ShortDescription
 			};
-
 			observable = this.client.update(contract);
+		} else {
+			const contract: SkillCategoryCreateContract = {
+				Name: this.Selected.Name,
+				ShortDescription: this.Selected.ShortDescription
+			};
+			observable = this.client.create(contract);
 		}
 		observable.subscribe(x => {
 			Object.assign(this.Selected, x);

@@ -1,9 +1,9 @@
-.unsaved ::ng-deep{
+:host ::ng-deep .unsaved {
     color: darkcyan;
     font-weight: 800;
 }
 
-.inactive ::ng-deep{
+:host ::ng-deep .inactive {
     color: lightgrey;
     font-weight: 100;
 }
@@ -37,9 +37,9 @@
     display: inline-flex;
 }
 
-::ng-deep .dx-treeview-item{
+:host ::ng-deep .dx-treeview-item{
 	padding: 0px;
 }
-::ng-deep .tree-node-container{
+:host ::ng-deep .tree-node-container{
 	padding: 13px 8px
 }
