@@ -1,4 +1,5 @@
-﻿using Kaizen.ApiGateway.Controllers;
+﻿using JetBrains.Annotations;
+using Kaizen.ApiGateway.Controllers;
 using Kaizen.Skill.Api.Create;
 using Kaizen.Skill.Api.Filter;
 using Kaizen.Skill.Api.Items;
@@ -22,6 +23,11 @@ namespace Kaizen.Skill.Api.Services
 		public Task<Page<SkillCategoryItem>> Query(SkillCategoryFilterContract filter)
 		{
 			return DoRequest<SkillCategoryFilterContract, Page<SkillCategoryItem>>(filter);
+		}
+
+		public Task<SkillCategoryItem> Update([NotNull] SkillCategoryUpdateContract contract)
+		{
+			return DoRequest<SkillCategoryUpdateContract, SkillCategoryItem>(contract);
 		}
 	}
 }

@@ -19,6 +19,17 @@ namespace Kaizen.Skill.Api.Services
 		/// <returns>Promise of created record. </returns>
 		[NotNull]
 		Task<SkillCategoryItem> Create([NotNull] SkillCategoryCreateContract contract);
+
+		/// <summary>
+		/// Updates existing skill category.
+		/// </summary>
+		/// <param name="contract">Contract to be used in update. Contains selector of object to be updated</param>
+		/// <exception cref="ArgumentNullException">Thrown if <see cref="contract"/> is null. </exception>
+		/// <exception cref="RequestException">Thrown if mass transit returned exception from client call. </exception>
+		/// <returns>Promise of created record. </returns>
+		[NotNull]
+		Task<SkillCategoryItem> Update([NotNull] SkillCategoryUpdateContract contract);
+
 		/// <summary>
 		/// Queries skill categories.
 		/// </summary>
