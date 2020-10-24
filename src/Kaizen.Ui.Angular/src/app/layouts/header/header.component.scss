@@ -19,6 +19,10 @@
   }
 }
 
+:host ::ng-deep .dx-toolbar .dx-toolbar-items-container{
+  height: 48px;
+}
+
 :host ::ng-deep .dx-toolbar .dx-toolbar-item.menu-button {
   width: $side-panel-min-width;
   text-align: center;
