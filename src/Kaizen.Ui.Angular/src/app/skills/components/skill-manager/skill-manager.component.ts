@@ -101,13 +101,18 @@ export class SkillManagerComponent implements OnDestroy {
 
 	private tryNavigate(value: SkillBase & TreeNode): void {
 
-		if (!value || value === this.Selected) {
+		if (value === this.Selected) {
+			return;
+		}
+		const path = ['admin', 'skill'];
+		if (!value) {
+			this.router.navigate(path);
 			return;
 		}
 
 		const routeByType = this.routesByTypes.get(value.NodeType);
+		path.push(routeByType);
 
-		const path = ['admin', 'skill', routeByType];
 		if (HasId(value)) {
 			path.push(value.Id.toString());
 		}

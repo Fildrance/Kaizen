@@ -87,6 +87,8 @@ services:
     - skilldata:/var/lib/postgresql/data
   networks:
     - backend
+  ports:
+    - 5666:5432
   environment:
     - POSTGRES_USER=uliss
     - POSTGRES_PASSWORD=lOTUzZsAqSQW2gVf
