@@ -28,9 +28,8 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/devextreme/dist/css/dx.common.css",
-              "src/themes/generated/theme.base.css",
-              "src/themes/generated/theme.additional.css",
+			  "node_modules/devextreme/dist/css/dx.common.css",
+			  "node_modules/devextreme/dist/css/dx.material.orange.dark.css",
 			  "src/dx-styles.scss",
 			  "node_modules/bootstrap/scss/bootstrap.scss",
               "src/styles.scss"

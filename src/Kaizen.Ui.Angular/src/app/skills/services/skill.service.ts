@@ -20,5 +20,3 @@ export interface SkillService {
 
 	toggleActive(contract: SkillCategoryChangeActiveContract): Observable<SkillCategoryItem>;
 }
-
-

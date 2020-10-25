@@ -15,7 +15,8 @@
   .menu-container {
     min-height: 100%;
     display: flex;
-    flex: 1;
+	flex: 1;
+	background-color: #363640;
 
     ::ng-deep .dx-treeview {
       // ## Long text positioning
