@@ -6,9 +6,6 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using FluentValidation;
 using Kaizen.Common.Service;
-using Kaizen.Skill.Api;
-using Kaizen.Skill.Api.Create;
-using Kaizen.Skill.Api.Deactivate;
 using MassTransit;
 using MassTransit.Context;
 using NLog.Extensions.Logging;
@@ -49,8 +46,6 @@ namespace Kaizen.ApiGateway.WindsorInstaller
 					);
 					cfg.UseSendFilter(typeof(ValidatingSendFilter<>), context);
 				});
-				x.AddRequestClient<SkillCategoryCreateContract>(RabbitUriHelper.QueueUri(SkillConstants.IncomingQueueName));
-				x.AddRequestClient<SkillCategoryChangeActiveContract>(RabbitUriHelper.QueueUri(SkillConstants.IncomingQueueName));
 			});
 
 			container.Register(

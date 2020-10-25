@@ -1,5 +1,6 @@
 ﻿using Kaizen.Common.DAL.Repository;
 using Kaizen.Skill.Api.Filter;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace Kaizen.Skill.Service.DAL
 	{
 		public Task<IQueryable<SkillCategoryEntity>> ApplySortAsync(IQueryable<SkillCategoryEntity> query, SkillCategoryFilterContract filter)
 		{
+			query = query.Include(x => x.Skils);
 			if (filter.IncludeActive == IncludeActiveOption.IncludeOnlyActive)
 			{
 				query = query.Where(x => x.IsActive);

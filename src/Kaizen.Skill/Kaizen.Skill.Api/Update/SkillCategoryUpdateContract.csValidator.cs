@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using Kaizen.Skill.Api.Selector;
+using Kaizen.Skill.Api.Selectors;
+using Kaizen.Skill.Api.Update;
 
 namespace Kaizen.Skill.Api.Create
 {

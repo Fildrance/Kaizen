@@ -2,11 +2,11 @@
 
 namespace Kaizen.Skill.Api.Update
 {
-	public class SkillCategoryUpdateContract
+	public class SkillUpdateContract
 	{
+		public SkillSelector ToUpdate { get; set; }
 		public string Name { get; set; }
 		public string ShortDescription { get; set; }
-		public bool? IsActive { get; set; }
-		public SkillCategorySelector ToUpdate { get; set; }
+		public bool? IsActive { get; set; }		
 	}
 }

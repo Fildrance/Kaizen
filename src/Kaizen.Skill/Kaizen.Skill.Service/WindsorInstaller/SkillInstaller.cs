@@ -18,7 +18,7 @@ namespace Kaizen.Skill.Service.WindsorInstaller
 		private string _rabbitUser;
 		private string _rabbitPassword;
 
-		public SkillInstaller(string rabbitHost, string rabbitUser, string rabbitPassword, string connectionString)
+		public SkillInstaller(string rabbitHost, string rabbitUser, string rabbitPassword, string connectionString) : base(typeof(SkillInstaller).Assembly)
 		{
 			_rabbitHost = rabbitHost;
 			_rabbitUser = rabbitUser;
@@ -33,12 +33,14 @@ namespace Kaizen.Skill.Service.WindsorInstaller
 			UsingFluentMigrator = true;
 
 			ConnectionString = connectionString;
-			RootAssembly = GetType().Assembly;
 		}
 
 		protected override void InstallMore(IWindsorContainer container, IConfigurationStore store)
 		{
-			container.Register(Component.For<ISkillRepository>().ImplementedBy<SkillRepository>().OnCreate(x => x.ConfigureExtractor()));
+			container.Register(
+				Component.For<ISkillCategoryRepository>().ImplementedBy<SkillCategoryRepository>().OnCreate(x => x.ConfigureExtractor()),
+				Component.For<ISkillRepository>().ImplementedBy<SkillRepository>().OnCreate(x => x.ConfigureExtractor())
+			);
 		}
 
 		public IBusControl MyBusFactory(IWindsorContainer container)

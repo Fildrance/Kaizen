@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Kaizen.Skill.Api.Services
+namespace Kaizen.Common.Service
 {
 	/// <summary> Base class for services that make MassTransit Request calls.</summary>
 	public abstract class BusBasedService

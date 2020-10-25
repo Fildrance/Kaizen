@@ -1,8 +1,9 @@
 ﻿using Kaizen.Skill.Api.Create;
-using Kaizen.Skill.Api.Deactivate;
+using Kaizen.Skill.Api.ToggleActive;
 using Kaizen.Skill.Api.Filter;
 using Kaizen.Skill.Api.Items;
 using Kaizen.Skill.Api.Services;
+using Kaizen.Skill.Api.Update;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 using System;
@@ -47,6 +48,27 @@ namespace Kaizen.ApiGateway.Controllers
 		[HttpPost]
 		[Route("api/skill-category/toggle-activity")]
 		public Task<SkillCategoryItem> ToggleActive(SkillCategoryChangeActiveContract contract)
+		{
+			return _service.ChangeActvie(contract);
+		}
+
+		[HttpPost]
+		[Route("api/skill")]
+		public Task<SkillItem> Create(SkillCreateContract contract)
+		{
+			return _service.Create(contract);
+		}
+
+		[HttpPut]
+		[Route("api/skill")]
+		public Task<SkillItem> Update(SkillUpdateContract contract)
+		{
+			return _service.Update(contract);
+		}
+
+		[HttpPost]
+		[Route("api/skill/toggle-activity")]
+		public Task<SkillItem> ToggleActive(SkillChangeActiveContract contract)
 		{
 			return _service.ChangeActvie(contract);
 		}

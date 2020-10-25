@@ -3,10 +3,9 @@ using Kaizen.Skill.Api.Selectors;
 
 namespace Kaizen.Skill.Api.ToggleActive
 {
-	public class SkillCategoryChangeActiveContract
+	public class SkillChangeActiveContract
 	{
-		[NotNull]
-		public SkillCategorySelector ToUpdate { get; set; }
+		public SkillSelector ToUpdate { get; set; }
 		[NotNull]
 		public bool? IsActive { get; set; }
 	}

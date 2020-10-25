@@ -3,9 +3,9 @@ using Kaizen.Skill.Api.Selectors;
 
 namespace Kaizen.Skill.Api.ToggleActive
 {
-	public class SkillCategoryChangeActiveContractValidator: AbstractValidator<SkillCategoryChangeActiveContract>
+	public class SkillChangeActiveContractValidator : AbstractValidator<SkillChangeActiveContract>
 	{
-		public SkillCategoryChangeActiveContractValidator(IValidator<SkillCategorySelector> selectorValidator)
+		public SkillChangeActiveContractValidator(IValidator<SkillSelector> selectorValidator)
 		{
 			RuleFor(x => x.IsActive).NotNull();
 			RuleFor(x => x.ToUpdate).NotNull().SetValidator(selectorValidator);

@@ -1,9 +1,10 @@
 ﻿using JetBrains.Annotations;
 using Kaizen.ApiGateway.Controllers;
 using Kaizen.Skill.Api.Create;
-using Kaizen.Skill.Api.Deactivate;
+using Kaizen.Skill.Api.ToggleActive;
 using Kaizen.Skill.Api.Filter;
 using Kaizen.Skill.Api.Items;
+using Kaizen.Skill.Api.Update;
 using System.Threading.Tasks;
 
 namespace Kaizen.Skill.Api.Services
@@ -48,5 +49,34 @@ namespace Kaizen.Skill.Api.Services
 		/// <returns>Promise of paged items. </returns>
 		[NotNull]
 		Task<Page<SkillCategoryItem>> Query([NotNull] SkillCategoryFilterContract filter);
+
+		/// <summary>
+		/// Creates skill.
+		/// </summary>
+		/// <param name="contract">Contract to be used in creation.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <see cref="contract"/> is null. </exception>
+		/// <exception cref="RequestException">Thrown if mass transit returned exception from client call. </exception>
+		/// <returns>Promise of created record. </returns>
+		[NotNull]
+		Task<SkillItem> Create([NotNull] SkillCreateContract contract);
+
+		/// <summary>
+		/// Updates existing skill.
+		/// </summary>
+		/// <param name="contract">Contract to be used in update. Contains selector of object to be updated. </param>
+		/// <exception cref="ArgumentNullException">Thrown if <see cref="contract"/> is null. </exception>
+		/// <exception cref="RequestException">Thrown if mass transit returned exception from client call. </exception>
+		/// <returns>Promise of created record. </returns>
+		[NotNull]
+		Task<SkillItem> Update([NotNull] SkillUpdateContract contract);
+
+		/// <summary>
+		/// Change activity state of skill.
+		/// </summary>
+		/// <param name="contract">Contract to be used in activity change. Contains selector of object to be updated. </param>
+		/// <returns>Promise of changed record. </returns>
+		[NotNull]
+		Task<SkillItem> ChangeActvie([NotNull] SkillChangeActiveContract contract);
+
 	}
 }

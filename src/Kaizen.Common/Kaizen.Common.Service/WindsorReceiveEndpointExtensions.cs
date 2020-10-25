@@ -27,9 +27,9 @@ namespace Kaizen.Common.Service
 		/// <summary> Registers list of consumer types to listen on mentioned queue. </summary>
 		/// <remarks> This registration doesn't use scoped way of consumer generation, this may lead to unpleasant side effects, so best approach is to not use stateful consumers.</remarks>
 		public static void AllServiceConsumersToEndpoint<TEndpointConfigurator>(
-			this IReceiveConfigurator<TEndpointConfigurator> cfg, 
-			string queueName, 
-			IWindsorContainer container, 
+			this IReceiveConfigurator<TEndpointConfigurator> cfg,
+			string queueName,
+			IWindsorContainer container,
 			Assembly consumerAssembly,
 			ILogger logger = null
 		)
@@ -40,7 +40,7 @@ namespace Kaizen.Common.Service
 				{
 					var implementations = container.Kernel.GetAssignableHandlers(typeof(IConsumer))
 						.Select(x => x.ComponentModel.Implementation).Where(x => x.Assembly == consumerAssembly).ToArray();
-					if(null != logger)
+					if (null != logger)
 					{
 						var message = new StringBuilder();
 						message.Append("Starting to watch endpoint " + queueName + " using following consumers:");
@@ -56,6 +56,5 @@ namespace Kaizen.Common.Service
 				}
 			);
 		}
-
 	}
 }

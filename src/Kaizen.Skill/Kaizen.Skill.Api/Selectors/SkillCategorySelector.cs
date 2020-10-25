@@ -1,4 +1,4 @@
-﻿namespace Kaizen.Skill.Api.Selector
+﻿namespace Kaizen.Skill.Api.Selectors
 {
 	public class SkillCategorySelector
 	{

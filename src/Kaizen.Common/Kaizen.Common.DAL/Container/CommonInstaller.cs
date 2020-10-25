@@ -11,11 +11,11 @@ using Kaizen.Common.DAL.Configuration;
 using Kaizen.Common.DAL.Discover.EntityExtractor;
 using Kaizen.Common.DAL.Repository;
 using MassTransit;
-using MassTransit.Context;
 using MassTransit.RabbitMqTransport;
 using MassTransit.WindsorIntegration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NLog;
 using NLog.Extensions.Logging;
 using IRegistration = Castle.MicroKernel.Registration.IRegistration;
 
@@ -30,20 +30,20 @@ namespace Kaizen.Common.DAL.Container
 		public bool UsingDatabase { get; set; }
 		public string ConnectionString { get; set; }
 		public bool UsingMapper { get; set; }
-		public Assembly RootAssembly { get; set; }
+		public Assembly RootAssembly { get; }
 		public bool ScanConsumers { get; set; }
 		public bool UseMassTransit { get; set; }
 		public Func<IBusRegistrationContext, IWindsorContainer, IBusControl> BusFactory { get; set; }
 		public Action<IWindsorContainerBusConfigurator> ConfigBus { get; set; }
 		public bool UsingFluentMigrator { get; set; }
 
+		public CommonInstaller(Assembly rootAssembly)
+		{
+			RootAssembly = rootAssembly ?? throw new ArgumentNullException($"Cannot install '{this.GetType().FullName}' - no value of {nameof(RootAssembly)}."); ;
+		}
+
 		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
-			if (null == RootAssembly)
-			{
-				throw new InvalidOperationException($"Cannot install '{this.GetType().FullName}' - no value set in {nameof(RootAssembly)} property.");
-			}
-
 			container.Kernel.Resolver.AddSubResolver(new CollectionResolver(container.Kernel, true));
 
 			var registrations = GenerateRegistrations(container);
@@ -87,11 +87,19 @@ namespace Kaizen.Common.DAL.Container
 
 		private IEnumerable<IRegistration> GenerateRegistrations(IWindsorContainer container)
 		{
-			// setup mass transit to log to nlog
-			LogContext.ConfigureCurrentLogContext(new NLogLoggerFactory());
-
 			var scanThisAssembly = Classes.FromAssemblyInThisApplication(RootAssembly);
 
+			var opts = new NLogProviderOptions
+			{
+				CaptureMessageProperties = true,
+				IgnoreEmptyEventId = false,
+				IncludeScopes = true,
+				ShutdownOnDispose = true
+			};
+			var provider = new NLogLoggerProvider(opts, LogManager.LogFactory);
+			var factory = new NLogLoggerFactory(provider);
+			
+			yield return Component.For<ILoggerFactory>().Instance(factory).IsDefault();
 			if (ScanConsumers)
 			{
 				var consumerInterface = typeof(IConsumer<>);
