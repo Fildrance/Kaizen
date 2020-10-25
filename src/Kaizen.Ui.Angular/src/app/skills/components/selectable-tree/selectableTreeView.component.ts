@@ -16,7 +16,12 @@ export class SelectableTreeViewComponent<T extends TreeNode> {
 
 	@Input()
 	public set selected(value: T) {
-		if (this.tree && this.tree.instance) {
+		if (
+			this.tree
+			&& this.tree.instance
+			&& this.tree.instance.getSelectedNodes()[0]
+			&& this.tree.instance.getSelectedNodes()[0].itemData !== value
+		) {
 			this.tree.instance.selectItem(value);
 		}
 	}

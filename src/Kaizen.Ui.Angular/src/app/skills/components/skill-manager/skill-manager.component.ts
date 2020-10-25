@@ -1,14 +1,15 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import DataSource from 'devextreme/data/data_source';
 import CustomStore from 'devextreme/data/custom_store';
 
-import { SkillService } from '../../services/skill.service';
+import { SkillService, SkillServiceToken } from '../../services/skill.service';
 import { DxButtonOptions, RoutesByTypes } from '../../../shared/models/shared-models';
 import {
 	SkillBase,
+	SkillCategoryChangeActiveContract,
 	SkillCategoryCreateContract,
 	SkillCategoryItem,
 	SkillCategoryUpdateContract,
@@ -16,6 +17,7 @@ import {
 } from '../../models/skill-models';
 import { SkillManagerState } from '../../models/skill-manager-state';
 import { createCustomStoreOptions } from '../selectable-tree/filterable-tree-data-source';
+import { HasId } from 'src/app/shared/services/utils.service';
 
 @Component({
 	templateUrl: 'skill-manager.component.html',
@@ -35,9 +37,10 @@ export class SkillManagerComponent implements OnDestroy {
 
 	private selected: TreeNode & SkillBase;
 	private store: CustomStore;
+	private subscription: Subscription = new Subscription();
 
 	constructor(
-		private client: SkillService,
+		@Inject(SkillServiceToken) private client: SkillService,
 		private router: Router,
 		private routesByTypes: RoutesByTypes,
 		private state: SkillManagerState,
@@ -77,14 +80,23 @@ export class SkillManagerComponent implements OnDestroy {
 				this.save();
 			}
 		};
+		this.toggleActiveButtonOptions = {
+			icon: 'isblank',
+			text: 'toggle active',
+			onClick: () => {
+				this.toggleActive();
+			}
+		};
 	}
 
 	public refreshButtonOptions: DxButtonOptions;
 	public addButtonOptions: DxButtonOptions;
 	public saveButtonOptions: DxButtonOptions;
+	public toggleActiveButtonOptions: DxButtonOptions;
 
 	public ngOnDestroy(): void {
 		this.Selected = null;
+		this.subscription.unsubscribe();
 	}
 
 	private tryNavigate(value: SkillBase & TreeNode): void {
@@ -96,7 +108,7 @@ export class SkillManagerComponent implements OnDestroy {
 		const routeByType = this.routesByTypes.get(value.NodeType);
 
 		const path = ['admin', 'skill', routeByType];
-		if (value.Id) {
+		if (HasId(value)) {
 			path.push(value.Id.toString());
 		}
 
@@ -104,7 +116,7 @@ export class SkillManagerComponent implements OnDestroy {
 	}
 
 	private addNew(): void {
-		const alreadyExistingUnsaved = this.dataSource.items().find(i => !i.Id);
+		const alreadyExistingUnsaved = this.dataSource.items().find(i => !HasId(i));
 		if (alreadyExistingUnsaved) {
 			this.Selected = alreadyExistingUnsaved;
 			return;
@@ -115,14 +127,14 @@ export class SkillManagerComponent implements OnDestroy {
 		this.store.insert(newRecord);
 		this.dataSource.reload()
 			.then(() => {
-				const newItem = this.dataSource.items().find(i => !i.Id);
+				const newItem = this.dataSource.items().find(i => !HasId(i));
 				this.Selected = newItem;
 			});
 	}
 
 	private save(): void {
 		let observable: Observable<SkillCategoryItem>;
-		if (this.Selected.Id) {
+		if (HasId(this.Selected)) {
 			const contract: SkillCategoryUpdateContract = {
 				ToUpdate: { Id: this.Selected.Id },
 				Name: this.Selected.Name,
@@ -136,9 +148,23 @@ export class SkillManagerComponent implements OnDestroy {
 			};
 			observable = this.client.create(contract);
 		}
-		observable.subscribe(x => {
-			Object.assign(this.Selected, x);
-			this.Selected = x;
-		});
+		this.subscription.add(
+			observable.subscribe(x => {
+				this.dataSource.reload();
+			})
+		);
+	}
+
+	private toggleActive(): void {
+		const contract: SkillCategoryChangeActiveContract = {
+			ToUpdate: { Id: this.Selected.Id },
+			IsActive: !this.Selected.IsActive
+		};
+		const observable = this.client.toggleActive(contract);
+		this.subscription.add(
+			observable.subscribe(x => {
+				this.dataSource.reload();
+			})
+		);
 	}
 }

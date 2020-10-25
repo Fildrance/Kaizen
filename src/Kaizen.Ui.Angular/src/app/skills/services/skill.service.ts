@@ -1,14 +1,24 @@
+import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Page } from '../../shared/models/shared-models';
-import { SkillCategoryCreateContract, SkillCategoryItem, SkillCategoryUpdateContract } from '../models/skill-models';
+import {
+	SkillCategoryChangeActiveContract,
+	SkillCategoryCreateContract,
+	SkillCategoryItem,
+	SkillCategoryUpdateContract
+} from '../models/skill-models';
 
-export abstract class SkillService {
-	public abstract create(contract: SkillCategoryCreateContract): Observable<SkillCategoryItem>;
+export const SkillServiceToken = new InjectionToken('SkillServiceInterface')
 
-	public abstract query(): Observable<Page<SkillCategoryItem>>;
+export interface SkillService {
+	create(contract: SkillCategoryCreateContract): Observable<SkillCategoryItem>;
 
-	public abstract update(contract: SkillCategoryUpdateContract): Observable<SkillCategoryItem>;
+	query(): Observable<Page<SkillCategoryItem>>;
+
+	update(contract: SkillCategoryUpdateContract): Observable<SkillCategoryItem>;
+
+	toggleActive(contract: SkillCategoryChangeActiveContract): Observable<SkillCategoryItem>;
 }
 
 

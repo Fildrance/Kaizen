@@ -9,7 +9,7 @@ export interface SkillBase {
 export interface TreeNode {
 	Id: number;
 	Name: string;
-	IsSelected: boolean;
+	IsSelected?: boolean;
 	IsActive: boolean;
 	Items?: TreeNode[];
 	NodeType?: string;
@@ -27,6 +27,11 @@ export interface SkillCategoryCreateContract {
 export interface SkillCategoryUpdateContract {
 	Name?: string;
 	ShortDescription?: string;
+	IsActive?: boolean;
+	ToUpdate: { Id: number };
+}
+
+export interface SkillCategoryChangeActiveContract {
 	IsActive?: boolean;
 	ToUpdate: { Id: number };
 }

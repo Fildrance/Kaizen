@@ -9,6 +9,7 @@ export class DxButtonOptions {
 	icon?: string;
 	type?: string;
 	onClick: () => void;
+	text?: string;
 }
 
 @Injectable()

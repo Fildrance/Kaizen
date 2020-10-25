@@ -17,15 +17,15 @@ namespace Kaizen.Skill.Service
 
         protected override ILogger СurrentLogger => Logger;
 
+        protected override string ServiceName => "Skill service";
+
 		public override Task StartAsync(CancellationToken cancellationToken)
         {
-            Logger.Info("Starting skill service.");
             return base.StartAsync(cancellationToken);
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            Logger.Info("Stopping skill service.");
             return base.StopAsync(cancellationToken);
         }
     }

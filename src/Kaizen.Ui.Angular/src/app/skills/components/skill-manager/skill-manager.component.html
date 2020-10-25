@@ -23,6 +23,14 @@
 					*ngIf="Selected"
 				>
 				</dxi-item>
+				<dxi-item
+					location="before"
+					widget="dxButton"
+					locateInMenu="auto"
+					[options]="toggleActiveButtonOptions"
+					*ngIf="Selected"
+				>
+				</dxi-item>
 			</dx-toolbar>
 			<kai-selectable-tree-view
 				[dataSource]="dataSource"

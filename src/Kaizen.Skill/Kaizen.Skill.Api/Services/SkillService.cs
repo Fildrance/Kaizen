@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Kaizen.ApiGateway.Controllers;
 using Kaizen.Skill.Api.Create;
+using Kaizen.Skill.Api.Deactivate;
 using Kaizen.Skill.Api.Filter;
 using Kaizen.Skill.Api.Items;
 using MassTransit;
@@ -13,6 +14,11 @@ namespace Kaizen.Skill.Api.Services
 	{
 		public SkillService(IBusControl busControl) : base(busControl)
 		{
+		}
+
+		public Task<SkillCategoryItem> ChangeActvie([NotNull] SkillCategoryChangeActiveContract contract)
+		{
+			return DoRequest<SkillCategoryChangeActiveContract, SkillCategoryItem>(contract);
 		}
 
 		public Task<SkillCategoryItem> Create(SkillCategoryCreateContract contract)

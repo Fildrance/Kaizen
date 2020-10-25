@@ -16,9 +16,11 @@ namespace Kaizen.Common.Service
 
         protected IBusControl Bus { get; }
         protected abstract ILogger СurrentLogger{get;}
+		protected abstract string ServiceName { get; }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+		protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            СurrentLogger.Info($"Starting {ServiceName}.");
             return Bus.StartAsync(stoppingToken).ContinueWith(x=>{
                 СurrentLogger.Info("Started bus.");
             });
@@ -26,6 +28,7 @@ namespace Kaizen.Common.Service
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
+            СurrentLogger.Info($"Stopping {ServiceName}.");
             return Task.WhenAll(base.StopAsync(cancellationToken), Bus.StopAsync(cancellationToken));
         }
     }

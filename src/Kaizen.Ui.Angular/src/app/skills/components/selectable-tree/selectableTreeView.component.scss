@@ -1,11 +1,18 @@
-:host ::ng-deep .unsaved {
-    color: darkcyan;
-    font-weight: 800;
-}
-
-:host ::ng-deep .inactive {
-    color: lightgrey;
-    font-weight: 100;
+:host ::ng-deep {
+	.unsaved {
+		color: darkcyan;
+		font-weight: 800;
+	}
+	.inactive {
+		color: #929191;
+		font-weight: 100;
+	}
+	.dx-treeview-item{
+		padding: 0px;
+	}
+	.dx-template-wrapper.dx-item-content.dx-treeview-item-content{
+		padding: 13px 8px;
+	}
 }
 
 .toolbar .button{
@@ -35,11 +42,4 @@
     width: 140px;
     float: right;
     display: inline-flex;
-}
-
-:host ::ng-deep .dx-treeview-item{
-	padding: 0px;
-}
-:host ::ng-deep .tree-node-container{
-	padding: 13px 8px
 }

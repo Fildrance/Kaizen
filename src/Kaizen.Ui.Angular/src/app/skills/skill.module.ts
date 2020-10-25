@@ -11,9 +11,11 @@ import { SelectableTreeViewComponent } from './components/selectable-tree/select
 import { SkillCategoryComponent } from './components/skill-category/skill-category.component';
 import { SkillManagerComponent } from './components/skill-manager/skill-manager.component';
 import { SkillManagerState } from './models/skill-manager-state';
-import { SkillService } from './services/skill.service';
 import { SkillServiceImpl } from './services/skill.service.impl';
-import { SkillServiceStub } from './services/stub/skill.service.stub';
+import { SkillServiceToken } from './services/skill.service';
+import { SkillServiceStub } from './services/skill.service.stub';
+
+
 
 const map = new Map<string, string>();
 map.set('skill-category', 'skill-category');
@@ -34,7 +36,7 @@ const routesByTypes = new RoutesByTypes(map);
 		DxToolbarModule
 	],
 	providers: [
-		{ provide: SkillService, useClass: environment.useStubs ? SkillServiceStub : SkillServiceImpl },
+		{ provide: SkillServiceToken, useClass: environment.useStubs ? SkillServiceStub : SkillServiceImpl },
 		{ provide: RoutesByTypes, useValue: routesByTypes },
 		SkillManagerState
 	],

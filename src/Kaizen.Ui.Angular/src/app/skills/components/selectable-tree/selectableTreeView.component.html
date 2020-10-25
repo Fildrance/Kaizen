@@ -10,13 +10,11 @@
 	selectByClick="true"
 >
 	<div *dxTemplate="let data of 'item'">
-		<div (click)="selectedChange.emit(data);" class="tree-node-container">
-			<span
-				[ngClass]="{'unsaved':!(data.Name && data.Id), 'inactive':data.IsActive===false, 'selected':data.IsSelected}"
-			>
-				{{data.Name || 'New record'}} {{data.Id?'':'(not saved)'}}
-				{{data.IsActive===false? '(inactive)':''}}
-			</span>
-		</div>
+		<span
+			[ngClass]="{ 'unsaved': !(data.Name && data.Id), 'inactive': data.IsActive===false, 'selected': data.IsSelected }"
+		>
+			{{data.Name || 'New record'}} {{data.Id?'':'(not saved)'}}
+			{{data.IsActive===false? '(inactive)':''}}
+		</span>
 	</div>
 </dx-tree-view>
