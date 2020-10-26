@@ -1,15 +1,15 @@
 <ng-container *ngIf="data">
-	<h5>Skill category {{data.Name}} {{data.IsActive?'':'(inactive)'}}</h5>
+	<h5>Skill {{data.Name}} {{data.IsActive?'':'(inactive)'}}</h5>
 	<fieldset>
 		<legend class="heading-line">
 			<b>General info</b>
 		</legend>
 		<div class="dx-fieldset col-md-6">
 			<div class="dx-field">
-				<div class="dx-field-label">Skill category name</div>
+				<div class="dx-field-label">Skill name</div>
 				<dx-text-box
 					[(value)]="data.Name"
-					placeholder="Enter name of category"
+					placeholder="Enter name of skill"
 					[disabled]="!canEdit"
 					valueChangeEvent="keyup"
 				>
@@ -22,7 +22,7 @@
 				<dx-text-area
 					[(value)]="data.ShortDescription"
 					[disabled]="!canEdit"
-					placeholder="Enter short description of category"
+					placeholder="Enter short description of skill"
 					autoResizeEnabled="true"
 				>
 				</dx-text-area>

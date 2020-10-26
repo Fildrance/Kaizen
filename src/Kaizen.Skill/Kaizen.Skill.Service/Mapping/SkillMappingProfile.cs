@@ -23,7 +23,8 @@ namespace Kaizen.Skill.Service.Mapping
 					return src.IsActive.Value;
 				})
 			);
-			CreateMap<SkillCategoryEntity, SkillCategoryItem>();
+			CreateMap<SkillCategoryEntity, SkillCategoryItem>()
+				.ForMember(x => x.Items, opts => opts.MapFrom(src => src.Skils));
 
 			CreateMap<SkillCreateContract, SkillEntity>()
 				.ForMember(x => x.Category, opts => opts.Ignore());

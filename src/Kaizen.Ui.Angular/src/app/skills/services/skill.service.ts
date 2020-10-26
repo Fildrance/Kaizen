@@ -6,17 +6,27 @@ import {
 	SkillCategoryChangeActiveContract,
 	SkillCategoryCreateContract,
 	SkillCategoryItem,
-	SkillCategoryUpdateContract
+	SkillCategoryUpdateContract,
+	SkillChangeActiveContract,
+	SkillCreateContract,
+	SkillItem,
+	SkillUpdateContract
 } from '../models/skill-models';
 
-export const SkillServiceToken = new InjectionToken('SkillServiceInterface')
+export const SkillServiceToken = new InjectionToken<SkillService>('SkillServiceInterface')
 
 export interface SkillService {
-	create(contract: SkillCategoryCreateContract): Observable<SkillCategoryItem>;
+	createCategory(contract: SkillCategoryCreateContract): Observable<SkillCategoryItem>;
+
+	updateCategory(contract: SkillCategoryUpdateContract): Observable<SkillCategoryItem>;
+
+	createSkill(contract: SkillCreateContract): Observable<SkillItem>;
+
+	updateSkill(contract: SkillUpdateContract): Observable<SkillItem>;
 
 	query(): Observable<Page<SkillCategoryItem>>;
 
-	update(contract: SkillCategoryUpdateContract): Observable<SkillCategoryItem>;
+	toggleActiveCategory(contract: SkillCategoryChangeActiveContract): Observable<SkillCategoryItem>;
 
-	toggleActive(contract: SkillCategoryChangeActiveContract): Observable<SkillCategoryItem>;
+	toggleActiveSkill(contract: SkillChangeActiveContract): Observable<SkillItem>;
 }

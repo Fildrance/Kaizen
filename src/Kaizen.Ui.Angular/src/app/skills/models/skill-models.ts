@@ -6,17 +6,23 @@ export interface SkillBase {
 	IsActive: boolean;
 }
 
-export interface TreeNode {
+export interface SkillCategoryItem extends TreeNode<SkillItem>, SkillBase {
+}
+
+export interface SkillItem extends TreeNode<SkillLevelItem>, SkillBase {
+}
+
+export interface SkillLevelItem extends TreeNode<void>, SkillBase {
+}
+
+export interface TreeNode<TChildType> {
 	Id: number;
 	Name: string;
 	IsSelected?: boolean;
 	IsActive: boolean;
-	Items?: TreeNode[];
+	Items?: Array<TChildType>;
 	NodeType?: string;
-	ItemsFilter?: (items?: Array<TreeNode>) => void;
-}
-
-export interface SkillCategoryItem extends TreeNode, SkillBase {
+	ItemsFilter?: (items?: Array<TreeNode<TChildType>>) => void;
 }
 
 export interface SkillCategoryCreateContract {
@@ -32,6 +38,24 @@ export interface SkillCategoryUpdateContract {
 }
 
 export interface SkillCategoryChangeActiveContract {
+	IsActive?: boolean;
+	ToUpdate: { Id: number };
+}
+
+export interface SkillCreateContract {
+	Name?: string;
+	ShortDescription?: string;
+	Parent: { Id: number }
+}
+
+export interface SkillUpdateContract {
+	Name?: string;
+	ShortDescription?: string;
+	IsActive?: boolean;
+	ToUpdate: { Id: number };
+}
+
+export interface SkillChangeActiveContract {
 	IsActive?: boolean;
 	ToUpdate: { Id: number };
 }

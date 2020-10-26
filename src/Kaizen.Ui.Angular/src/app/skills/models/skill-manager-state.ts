@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 
-import { SkillCategoryItem } from './skill-models';
+import { SkillBase, TreeNode } from './skill-models';
 
 
 @Injectable()
 export class SkillManagerState {
 
-	private selectedNode$: Subject<SkillCategoryItem>;
+	private selectedNode$: Subject<SkillBase& TreeNode<any>>;
 
-	public get SelectedNode$(): Observable<SkillCategoryItem> {
+	public get SelectedNode$(): Observable<SkillBase & TreeNode<any>> {
 		return this.selectedNode$.asObservable();
 	}
 

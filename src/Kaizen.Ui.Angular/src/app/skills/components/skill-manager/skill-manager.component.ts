@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import DataSource from 'devextreme/data/data_source';
 import CustomStore from 'devextreme/data/custom_store';
@@ -9,15 +9,12 @@ import { SkillService, SkillServiceToken } from '../../services/skill.service';
 import { DxButtonOptions, RoutesByTypes } from '../../../shared/models/shared-models';
 import {
 	SkillBase,
-	SkillCategoryChangeActiveContract,
-	SkillCategoryCreateContract,
-	SkillCategoryItem,
-	SkillCategoryUpdateContract,
 	TreeNode
 } from '../../models/skill-models';
 import { SkillManagerState } from '../../models/skill-manager-state';
 import { createCustomStoreOptions } from '../selectable-tree/filterable-tree-data-source';
 import { HasId } from 'src/app/shared/services/utils.service';
+import { SkillManagerService } from './skill-manager.service';
 
 @Component({
 	templateUrl: 'skill-manager.component.html',
@@ -26,16 +23,16 @@ import { HasId } from 'src/app/shared/services/utils.service';
 export class SkillManagerComponent implements OnDestroy {
 
 	public dataSource: DataSource;
-	public get Selected(): TreeNode & SkillBase {
+	public get Selected(): TreeNode<any> & SkillBase {
 		return this.selected;
 	}
-	public set Selected(value: TreeNode & SkillBase) {
+	public set Selected(value: TreeNode<any> & SkillBase) {
 		this.tryNavigate(value);
 		this.selected = value;
 		this.state.selectNode(value);
 	}
 
-	private selected: TreeNode & SkillBase;
+	private selected: TreeNode<any> & SkillBase;
 	private store: CustomStore;
 	private subscription: Subscription = new Subscription();
 
@@ -44,7 +41,8 @@ export class SkillManagerComponent implements OnDestroy {
 		private router: Router,
 		private routesByTypes: RoutesByTypes,
 		private state: SkillManagerState,
-		route: ActivatedRoute
+		route: ActivatedRoute,
+		private managerService: SkillManagerService
 	) {
 		const opts = createCustomStoreOptions(_ => this.client.query(), _ => { });
 		this.store = new CustomStore(opts);
@@ -52,12 +50,15 @@ export class SkillManagerComponent implements OnDestroy {
 
 		if (route.firstChild) {
 
+			const subRoute = route.firstChild.routeConfig.path.split('/')[0];
+
 			const routeChangedPromise = route.firstChild.params.pipe(map(x => parseInt(x.id, 10)), take(1)).toPromise();
 
 			const loadPromise = this.dataSource.load();
 
 			Promise.all([routeChangedPromise, loadPromise]).then(x => {
-				const found = this.dataSource.items().find(i => i.Id === x[0]);
+				const idToFind = x[0];
+				const found = managerService.search(this.dataSource.items(), idToFind, subRoute);
 				this.Selected = found;
 			});
 		}
@@ -65,7 +66,7 @@ export class SkillManagerComponent implements OnDestroy {
 		this.refreshButtonOptions = {
 			icon: 'refresh',
 			onClick: () => {
-				console.log('refresh!');
+				this.dataSource.reload();
 			}
 		};
 		this.addButtonOptions = {
@@ -99,12 +100,12 @@ export class SkillManagerComponent implements OnDestroy {
 		this.subscription.unsubscribe();
 	}
 
-	private tryNavigate(value: SkillBase & TreeNode): void {
-
+	private tryNavigate(value: SkillBase & TreeNode<any>): void {
 		if (value === this.Selected) {
 			return;
 		}
-		const path = ['admin', 'skill'];
+
+		const path = ['admin', 'skill-manager'];
 		if (!value) {
 			this.router.navigate(path);
 			return;
@@ -121,55 +122,19 @@ export class SkillManagerComponent implements OnDestroy {
 	}
 
 	private addNew(): void {
-		const alreadyExistingUnsaved = this.dataSource.items().find(i => !HasId(i));
-		if (alreadyExistingUnsaved) {
-			this.Selected = alreadyExistingUnsaved;
-			return;
-		}
-		const newRecord = {
-			NodeType: 'skill-category'
-		};
-		this.store.insert(newRecord);
-		this.dataSource.reload()
-			.then(() => {
-				const newItem = this.dataSource.items().find(i => !HasId(i));
-				this.Selected = newItem;
-			});
+		const res = this.managerService.addNode(this.Selected, this.dataSource);
+		res.then(x => {
+			if (x) {
+				this.Selected = x;
+			}
+		});
 	}
 
 	private save(): void {
-		let observable: Observable<SkillCategoryItem>;
-		if (HasId(this.Selected)) {
-			const contract: SkillCategoryUpdateContract = {
-				ToUpdate: { Id: this.Selected.Id },
-				Name: this.Selected.Name,
-				ShortDescription: this.Selected.ShortDescription
-			};
-			observable = this.client.update(contract);
-		} else {
-			const contract: SkillCategoryCreateContract = {
-				Name: this.Selected.Name,
-				ShortDescription: this.Selected.ShortDescription
-			};
-			observable = this.client.create(contract);
-		}
-		this.subscription.add(
-			observable.subscribe(x => {
-				this.dataSource.reload();
-			})
-		);
+		this.managerService.saveNode(this.Selected, this.dataSource);
 	}
 
 	private toggleActive(): void {
-		const contract: SkillCategoryChangeActiveContract = {
-			ToUpdate: { Id: this.Selected.Id },
-			IsActive: !this.Selected.IsActive
-		};
-		const observable = this.client.toggleActive(contract);
-		this.subscription.add(
-			observable.subscribe(x => {
-				this.dataSource.reload();
-			})
-		);
+		this.managerService.toggleNode(this.Selected, this.dataSource);
 	}
 }

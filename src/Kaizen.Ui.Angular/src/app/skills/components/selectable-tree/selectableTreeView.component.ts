@@ -10,21 +10,25 @@ import { TreeNode } from '../../models/skill-models';
 	templateUrl: 'selectableTreeView.component.html',
 	styleUrls: ['selectableTreeView.component.scss']
 })
-export class SelectableTreeViewComponent<T extends TreeNode> implements AfterViewInit {
+export class SelectableTreeViewComponent<TNode extends TreeNode<TChild>, TChild> implements AfterViewInit {
 
-	private initialValue: T;
+	private initialValue: TNode;
 
 	@Input()
 	public dataSource: DataSource;
 
 	@Input()
-	public set selected(value: T) {
-		if (
-			this.tree
-			&& this.tree.instance
-			&& this.tree.instance.getSelectedNodes()[0]
-			&& this.tree.instance.getSelectedNodes()[0].itemData !== value
-		) {
+	public set selected(value: TNode) {
+		const treeInitialized = this.tree
+			&& this.tree.instance;
+
+		const noSelectedNode = () => this.tree.instance.getSelectedNodes().length === 0;
+
+		const selectedNodeIsNotValue = () => this.tree.instance.getSelectedNodes()[0]
+			&& this.tree.instance.getSelectedNodes()[0].itemData !== value;
+
+		if (treeInitialized && (noSelectedNode() || selectedNodeIsNotValue())) {
+			this.tree.instance.expandItem(value);
 			this.tree.instance.selectItem(value);
 		} else {
 			this.initialValue = value;
@@ -35,13 +39,16 @@ export class SelectableTreeViewComponent<T extends TreeNode> implements AfterVie
 	public tree: DxTreeViewComponent;
 
 	@Output()
-	public selectedChange: EventEmitter<T> = new EventEmitter();
+	public selectedChange: EventEmitter<TNode> = new EventEmitter();
 
 	public ngAfterViewInit(): void {
-		this.tree.instance.selectItem(this.initialValue);
+		if (this.initialValue) {
+			this.tree.instance.expandItem(this.initialValue);
+			this.tree.instance.selectItem(this.initialValue);
+		}
 	}
 
-	public selectedChanged(e: { itemData: T, node: { selected: boolean } }): void {
+	public selectedChanged(e: { itemData: TNode, node: { selected: boolean } }): void {
 		if (e.itemData) {
 			this.selectedChange.emit(e.node.selected ? e.itemData : null);
 		}

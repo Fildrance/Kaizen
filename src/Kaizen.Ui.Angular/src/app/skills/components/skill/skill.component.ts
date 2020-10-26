@@ -3,17 +3,17 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 
-import { SkillCategoryItem } from '../../models/skill-models';
+import { SkillItem } from '../../models/skill-models';
 import { SkillManagerState } from '../../models/skill-manager-state';
 
 
 @Component({
-	templateUrl: 'skill-category.component.html',
-	styleUrls: ['./skill-category.component.scss']
+	templateUrl: 'skill.component.html',
+	styleUrls: ['./skill.component.scss']
 })
-export class SkillCategoryComponent implements OnDestroy {
+export class SkillComponent implements OnDestroy {
 
-	public data: SkillCategoryItem;
+	public data: SkillItem;
 
 	private subscription: Subscription;
 
@@ -23,7 +23,7 @@ export class SkillCategoryComponent implements OnDestroy {
 	) {
 		this.subscription = activeRoute.url.pipe(
 			switchMap(_ => this.state.SelectedNode$),
-			filter(x => !x || x.NodeType === 'skill-category')
+			filter(x => !x || x.NodeType === 'skill')
 		).subscribe(x => {
 			this.data = x;
 		});

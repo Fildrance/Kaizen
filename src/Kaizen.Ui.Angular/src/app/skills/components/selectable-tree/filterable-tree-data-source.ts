@@ -5,13 +5,13 @@ import { Observable } from 'rxjs';
 import { Page } from '../../../shared/models/shared-models';
 import { TreeNode } from '../../models/skill-models';
 
-export class FilterableTreeDataStore {
-	private _data: TreeNode[];
+export class FilterableTreeDataStore<TRootLevelItems> {
+	private _data: TreeNode<TRootLevelItems>[];
 	private _filter: (node: any[]) => void;
 
 	public totalCount: number;
 
-	constructor(items: TreeNode[], filter?: (node: any[]) => void) {
+	constructor(items: TreeNode<TRootLevelItems>[], filter?: (node: any[]) => void) {
 		this._filter = filter;
 		if (filter) {
 			this.doApplyFilter(items, filter);
@@ -20,42 +20,42 @@ export class FilterableTreeDataStore {
 
 	}
 
-	public get data(): TreeNode[] {
+	public get data(): TreeNode<TRootLevelItems>[] {
 		const duplicate = this._data.slice(0);
 		if (this._filter) {
 			this._filter(duplicate);
 		}
 		return duplicate;
 	}
-	public set data(value: TreeNode[]) {
+	public set data(value: TreeNode<TRootLevelItems>[]) {
 		this._data = value;
 	}
 
-	private doApplyFilter(items: TreeNode[], filter: (node: any[]) => void): void {
+	private doApplyFilter(items: TreeNode<any>[], filter: (node: any[]) => void): void {
 		items.forEach(x => {
 			x.ItemsFilter = filter;
 			if (x.Items && x.Items.length) {
 				this.doApplyFilter(x.Items, filter);
 			}
-		})
+		});
 	}
 
-	public push(node: TreeNode): void {
+	public push(node: TreeNode<TRootLevelItems>): void {
 		node.ItemsFilter = this._filter;
 		this._data.push(node);
 	}
 }
 
-export function createCustomStoreOptions(
+export function createCustomStoreOptions<T>(
 	query: (filter: LoadOptions) => Observable<Page<any>>,
 	itemsFilter: (node: any[]) => void
 ): CustomStoreOptions {
 
-	let store: FilterableTreeDataStore;
+	let store: FilterableTreeDataStore<T>;
 
 	return {
 		load: (options: LoadOptions) => {
-			let promise: Promise<FilterableTreeDataStore>;
+			let promise: Promise<FilterableTreeDataStore<T>>;
 			if (store) {
 				promise = new Promise((res, rej) => res(store));
 			} else {

@@ -13,11 +13,13 @@
 	.dx-template-wrapper.dx-item-content.dx-treeview-item-content{
 		padding: 13px 8px;
 	}
-	.dx-treeview .dx-treeview-node-container .dx-state-focused .dx-item.dx-treeview-item{
+
+	.dx-treeview .dx-treeview-node-container .dx-state-focused:not(.dx-state-selected) .dx-item.dx-treeview-item{
 		background-color: inherit;
 	}
-	.dx-treeview-node.dx-treeview-item-without-checkbox.dx-treeview-node-is-leaf.dx-state-selected .dx-item.dx-treeview-item{
-		background-color: rgb(110 110 128 / 50%);
+
+	.dx-treeview-node.dx-state-selected + .dx-item.dx-treeview-item{
+		background-color: rgb(110 110 128 / 50%) !important;
 	}
 }
 
