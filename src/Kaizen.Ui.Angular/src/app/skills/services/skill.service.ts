@@ -10,6 +10,10 @@ import {
 	SkillChangeActiveContract,
 	SkillCreateContract,
 	SkillItem,
+	SkillLevelChangeActiveContract,
+	SkillLevelCreateContract,
+	SkillLevelItem,
+	SkillLevelUpdateContract,
 	SkillUpdateContract
 } from '../models/skill-models';
 
@@ -20,13 +24,19 @@ export interface SkillService {
 
 	updateCategory(contract: SkillCategoryUpdateContract): Observable<SkillCategoryItem>;
 
+	toggleActiveCategory(contract: SkillCategoryChangeActiveContract): Observable<SkillCategoryItem>;
+
 	createSkill(contract: SkillCreateContract): Observable<SkillItem>;
 
 	updateSkill(contract: SkillUpdateContract): Observable<SkillItem>;
 
-	query(): Observable<Page<SkillCategoryItem>>;
-
-	toggleActiveCategory(contract: SkillCategoryChangeActiveContract): Observable<SkillCategoryItem>;
-
 	toggleActiveSkill(contract: SkillChangeActiveContract): Observable<SkillItem>;
+
+	createSkillLevel(contract: SkillLevelCreateContract): Observable<SkillLevelItem>;
+
+	updateSkillLevel(contract: SkillLevelUpdateContract): Observable<SkillLevelItem>;
+
+	toggleActiveSkillLevel(contract: SkillLevelChangeActiveContract): Observable<SkillLevelItem>;
+
+	query(): Observable<Page<SkillCategoryItem>>;
 }

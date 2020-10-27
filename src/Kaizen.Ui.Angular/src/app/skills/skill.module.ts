@@ -2,7 +2,16 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { DxTreeViewModule, DxTextBoxModule, DxButtonModule, DxTextAreaModule, DxToolbarModule } from 'devextreme-angular';
+import {
+	DxTreeViewModule,
+	DxTextBoxModule,
+	DxButtonModule,
+	DxTextAreaModule,
+	DxToolbarModule,
+	DxSliderModule,
+	DxHtmlEditorModule,
+	DxTooltipModule
+} from 'devextreme-angular';
 
 import { environment } from 'src/environments/environment';
 import { SingleCardModule } from '../layouts/single-card/single-card.component';
@@ -16,6 +25,7 @@ import { SkillServiceToken } from './services/skill.service';
 import { SkillServiceStub } from './services/skill.service.stub';
 import { SkillComponent } from './components/skill/skill.component';
 import { SkillManagerService } from './components/skill-manager/skill-manager.service';
+import { SkillLevelComponent } from './components/skill-level/skill-level.component';
 
 const map = new Map<string, string>();
 map.set('skill-category', 'skill-category');
@@ -33,7 +43,10 @@ const routesByTypes = new RoutesByTypes(map);
 		SingleCardModule,
 		DxTextBoxModule,
 		DxTextAreaModule,
-		DxToolbarModule
+		DxToolbarModule,
+		DxSliderModule,
+		DxTooltipModule,
+		DxHtmlEditorModule
 	],
 	providers: [
 		{ provide: SkillServiceToken, useClass: environment.useStubs ? SkillServiceStub : SkillServiceImpl },
@@ -41,7 +54,13 @@ const routesByTypes = new RoutesByTypes(map);
 		SkillManagerState,
 		SkillManagerService
 	],
-	declarations: [SkillManagerComponent, SelectableTreeViewComponent, SkillCategoryComponent, SkillComponent]
+	declarations: [
+		SkillManagerComponent,
+		SelectableTreeViewComponent,
+		SkillCategoryComponent,
+		SkillComponent,
+		SkillLevelComponent
+	]
 })
 export class SkillModule {
 }

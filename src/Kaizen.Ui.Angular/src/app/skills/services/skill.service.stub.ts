@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { StubCrudServiceBase } from 'src/app/shared/services/stub-service-base';
-import { HasId } from 'src/app/shared/services/utils.service';
+import { HasId, searchInTree } from 'src/app/shared/services/utils.service';
 
 import { Page } from '../../shared/models/shared-models';
 import {
@@ -12,7 +12,11 @@ import {
 	SkillChangeActiveContract,
 	SkillCreateContract,
 	SkillItem,
-	SkillUpdateContract
+	SkillUpdateContract,
+	SkillLevelItem,
+	SkillLevelCreateContract,
+	SkillLevelUpdateContract,
+	SkillLevelChangeActiveContract
 } from '../models/skill-models';
 import { SkillService } from './skill.service';
 
@@ -57,7 +61,7 @@ export class SkillServiceStub extends StubCrudServiceBase<SkillCategoryItem> imp
 	}
 
 	public createSkill(contract: SkillCreateContract): Observable<SkillItem> {
-		const stubForNew = { Id: this.getNextId(), IsActive: true, NodeType: 'skill' }
+		const stubForNew = { Id: this.getNextId(), IsActive: true, NodeType: 'skill' };
 
 		let found;
 		for (const iterator of this.store) {
@@ -77,15 +81,7 @@ export class SkillServiceStub extends StubCrudServiceBase<SkillCategoryItem> imp
 	}
 
 	public updateSkill(contract: SkillUpdateContract): Observable<SkillItem> {
-		let found;
-		for (const iterator of this.store) {
-			if (iterator.Items) {
-				found = iterator.Items.find(x => x.Id === contract.ToUpdate.Id);
-				if (found) {
-					break;
-				}
-			}
-		}
+		const found = searchInTree(this.store, contract.ToUpdate.Id, 'skill');
 		if (!found) {
 			throw Error('Failed to find obj to update');
 		}
@@ -107,6 +103,44 @@ export class SkillServiceStub extends StubCrudServiceBase<SkillCategoryItem> imp
 		});
 	}
 
+	public createSkillLevel(contract: SkillLevelCreateContract): Observable<SkillLevelItem> {
+		const stubForNew = { Id: this.getNextId(), IsActive: true, NodeType: 'skill-level' };
+
+		let found;
+		for (const skillCat of this.store) {
+			for (const skill of skillCat.Items) {
+				if (skill.Items) {
+					found = skill.Items.find(x => !HasId(x));
+					if (found) {
+						break;
+					}
+				}
+			}
+		}
+		if (!found) {
+			throw Error('Failed to find obj to save');
+		}
+
+		Object.assign(found, stubForNew);
+		return of(found);
+	}
+
+	public updateSkillLevel(contract: SkillLevelUpdateContract): Observable<SkillLevelItem> {
+		const found = searchInTree(this.store, contract.ToUpdate.Id, 'skill-level');
+		if (!found) {
+			throw Error('Failed to find obj to update');
+		}
+
+		Object.assign(found, contract);
+		return of(found);
+	}
+
+	public toggleActiveSkillLevel(contract: SkillLevelChangeActiveContract): Observable<SkillLevelItem> {
+		const found = searchInTree(this.store, contract.ToUpdate.Id, 'skill-level');
+		found.IsActive = contract.IsActive;
+		return of(found);
+	}
+
 	protected fillStore(): SkillCategoryItem[] {
 		return [
 			{
@@ -123,7 +157,25 @@ export class SkillServiceStub extends StubCrudServiceBase<SkillCategoryItem> imp
 					IsActive: true,
 					NodeType: 'skill',
 					IsSelected: false,
-					Items: []
+					Items: [{
+						Id: this.getNextId(),
+						Name: 'test skill leve1',
+						ShortDescription: 'test description2',
+						IsActive: true,
+						NodeType: 'skill',
+						IsSelected: false,
+						FullDescription: 'this is full description',
+						Weight: 8
+					}, {
+						Id: this.getNextId(),
+						Name: 'test skill level1',
+						ShortDescription: 'test description2',
+						IsActive: true,
+						NodeType: 'skill',
+						IsSelected: false,
+						Weight: 0,
+						FullDescription: 'qreghqerhoiqe roigher'
+					}]
 				},
 				{
 					Id: this.getNextId(),

@@ -13,7 +13,7 @@ import {
 } from '../../models/skill-models';
 import { SkillManagerState } from '../../models/skill-manager-state';
 import { createCustomStoreOptions } from '../selectable-tree/filterable-tree-data-source';
-import { HasId } from 'src/app/shared/services/utils.service';
+import { HasId, searchInTree } from 'src/app/shared/services/utils.service';
 import { SkillManagerService } from './skill-manager.service';
 
 @Component({
@@ -58,7 +58,7 @@ export class SkillManagerComponent implements OnDestroy {
 
 			Promise.all([routeChangedPromise, loadPromise]).then(x => {
 				const idToFind = x[0];
-				const found = managerService.search(this.dataSource.items(), idToFind, subRoute);
+				const found = searchInTree(this.dataSource.items(), idToFind, subRoute);
 				this.Selected = found;
 			});
 		}
@@ -98,6 +98,10 @@ export class SkillManagerComponent implements OnDestroy {
 	public ngOnDestroy(): void {
 		this.Selected = null;
 		this.subscription.unsubscribe();
+	}
+
+	public hasId(node: TreeNode<any>): boolean {
+		return HasId(node);
 	}
 
 	private tryNavigate(value: SkillBase & TreeNode<any>): void {

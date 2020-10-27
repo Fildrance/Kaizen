@@ -6,6 +6,7 @@
 					location="before"
 					widget="dxButton"
 					[options]="addButtonOptions"
+					*ngIf="!Selected || hasId(Selected)"
 				>
 				</dxi-item>
 				<dxi-item

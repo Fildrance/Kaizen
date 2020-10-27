@@ -11,7 +11,11 @@ import {
 	SkillChangeActiveContract,
 	SkillCreateContract,
 	SkillItem,
-	SkillUpdateContract
+	SkillUpdateContract,
+	SkillLevelItem,
+	SkillLevelChangeActiveContract,
+	SkillLevelCreateContract,
+	SkillLevelUpdateContract
 } from '../models/skill-models';
 import { SkillService } from './skill.service';
 
@@ -48,5 +52,17 @@ export class SkillServiceImpl implements SkillService {
 
 	public query(): Observable<Page<SkillCategoryItem>> {
 		return this.httpClient.get<Page<SkillCategoryItem>>('/api/skill-category/list');
+	}
+
+	public createSkillLevel(contract: SkillLevelCreateContract): Observable<SkillLevelItem> {
+		return this.httpClient.post<SkillLevelItem>('/api/skill-level', contract);
+	}
+
+	public updateSkillLevel(contract: SkillLevelUpdateContract): Observable<SkillLevelItem> {
+		return this.httpClient.put<SkillLevelItem>('/api/skill-level', contract);
+	}
+
+	public toggleActiveSkillLevel(contract: SkillLevelChangeActiveContract): Observable<SkillLevelItem> {
+		return this.httpClient.post<SkillLevelItem>('api/skill-level/toggle-activity', contract);
 	}
 }

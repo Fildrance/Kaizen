@@ -7,6 +7,7 @@ import { SkillCategoryComponent } from './skills/components/skill-category/skill
 import { AdminComponent } from './admin/admin.component';
 import { AdminModule } from './admin/admin.module';
 import { SkillComponent } from './skills/components/skill/skill.component';
+import { SkillLevelComponent } from './skills/components/skill-level/skill-level.component';
 
 const routes: Routes = [
 	{
@@ -21,7 +22,9 @@ const routes: Routes = [
 					{ path: 'skill-category', component: SkillCategoryComponent },
 					{ path: 'skill-category/:id', component: SkillCategoryComponent },
 					{ path: 'skill', component: SkillComponent },
-					{ path: 'skill/:id', component: SkillComponent }
+					{ path: 'skill/:id', component: SkillComponent },
+					{ path: 'skill-level', component: SkillLevelComponent },
+					{ path: 'skill-level/:id', component: SkillLevelComponent }
 				]
 			}
 		]

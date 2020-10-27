@@ -1,0 +1,125 @@
+<ng-container *ngIf="data">
+	<h1>{{data.Parent.Parent.Name}} => {{data.Parent.Name}} => {{data.Name}} {{data.IsActive?'':'(Не активно)'}}</h1>
+	<fieldset>
+		<legend class="heading-line">
+			<b>General information</b>
+		</legend>
+		<div class="dx-fieldset col-md-6">
+			<div class="dx-field">
+				<div class="dx-field-label">Skill level name</div>
+				<dx-text-box
+					[(value)]="data.Name"
+					placeholder="Enter name for skill level"
+					[disabled]="!canEdit"
+					valueChangeEvent="keyup"
+				>
+				</dx-text-box>
+			</div>
+		</div>
+		<div class="dx-fieldset col-md-6">
+			<div class="dx-field">
+				<div class="dx-field-label">Weight</div>
+				<dx-slider
+					[(value)]='data.Weight'
+					[disabled]='!canEdit'
+					max="100"
+				>
+					<dxo-tooltip
+						[enabled]="true"
+						showMode="always"
+					></dxo-tooltip>
+				</dx-slider>
+			</div>
+		</div>
+		<div class="dx-fieldset col-md-12">
+			<div class="dx-field">
+				<div class="dx-field-label">Short description</div>
+				<dx-text-area
+					class="dx-field-value"
+					[(value)]="data.ShortDescription"
+					[disabled]="!canEdit"
+					placeholder="Enter skill level short description"
+					autoResizeEnabled="true"
+				>
+				</dx-text-area>
+			</div>
+		</div>
+		<div class="dx-fieldset col-md-12">
+			<div class="dx-field">
+				<div class="dx-field-label">Full skill level description and reference materials.</div>
+				<dx-html-editor
+					[(value)]="data.FullDescription"
+					[readOnly]="!this.canEdit"
+				>
+					<dxo-toolbar>
+						<dxi-item formatName="separator"></dxi-item>
+
+						<dxi-item formatName="undo"></dxi-item>
+						<dxi-item formatName="redo"></dxi-item>
+						<dxi-item formatName="separator"></dxi-item>
+
+						<dxi-item formatName="bold"></dxi-item>
+						<dxi-item formatName="italic"></dxi-item>
+						<dxi-item formatName="strike"></dxi-item>
+						<dxi-item formatName="underline"></dxi-item>
+						<dxi-item formatName="separator"></dxi-item>
+
+						<dxi-item formatName="orderedList"></dxi-item>
+						<dxi-item formatName="bulletList"></dxi-item>
+						<dxi-item formatName="separator"></dxi-item>
+
+						<dxi-item formatName="color"></dxi-item>
+						<dxi-item formatName="background"></dxi-item>
+						<dxi-item formatName="separator"></dxi-item>
+
+						<dxi-item formatName="link"></dxi-item>
+						<dxi-item formatName="image"></dxi-item>
+						<dxi-item formatName="separator"></dxi-item>
+
+						<dxi-item formatName="clear"></dxi-item>
+						<dxi-item formatName="codeBlock"></dxi-item>
+						<dxi-item formatName="blockquote"></dxi-item>
+
+					</dxo-toolbar>
+				</dx-html-editor>
+
+			</div>
+		</div>
+
+		<div
+			class="dx-fieldset col-md-12"
+			*ngIf="data.Id"
+		>
+			<div class="dx-field">
+				<div class="dx-field-label">Prerequisite</div>
+				<br />
+				<div *ngFor="let prerequisite of data.Prerequisites">
+					<div class="m-grid">
+						<div class="m-grid-row">
+							<div class="m-grid-col m-grid-col-md-9 m-grid-col-left">
+								{{prerequisite.Name}}
+							</div>
+							<div class="m-grid-col m-grid-col-md-3 m-grid-col-right">
+								<button
+									class="btn btn-primary"
+									(click)="removePrerequisite(prerequisite)"
+								>
+									<i class="fa fa-trash"></i> Delete
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br />
+				<dx-select-box
+					class="dx-field-value"
+					valueExpr='Id'
+					displayExpr='Name'
+					[dataSource]="skillsLevelsDataSource"
+					[searchEnabled]="true"
+				>
+				</dx-select-box>
+			</div>
+		</div>
+	</fieldset>
+</ng-container>

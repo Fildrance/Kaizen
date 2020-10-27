@@ -12,6 +12,10 @@ import {
 	SkillChangeActiveContract,
 	SkillCreateContract,
 	SkillItem,
+	SkillLevelChangeActiveContract,
+	SkillLevelCreateContract,
+	SkillLevelItem,
+	SkillLevelUpdateContract,
 	SkillUpdateContract,
 	TreeNode
 } from '../../models/skill-models';
@@ -25,19 +29,22 @@ export class SkillManagerService {
 	private saveDelegatesByNodeType:
 		Map<string, (selected: TreeNode<any> & SkillBase, dataSource: DataSource) => void> = new Map();
 	private toggleDelegatesByNodeType:
-		Map<string, (selected: TreeNode<any> & SkillBase, dataSource: DataSource) => void> = new Map();
+		Map<string, (selected: TreeNode<any> & SkillBase, dataSource: DataSource) => Observable<{ IsActive: boolean }>> = new Map();
 
 	constructor(
 		@Inject(SkillServiceToken) private skillService: SkillService,
 	) {
 		this.addDelegatesByNodeType.set(null, (s: TreeNode<any> & SkillBase, dS: DataSource) => this.addCategory(s, dS));
 		this.addDelegatesByNodeType.set('skill-category', (s: TreeNode<any> & SkillBase, dS: DataSource) => this.addSkill(s, dS));
+		this.addDelegatesByNodeType.set('skill', (s: TreeNode<any> & SkillBase, dS: DataSource) => this.addSkillLevel(s, dS));
 
 		this.saveDelegatesByNodeType.set('skill-category', (s: TreeNode<any> & SkillBase, dS: DataSource) => this.saveCategory(s, dS));
 		this.saveDelegatesByNodeType.set('skill', (s: TreeNode<any> & SkillBase, dS: DataSource) => this.saveSkill(s, dS));
+		this.saveDelegatesByNodeType.set('skill-level', (s: TreeNode<any> & SkillBase, dS: DataSource) => this.saveSkillLevel(s, dS));
 
 		this.toggleDelegatesByNodeType.set('skill-category', (s: TreeNode<any> & SkillBase, dS: DataSource) => this.toggleCategory(s, dS));
 		this.toggleDelegatesByNodeType.set('skill', (s: TreeNode<any> & SkillBase, dS: DataSource) => this.toggleSkill(s, dS));
+		this.toggleDelegatesByNodeType.set('skill-level', (s: TreeNode<any> & SkillBase, dS: DataSource) => this.toggleSkillLevel(s, dS));
 	}
 
 	public addNode(selected: TreeNode<any> & SkillBase, store: DataSource): Promise<TreeNode<any> & SkillBase> {
@@ -57,36 +64,39 @@ export class SkillManagerService {
 		if (!selected || !selected.NodeType) {
 			throw Error('Cannot toggle node without selected node!');
 		}
+		if (!HasId(selected)) {
+			selected.IsActive = !selected.IsActive;
+			return;
+		}
 		const delegate = this.toggleDelegatesByNodeType.get(selected.NodeType);
-		delegate(selected, store);
+		delegate(selected, store).subscribe(x => {
+			selected.IsActive = x.IsActive;
+			store.reload();
+		});
 	}
 
-	public search(items: Array<TreeNode<any> & SkillBase>, idToFind: number, tierToBeSearched: string): TreeNode<any> & SkillBase {
-		if (tierToBeSearched === 'skill-category') {
-			return items.find(i => i.Id === idToFind);
-		} else if (tierToBeSearched === 'skill') {
-			return this.findSkillById(items, idToFind);
+	private addCategory(_: TreeNode<any> & SkillBase, dataSource: DataSource): Promise<TreeNode<any> & SkillBase> {
+		const alreadyExistingUnsaved = dataSource.items()
+			.find(i => !HasId(i));
+		if (alreadyExistingUnsaved) {
+			return Promise.resolve(alreadyExistingUnsaved);
 		}
-	}
-
-	private findSkillById(items: Array<TreeNode<any> & SkillBase>, id: number): TreeNode<any> & SkillBase {
-		let found;
-		for (const iterator of items) {
-			if (iterator.Items) {
-				found = iterator.Items.find((i: TreeNode<any>) => i.Id === id);
-				if (found) {
-					break;
-				}
-			}
-		}
-		return found;
+		const newRecord = {
+			NodeType: 'skill-category'
+		};
+		dataSource.store().insert(newRecord);
+		return dataSource.reload()
+			.then(() => dataSource.items().find(i => !HasId(i)));
 	}
 
 	private addSkill(selected: TreeNode<any> & SkillBase, dataSource: DataSource): Promise<TreeNode<any> & SkillBase> {
+		if (!HasId(selected)) {
+			return Promise.resolve(selected);
+		}
 		if (selected.Items) {
 			const alreadyExistingUnsaved = selected.Items.find(i => !HasId(i));
 			if (alreadyExistingUnsaved) {
-				return new Promise((res, _) => res(alreadyExistingUnsaved));
+				return Promise.resolve(alreadyExistingUnsaved);
 			}
 		}
 		const newRecord: any = {
@@ -97,25 +107,29 @@ export class SkillManagerService {
 		};
 		selected.Items.push(newRecord);
 		return dataSource.reload()
-			.then(x => {
-				return newRecord;
-			});
+			.then(_ => newRecord);
 	}
 
-	private addCategory(_: TreeNode<any> & SkillBase, dataSource: DataSource): Promise<TreeNode<any> & SkillBase> {
-		const alreadyExistingUnsaved = dataSource.items().find(i => !HasId(i));
-		if (alreadyExistingUnsaved) {
-			return new Promise((res, _) => res(alreadyExistingUnsaved));
+
+	private addSkillLevel(selected: TreeNode<any> & SkillBase, dataSource: DataSource): Promise<TreeNode<any> & SkillBase> {
+		if (!HasId(selected)) {
+			return Promise.resolve(selected);
 		}
-		const newRecord = {
-			NodeType: 'skill-category'
+		if (selected.Items) {
+			const alreadyExistingUnsaved = selected.Items.find(i => !HasId(i));
+			if (alreadyExistingUnsaved) {
+				return Promise.resolve(alreadyExistingUnsaved);
+			}
+		}
+		const newRecord: any = {
+			NodeType: 'skill-level',
+			Items: [],
+			IsActive: true,
+			Parent: selected
 		};
-		dataSource.store().insert(newRecord);
+		selected.Items.push(newRecord);
 		return dataSource.reload()
-			.then(() => {
-				const newItem = dataSource.items().find(i => !HasId(i));
-				return newItem;
-			});
+			.then(_ => newRecord);
 	}
 
 	private saveCategory(selected: TreeNode<any> & SkillBase, dataSource: DataSource): void {
@@ -135,6 +149,7 @@ export class SkillManagerService {
 			observable = this.skillService.createCategory(contract);
 		}
 		observable.subscribe(x => {
+			Object.assign(selected, x);
 			dataSource.reload();
 		});
 	}
@@ -166,21 +181,59 @@ export class SkillManagerService {
 		});
 	}
 
-	private toggleCategory(selected: TreeNode<any> & SkillBase, dataSource: DataSource): void {
+	private saveSkillLevel(selected: TreeNode<any> & SkillBase, dataSource: DataSource): void {
+		let observable: Observable<SkillLevelItem>;
+		const selectedLevel: SkillLevelItem = selected;
+		if (HasId(selected)) {
+			const contract: SkillLevelUpdateContract = {
+				ToUpdate: { Id: selected.Id },
+				Name: selected.Name,
+				ShortDescription: selected.ShortDescription,
+				FullDescription: selectedLevel.FullDescription,
+				Weight: selectedLevel.Weight
+			};
+			observable = this.skillService.updateSkillLevel(contract);
+		} else {
+			const parent = (<any>selected).Parent;
+			if (!parent || !parent.Id) {
+				throw Error('Cannot save skill without reference to skill category, to which it should be attached.');
+			}
+			const contract: SkillLevelCreateContract = {
+				Name: selected.Name,
+				ShortDescription: selected.ShortDescription,
+				Parent: { Id: parent.Id },
+				FullDescription: selectedLevel.FullDescription,
+				Weight: selectedLevel.Weight
+			};
+			observable = this.skillService.createSkillLevel(contract);
+		}
+		observable.subscribe(x => {
+			Object.assign(selected, x);
+			dataSource.reload();
+		});
+	}
+
+	private toggleCategory(selected: TreeNode<any> & SkillBase, dataSource: DataSource): Observable<{ IsActive: boolean }> {
 		const contract: SkillCategoryChangeActiveContract = {
 			ToUpdate: { Id: selected.Id },
 			IsActive: !selected.IsActive
 		};
-		const observable = this.skillService.toggleActiveCategory(contract);
-		observable.subscribe(x => dataSource.reload());
+		return this.skillService.toggleActiveCategory(contract);
 	}
 
-	private toggleSkill(selected: TreeNode<any> & SkillBase, dataSource: DataSource): void {
+	private toggleSkill(selected: TreeNode<any> & SkillBase, dataSource: DataSource): Observable<{ IsActive: boolean }> {
 		const contract: SkillChangeActiveContract = {
 			ToUpdate: { Id: selected.Id },
 			IsActive: !selected.IsActive
 		};
-		const observable = this.skillService.toggleActiveSkill(contract);
-		observable.subscribe(x => dataSource.reload());
+		return this.skillService.toggleActiveSkill(contract);
+	}
+
+	private toggleSkillLevel(selected: TreeNode<any> & SkillBase, dataSource: DataSource): Observable<{ IsActive: boolean }> {
+		const contract: SkillLevelChangeActiveContract = {
+			ToUpdate: { Id: selected.Id },
+			IsActive: !selected.IsActive
+		};
+		return this.skillService.toggleActiveSkillLevel(contract);
 	}
 }

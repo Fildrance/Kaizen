@@ -12,6 +12,10 @@ export class FilterableTreeDataStore<TRootLevelItems> {
 	public totalCount: number;
 
 	constructor(items: TreeNode<TRootLevelItems>[], filter?: (node: any[]) => void) {
+		for (const item of items) {
+			this.fillParent(item);
+		}
+
 		this._filter = filter;
 		if (filter) {
 			this.doApplyFilter(items, filter);
@@ -27,8 +31,19 @@ export class FilterableTreeDataStore<TRootLevelItems> {
 		}
 		return duplicate;
 	}
+
 	public set data(value: TreeNode<TRootLevelItems>[]) {
 		this._data = value;
+	}
+
+	private fillParent(node: TreeNode<any>): void {
+		if (!node || !node.Items) {
+			return;
+		}
+		for (const child of node.Items) {
+			child.Parent = node;
+			this.fillParent(child);
+		}
 	}
 
 	private doApplyFilter(items: TreeNode<any>[], filter: (node: any[]) => void): void {
