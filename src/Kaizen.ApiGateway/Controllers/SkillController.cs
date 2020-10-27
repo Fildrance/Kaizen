@@ -72,5 +72,26 @@ namespace Kaizen.ApiGateway.Controllers
 		{
 			return _service.ChangeActvie(contract);
 		}
+
+		[HttpPost]
+		[Route("api/skill-level")]
+		public Task<SkillLevelItem> Create(SkillLevelCreateContract contract)
+		{
+			return _service.Create(contract);
+		}
+
+		[HttpPut]
+		[Route("api/skill-level")]
+		public Task<SkillLevelItem> Update(SkillLevelUpdateContract contract)
+		{
+			return _service.Update(contract);
+		}
+
+		[HttpPost]
+		[Route("api/skill-level/toggle-activity")]
+		public Task<SkillLevelItem> ToggleActive(SkillLevelChangeActiveContract contract)
+		{
+			return _service.ChangeActvie(contract);
+		}
 	}
 }

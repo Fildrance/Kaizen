@@ -28,6 +28,11 @@ namespace Kaizen.Skill.Api.Services
 			return DoRequest<SkillChangeActiveContract, SkillItem>(contract);
 		}
 
+		public Task<SkillLevelItem> ChangeActvie([NotNull] SkillLevelChangeActiveContract contract)
+		{
+			return DoRequest<SkillLevelChangeActiveContract, SkillLevelItem>(contract);
+		}
+
 		public Task<SkillCategoryItem> Create(SkillCategoryCreateContract contract)
 		{
 			return DoRequest<SkillCategoryCreateContract, SkillCategoryItem>(contract);
@@ -36,6 +41,11 @@ namespace Kaizen.Skill.Api.Services
 		public Task<SkillItem> Create([NotNull] SkillCreateContract contract)
 		{
 			return DoRequest<SkillCreateContract, SkillItem>(contract);
+		}
+
+		public Task<SkillLevelItem> Create([NotNull] SkillLevelCreateContract contract)
+		{
+			return DoRequest<SkillLevelCreateContract, SkillLevelItem>(contract);
 		}
 
 		public Task<Page<SkillCategoryItem>> Query(SkillCategoryFilterContract filter)
@@ -51,6 +61,11 @@ namespace Kaizen.Skill.Api.Services
 		public Task<SkillItem> Update([NotNull] SkillUpdateContract contract)
 		{
 			return DoRequest<SkillUpdateContract, SkillItem>(contract);
+		}
+
+		public Task<SkillLevelItem> Update([NotNull] SkillLevelUpdateContract contract)
+		{
+			return DoRequest<SkillLevelUpdateContract, SkillLevelItem>(contract);
 		}
 	}
 }

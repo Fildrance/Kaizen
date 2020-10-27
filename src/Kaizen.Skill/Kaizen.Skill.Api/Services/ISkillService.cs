@@ -78,5 +78,33 @@ namespace Kaizen.Skill.Api.Services
 		[NotNull]
 		Task<SkillItem> ChangeActvie([NotNull] SkillChangeActiveContract contract);
 
+		/// <summary>
+		/// Creates skill level.
+		/// </summary>
+		/// <param name="contract">Contract to be used in creation.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <see cref="contract"/> is null. </exception>
+		/// <exception cref="RequestException">Thrown if mass transit returned exception from client call. </exception>
+		/// <returns>Promise of created record. </returns>
+		[NotNull]
+		Task<SkillLevelItem> Create([NotNull] SkillLevelCreateContract contract);
+
+		/// <summary>
+		/// Updates existing skill level.
+		/// </summary>
+		/// <param name="contract">Contract to be used in update. Contains selector of object to be updated. </param>
+		/// <exception cref="ArgumentNullException">Thrown if <see cref="contract"/> is null. </exception>
+		/// <exception cref="RequestException">Thrown if mass transit returned exception from client call. </exception>
+		/// <returns>Promise of created record. </returns>
+		[NotNull]
+		Task<SkillLevelItem> Update([NotNull] SkillLevelUpdateContract contract);
+
+		/// <summary>
+		/// Change activity state of skill level.
+		/// </summary>
+		/// <param name="contract">Contract to be used in activity change. Contains selector of object to be updated. </param>
+		/// <returns>Promise of changed record. </returns>
+		[NotNull]
+		Task<SkillLevelItem> ChangeActvie([NotNull] SkillLevelChangeActiveContract contract);
+
 	}
 }

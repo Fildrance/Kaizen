@@ -39,7 +39,8 @@ namespace Kaizen.Skill.Service.WindsorInstaller
 		{
 			container.Register(
 				Component.For<ISkillCategoryRepository>().ImplementedBy<SkillCategoryRepository>().OnCreate(x => x.ConfigureExtractor()),
-				Component.For<ISkillRepository>().ImplementedBy<SkillRepository>().OnCreate(x => x.ConfigureExtractor())
+				Component.For<ISkillRepository>().ImplementedBy<SkillRepository>().OnCreate(x => x.ConfigureExtractor()),
+				Component.For<ISkillLevelRepository>().ImplementedBy<SkillLevelRepository>().OnCreate(x => x.ConfigureExtractor())
 			);
 		}
 

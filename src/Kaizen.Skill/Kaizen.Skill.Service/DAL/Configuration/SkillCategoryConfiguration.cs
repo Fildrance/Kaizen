@@ -24,7 +24,16 @@ namespace Kaizen.Skill.Service.DAL.Configuration
             skillConfig.Property(x => x.Id)
                 .HasIdentityOptions()
                 .ValueGeneratedOnAdd();
+            skillConfig.HasMany(x => x.SkillLevels)
+                .WithOne(x => x.Skill)
+                .HasForeignKey(CreateSkillLevels.SkillForeignKeyColumnName);
 
+            var skillLevelConfig = modelBuilder.Entity<SkillLevelEntity>();
+
+            skillLevelConfig.ToTable(CreateSkillLevels.TableName, CreateSkillSchema.SchemaName);
+            skillLevelConfig.Property(x => x.Id)
+                .HasIdentityOptions()
+                .ValueGeneratedOnAdd();
         }
     }
 }

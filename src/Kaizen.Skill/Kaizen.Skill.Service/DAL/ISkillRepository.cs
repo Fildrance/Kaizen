@@ -9,4 +9,5 @@ namespace Kaizen.Skill.Service.DAL
 	{
 
 	}
+
 }
