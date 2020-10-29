@@ -27,7 +27,7 @@ namespace Kaizen.Common.DAL.Container
 	{
 		private static readonly LoggerFactory DbLoggerFactory = new LoggerFactory(new[] { new NLogLoggerProvider() });
 
-		public bool UsingDatabase { get; set; }
+		public bool UsingRelationalDatabase { get; set; }
 		public string ConnectionString { get; set; }
 		public bool UsingMapper { get; set; }
 		public Assembly RootAssembly { get; }
@@ -106,11 +106,11 @@ namespace Kaizen.Common.DAL.Container
 
 				yield return scanThisAssembly.BasedOn(consumerInterface).WithService.AllInterfaces().WithServiceSelf();
 			}
-			if (UsingDatabase)
+			if (UsingRelationalDatabase)
 			{
 				if (string.IsNullOrWhiteSpace(ConnectionString))
 				{
-					var message = $"Cannot initiate ef working with db, no connection string passed. Property {nameof(UsingDatabase)} should be used only with property {nameof(ConnectionString)} filled correctly.";
+					var message = $"Cannot initiate ef working with db, no connection string passed. Property {nameof(UsingRelationalDatabase)} should be used only with property {nameof(ConnectionString)} filled correctly.";
 					throw new InvalidOperationException(message);
 				}
 				var builder = new DbContextOptionsBuilder();

@@ -122,4 +122,14 @@
 			</div>
 		</div>
 	</fieldset>
+
+	<div
+		class="dx-fieldset col-md-12"
+		*ngIf="data.Id"
+	>
+		<kai-comments
+			[subjectKey]="data.Id"
+			subjectType="skill-level"
+		></kai-comments>
+	</div>
 </ng-container>

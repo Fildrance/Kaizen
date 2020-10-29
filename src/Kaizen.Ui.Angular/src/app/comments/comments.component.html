@@ -1,0 +1,159 @@
+
+<dx-html-editor
+	*ngFor="let item of Comments"
+	[(value)]="item.CommentText"
+>
+	<dxo-toolbar>
+
+		<dxi-item><b>{{item.DisplayName}}</b></dxi-item>
+		<dxi-item><i>{{item.On | date:'yyyy/MM/dd HH:mm'}}</i></dxi-item>
+		<dxi-item *ngIf="!isExistEditComment && item.AuthorId === currentUserId">
+
+			<dx-button
+				icon="trash"
+				(onClick)="deleteCommentStart(item)"
+			></dx-button>
+
+			<dx-popup
+				[width]="450"
+				[height]="180"
+				[dragEnabled]="false"
+				[closeOnOutsideClick]="true"
+				[(visible)]="isPopupVisible"
+				[showCloseButton]="false"
+				[showTitle]="false"
+			>
+				<div>
+					<div>
+						<h5>Please confirm comment deletion</h5>
+
+						<dx-button
+							icon="todo"
+							text="Delete"
+							(onClick)="deleteComment()"
+							type="Error"
+						></dx-button>
+
+						<dx-button
+							icon="close"
+							text="Cancel"
+							(onClick)="deleteUndo()"
+						></dx-button>
+					</div>
+				</div>
+			</dx-popup>
+		</dxi-item>
+
+		<dxi-item *ngIf="!isExistEditComment && item.AuthorId === currentUserId">
+			<dx-button
+				(click)="markForUpdate(item)"
+				icon="edit"
+			></dx-button>
+		</dxi-item>
+	</dxo-toolbar>
+</dx-html-editor>
+
+<div class="new-comment-block">
+
+	<h4>Add new comment</h4>
+
+	<dx-html-editor [(value)]="editorValue">
+		<dxo-toolbar>
+			<dxi-item>
+				<dx-button
+					(click)="addComment()"
+					icon="add"
+					text="Add"
+				></dx-button>
+			</dxi-item>
+
+			<dxi-item formatName="separator"></dxi-item>
+
+			<dxi-item formatName="undo"></dxi-item>
+			<dxi-item formatName="redo"></dxi-item>
+			<dxi-item formatName="separator"></dxi-item>
+
+			<dxi-item formatName="bold"></dxi-item>
+			<dxi-item formatName="italic"></dxi-item>
+			<dxi-item formatName="strike"></dxi-item>
+			<dxi-item formatName="underline"></dxi-item>
+			<dxi-item formatName="separator"></dxi-item>
+
+			<dxi-item formatName="orderedList"></dxi-item>
+			<dxi-item formatName="bulletList"></dxi-item>
+			<dxi-item formatName="separator"></dxi-item>
+
+			<dxi-item formatName="color"></dxi-item>
+			<dxi-item formatName="background"></dxi-item>
+			<dxi-item formatName="separator"></dxi-item>
+
+			<dxi-item formatName="link"></dxi-item>
+			<dxi-item formatName="image"></dxi-item>
+			<dxi-item formatName="separator"></dxi-item>
+
+			<dxi-item formatName="clear"></dxi-item>
+			<dxi-item formatName="codeBlock"></dxi-item>
+			<dxi-item formatName="blockquote"></dxi-item>
+
+		</dxo-toolbar>
+	</dx-html-editor>
+</div>
+<dx-popup
+	[width]="1300"
+	[height]="700"
+	[showTitle]="true"
+	title="Edit"
+	[(visible)]="editPopupVisible"
+	[closeOnOutsideClick]="false"
+	[showCloseButton]="false"
+>
+	<div *dxTemplate="let data of 'content'">
+		<dx-scroll-view>
+			<dx-html-editor [(value)]="itemUnderEdit.CommentText">
+				<dxo-toolbar>
+					<dxi-item><b>{{itemUnderEdit.DisplayName}}</b></dxi-item>
+					<dxi-item><i>{{itemUnderEdit.On | date:'yyyy/MM/dd HH:mm'}}</i></dxi-item>
+					<dxi-item formatName="separator"></dxi-item>
+					<dxi-item formatName="undo"></dxi-item>
+					<dxi-item formatName="redo"></dxi-item>
+					<dxi-item formatName="separator"></dxi-item>
+
+					<dxi-item formatName="bold"></dxi-item>
+					<dxi-item formatName="italic"></dxi-item>
+					<dxi-item formatName="strike"></dxi-item>
+					<dxi-item formatName="underline"></dxi-item>
+					<dxi-item formatName="separator"></dxi-item>
+
+					<dxi-item formatName="orderedList"></dxi-item>
+					<dxi-item formatName="bulletList"></dxi-item>
+					<dxi-item formatName="separator"></dxi-item>
+
+					<dxi-item formatName="color"></dxi-item>
+					<dxi-item formatName="background"></dxi-item>
+					<dxi-item formatName="separator"></dxi-item>
+
+					<dxi-item formatName="link"></dxi-item>
+					<dxi-item formatName="image"></dxi-item>
+					<dxi-item formatName="separator"></dxi-item>
+
+					<dxi-item formatName="clear"></dxi-item>
+					<dxi-item formatName="codeBlock"></dxi-item>
+					<dxi-item formatName="blockquote"></dxi-item>
+				</dxo-toolbar>
+			</dx-html-editor>
+			<div class="pull-right">
+				<dx-button
+					icon="todo"
+					text="Apply"
+					style="margin-right: 10px;"
+					(onClick)="updateComment(itemUnderEdit)"
+				></dx-button>
+				<dx-button
+					icon="close"
+					text="Cancel"
+					(onClick)="cancelEdit(itemUnderEdit)"
+				></dx-button>
+			</div>
+		</dx-scroll-view>
+	</div>
+</dx-popup>

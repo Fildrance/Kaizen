@@ -26,6 +26,7 @@ import { SkillServiceStub } from './services/skill.service.stub';
 import { SkillComponent } from './components/skill/skill.component';
 import { SkillManagerService } from './components/skill-manager/skill-manager.service';
 import { SkillLevelComponent } from './components/skill-level/skill-level.component';
+import { CommentsModule } from '../comments/comments.module';
 
 const map = new Map<string, string>();
 map.set('skill-category', 'skill-category');
@@ -46,7 +47,8 @@ const routesByTypes = new RoutesByTypes(map);
 		DxToolbarModule,
 		DxSliderModule,
 		DxTooltipModule,
-		DxHtmlEditorModule
+		DxHtmlEditorModule,
+		CommentsModule
 	],
 	providers: [
 		{ provide: SkillServiceToken, useClass: environment.useStubs ? SkillServiceStub : SkillServiceImpl },

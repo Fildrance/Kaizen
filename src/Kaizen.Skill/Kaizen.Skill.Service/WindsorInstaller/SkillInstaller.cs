@@ -14,9 +14,9 @@ namespace Kaizen.Skill.Service.WindsorInstaller
 	{
 		private static readonly ILogger Logger = LogManager.GetLogger(typeof(SkillInstaller).FullName);
 
-		private string _rabbitHost;
-		private string _rabbitUser;
-		private string _rabbitPassword;
+		private readonly string _rabbitHost;
+		private readonly string _rabbitUser;
+		private readonly string _rabbitPassword;
 
 		public SkillInstaller(string rabbitHost, string rabbitUser, string rabbitPassword, string connectionString) : base(typeof(SkillInstaller).Assembly)
 		{
@@ -29,7 +29,7 @@ namespace Kaizen.Skill.Service.WindsorInstaller
 			UseMassTransit = true;
 			ScanConsumers = true;
 			UsingMapper = true;
-			UsingDatabase = true;
+			UsingRelationalDatabase = true;
 			UsingFluentMigrator = true;
 
 			ConnectionString = connectionString;

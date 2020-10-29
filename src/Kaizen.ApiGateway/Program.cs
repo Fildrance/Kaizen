@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Castle.Windsor;
 using Castle.Windsor.MsDependencyInjection;
 using Kaizen.ApiGateway.WindsorInstaller;
+using Kaizen.Comments.Api.WindsorInstaller;
 using Kaizen.Common.Service;
 using Kaizen.Skill.Api.WindsorInstaller;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +32,8 @@ namespace Kaizen.ApiGateway
 			var rabbitPassword = Environment.GetEnvironmentVariable("RABBITPASSWORD");
 
 			var gatewayInstaller = new KaizenApiGatewayInstaller(rabbitHost, rabbitUser, rabbitPassword);
+			var skillInstaller = new SkillApiInstaller();
+			var commentsInstaller = new CommentsApiInstaller();
 
 			return Host.CreateDefaultBuilder(args)
 				.ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
@@ -40,7 +43,9 @@ namespace Kaizen.ApiGateway
 					logging.SetMinimumLevel(LogLevel.Trace);
 				}).UseNLog()
 				.UseServiceProviderFactory(hbc => new WindsorServiceProviderFactory())
-				.ConfigureContainer<IWindsorContainer>((hbc, builder) => builder.Install(gatewayInstaller, new SkillApiInstaller()));
+				.ConfigureContainer<IWindsorContainer>(
+					(hbc, builder) => builder.Install(gatewayInstaller, skillInstaller, commentsInstaller)
+				);
 		}
 	}
 }

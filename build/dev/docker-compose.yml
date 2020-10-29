@@ -2,6 +2,7 @@ version: "3"
 
 volumes:
  skilldata:
+ commentsdata:
  rabbitdata:
 
 networks:
@@ -131,3 +132,55 @@ services:
   depends_on:
    - kaizen-rabbit
    - kaizen-skills-db
+
+ kaizen-comments:
+  container_name: kaizen-comments
+  hostname: kaizen-comments
+  image: kaizen-comments
+  build:
+   context: ../../src/Kaizen.Comments/Kaizen.Comments.Service
+   dockerfile: Dockerfile
+  #ports:
+   # is used for debugging only
+   #- 443:433
+  environment:
+   # debug settings start 
+   - ASPNETCORE_ENVIRONMENT=Production
+   - ASPNETCORE_URLS=http://+:80
+   # debug settings end
+   - DBHOST=kaizen-comments-db
+   - DBPORT=27017
+   - DBNAME=SkillDb
+   - DBUSER=Clob
+   - DBPASSWORD=64JuZGAw4tQAQ8kf
+
+   - RABBITUSER=Nora
+   - RABBITPASSWORD=xTJD0eNCwADZJ4go
+   - RABBITHOST=kaizen-rabbit
+  networks:
+   - backend
+  volumes:
+   # direct binding is used for faster restart and debugging
+   - type: bind
+     source: ../../src/Kaizen.Comments/Kaizen.Comments.Service/logs
+     target: /app/logs
+   - type: bind
+     source: ../../src/Kaizen.Comments/Kaizen.Comments.Service/bin/Debug/netcoreapp3.1
+     target: /app
+   - ~/.vsdbg:/remote_debugger:rw
+  depends_on:
+   - kaizen-rabbit
+   - kaizen-comments-db
+
+ kaizen-comments-db:
+  image: mongo
+  hostname: kaizen-comments-db
+  restart: always
+  container_name: "kaizen-comments-db"
+  volumes:
+   - commentsdata:/data/db
+  networks:
+   - backend
+  environment:
+   - MONGO_INITDB_ROOT_USERNAME=Clob
+   - MONGO_INITDB_ROOT_PASSWORD=64JuZGAw4tQAQ8kf

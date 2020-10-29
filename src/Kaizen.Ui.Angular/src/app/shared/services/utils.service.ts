@@ -1,3 +1,5 @@
+import { HttpParams } from '@angular/common/http';
+
 import { TreeNode, SkillBase } from '../../../app/skills/models/skill-models';
 
 export function HasId(item: { Id?: number }): boolean {
@@ -44,4 +46,39 @@ export function findSkillLevelById(skillCats: Array<TreeNode<any> & SkillBase>, 
 		}
 	}
 	return found;
+}
+
+export class HttpParamsHelper {
+	public static toHttpParams(obj: any, prefix: string | null = null, init: HttpParams | null = null): HttpParams {
+		if (!init) {
+			init = new HttpParams();
+		}
+		return Object.getOwnPropertyNames(obj)
+			.reduce((p: any, key: string) => {
+				const value = obj[key];
+				const paramKey = (prefix && prefix.length) ? `${prefix}.${key}` : key;
+
+				if (typeof value === 'function') {
+					return;
+				} else if (value instanceof Array) {
+					value.forEach((v, i) => {
+						if (v instanceof Object) {
+							p = HttpParamsHelper.toHttpParams(v, paramKey + `[${i}]`, p);
+						} else {
+							p = p.append(paramKey, v);
+						}
+					});
+				} else if (value instanceof Date) {
+					p = p.set(paramKey, value.toISOString());
+				} else if (value instanceof Object) {
+					p = HttpParamsHelper.toHttpParams(value, paramKey, p);
+				} else {
+					if (undefined !== value
+						&& null !== value) {
+						p = p.set(paramKey, value);
+					}
+				}
+				return p;
+			}, init);
+	}
 }
