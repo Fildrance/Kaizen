@@ -20,17 +20,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dev", "dev", "{1A13F86F-E04
 		build\dev\docker-compose.yml = build\dev\docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{10DD2E80-D836-4B74-AF11-1FCDD9CE2500}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kaizen.Common", "Kaizen.Common", "{10DD2E80-D836-4B74-AF11-1FCDD9CE2500}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaizen.Common.DAL", "src\Kaizen.Common\Kaizen.Common.DAL\Kaizen.Common.DAL.csproj", "{2E9D7093-FD87-4BCF-B147-8ADEF5D9C32A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaizen.Common.Service", "src\Kaizen.Common\Kaizen.Common.Service\Kaizen.Common.Service.csproj", "{FB556217-3141-40F5-9C77-69972448D820}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Comments", "Comments", "{895FF57E-BB87-4077-BAAF-9E03A5DB600B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kaizen.Comments", "Kaizen.Comments", "{895FF57E-BB87-4077-BAAF-9E03A5DB600B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kaizen.Comments.Api", "src\Kaizen.Comments\Kaizen.Comments.Api\Kaizen.Comments.Api.csproj", "{9125A370-53BC-423E-908E-E3D1828392DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaizen.Comments.Api", "src\Kaizen.Comments\Kaizen.Comments.Api\Kaizen.Comments.Api.csproj", "{9125A370-53BC-423E-908E-E3D1828392DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kaizen.Comments.Service", "src\Kaizen.Comments\Kaizen.Comments.Service\Kaizen.Comments.Service.csproj", "{DF3E390D-E76F-4ED8-8CC3-6B9817457CF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaizen.Comments.Service", "src\Kaizen.Comments\Kaizen.Comments.Service\Kaizen.Comments.Service.csproj", "{DF3E390D-E76F-4ED8-8CC3-6B9817457CF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -80,7 +80,6 @@ services:
   depends_on:
    - kaizen-rabbit
 
-
  kaizen-skills-db:
   container_name: "kaizen-skills-db"
   image: "postgres"
