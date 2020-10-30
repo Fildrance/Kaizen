@@ -2,15 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Page } from '../shared/models/shared-models';
+import { CommentCreateContract, CommentItem, CommentFilter, CommentUpdateContract, CommentDeleteContract } from '../shared/models/comments.model';
+import { Page } from '../shared/models/shared.models';
 import { HttpParamsHelper } from '../shared/services/utils.service';
-import {
-	CommentCreateContract,
-	CommentFilter,
-	CommentItem,
-	CommentDeleteContract,
-	CommentUpdateContract
-} from './comments.model';
 
 @Injectable()
 export class CommentsService {

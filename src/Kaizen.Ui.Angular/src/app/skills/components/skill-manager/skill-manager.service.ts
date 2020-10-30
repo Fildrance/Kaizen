@@ -16,10 +16,10 @@ import {
 	SkillLevelCreateContract,
 	SkillLevelItem,
 	SkillLevelUpdateContract,
-	SkillUpdateContract,
-	TreeNode
-} from '../../models/skill-models';
+	SkillUpdateContract
+} from '../../../shared/models/skill.model';
 import { SkillService, SkillServiceToken } from '../../services/skill.service';
+import { TreeNode } from 'src/app/shared/models/util.models';
 
 @Injectable()
 export class SkillManagerService {
@@ -29,7 +29,7 @@ export class SkillManagerService {
 	private saveDelegatesByNodeType:
 		Map<string, (selected: TreeNode<any> & SkillBase, dataSource: DataSource) => void> = new Map();
 	private toggleDelegatesByNodeType:
-		Map<string, (selected: TreeNode<any> & SkillBase, dataSource: DataSource) => Observable<{ IsActive: boolean }>> = new Map();
+		Map<string, (selected: TreeNode<any> & SkillBase, dataSource: DataSource) => Observable<{ IsActive?: boolean }>> = new Map();
 
 	constructor(
 		@Inject(SkillServiceToken) private skillService: SkillService,
@@ -213,7 +213,7 @@ export class SkillManagerService {
 		});
 	}
 
-	private toggleCategory(selected: TreeNode<any> & SkillBase, dataSource: DataSource): Observable<{ IsActive: boolean }> {
+	private toggleCategory(selected: TreeNode<any> & SkillBase, dataSource: DataSource): Observable<{ IsActive?: boolean }> {
 		const contract: SkillCategoryChangeActiveContract = {
 			ToUpdate: { Id: selected.Id },
 			IsActive: !selected.IsActive
@@ -221,7 +221,7 @@ export class SkillManagerService {
 		return this.skillService.toggleActiveCategory(contract);
 	}
 
-	private toggleSkill(selected: TreeNode<any> & SkillBase, dataSource: DataSource): Observable<{ IsActive: boolean }> {
+	private toggleSkill(selected: TreeNode<any> & SkillBase, dataSource: DataSource): Observable<{ IsActive?: boolean }> {
 		const contract: SkillChangeActiveContract = {
 			ToUpdate: { Id: selected.Id },
 			IsActive: !selected.IsActive
@@ -229,7 +229,7 @@ export class SkillManagerService {
 		return this.skillService.toggleActiveSkill(contract);
 	}
 
-	private toggleSkillLevel(selected: TreeNode<any> & SkillBase, dataSource: DataSource): Observable<{ IsActive: boolean }> {
+	private toggleSkillLevel(selected: TreeNode<any> & SkillBase, dataSource: DataSource): Observable<{ IsActive?: boolean }> {
 		const contract: SkillLevelChangeActiveContract = {
 			ToUpdate: { Id: selected.Id },
 			IsActive: !selected.IsActive

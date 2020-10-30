@@ -1,5 +1,4 @@
-﻿using Kaizen.ApiGateway.Controllers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Kaizen.Common.Service
 {

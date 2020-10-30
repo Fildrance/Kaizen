@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { CommentCreateContract, CommentDeleteContract, CommentFilter, CommentItem, CommentUpdateContract } from './comments.model';
+
+import { CommentItem, CommentCreateContract, CommentUpdateContract, CommentDeleteContract, CommentFilter } from '../shared/models/comments.model';
 import { CommentsService } from './comments.service';
 
 @Component({

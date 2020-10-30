@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using Kaizen.ApiGateway.Controllers;
 using Kaizen.Skill.Api.Create;
 using Kaizen.Skill.Api.ToggleActive;
 using Kaizen.Skill.Api.Filter;

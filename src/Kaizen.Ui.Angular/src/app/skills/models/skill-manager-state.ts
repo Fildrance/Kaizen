@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 
-import { SkillBase, TreeNode } from './skill-models';
-
+import { SkillBase } from 'src/app/shared/models/skill.model';
+import { TreeNode } from 'src/app/shared/models/util.models';
 
 @Injectable()
 export class SkillManagerState {

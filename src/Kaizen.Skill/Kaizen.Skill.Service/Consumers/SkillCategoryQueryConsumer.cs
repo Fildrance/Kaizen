@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Kaizen.ApiGateway.Controllers;
 using Kaizen.Common.Service;
 using Kaizen.Skill.Api.Filter;
 using Kaizen.Skill.Api.Items;

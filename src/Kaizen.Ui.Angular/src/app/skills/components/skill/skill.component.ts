@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 
-import { SkillItem } from '../../models/skill-models';
+import { SkillItem } from '../../../shared/models/skill.model';
 import { SkillManagerState } from '../../models/skill-manager-state';
 
 

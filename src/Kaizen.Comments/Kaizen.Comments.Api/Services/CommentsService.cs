@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using Kaizen.ApiGateway.Controllers;
 using Kaizen.Comments.Api.Create;
 using Kaizen.Comments.Api.Delete;
 using Kaizen.Comments.Api.Filter;

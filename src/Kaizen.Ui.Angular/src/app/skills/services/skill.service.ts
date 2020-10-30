@@ -1,21 +1,23 @@
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Page } from '../../shared/models/shared-models';
+import { Page } from 'src/app/shared/models/shared.models';
 import {
-	SkillCategoryChangeActiveContract,
 	SkillCategoryCreateContract,
 	SkillCategoryItem,
 	SkillCategoryUpdateContract,
-	SkillChangeActiveContract,
+	SkillCategoryChangeActiveContract,
 	SkillCreateContract,
 	SkillItem,
-	SkillLevelChangeActiveContract,
+	SkillUpdateContract,
+	SkillChangeActiveContract,
 	SkillLevelCreateContract,
 	SkillLevelItem,
 	SkillLevelUpdateContract,
-	SkillUpdateContract
-} from '../models/skill-models';
+	SkillLevelChangeActiveContract
+} from 'src/app/shared/models/skill.model';
+
+
 
 export const SkillServiceToken = new InjectionToken<SkillService>('SkillServiceInterface')
 

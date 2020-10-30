@@ -1,5 +1,4 @@
-﻿using Kaizen.ApiGateway.Controllers;
-using Kaizen.Comments.Api.Delete;
+﻿using Kaizen.Comments.Api.Delete;
 using Kaizen.Comments.Service.DAL;
 using Kaizen.Common.Service;
 using MassTransit;

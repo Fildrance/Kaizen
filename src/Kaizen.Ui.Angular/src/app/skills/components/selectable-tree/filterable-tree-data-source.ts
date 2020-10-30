@@ -2,8 +2,9 @@ import { CustomStoreOptions } from 'devextreme/data/custom_store';
 import { LoadOptions } from 'devextreme/data/load_options';
 import { Observable } from 'rxjs';
 
-import { Page } from '../../../shared/models/shared-models';
-import { TreeNode } from '../../models/skill-models';
+import { Page } from 'src/app/shared/models/shared.models';
+import { TreeNode } from 'src/app/shared/models/util.models';
+
 
 export class FilterableTreeDataStore<TRootLevelItems> {
 	private _data: TreeNode<TRootLevelItems>[];

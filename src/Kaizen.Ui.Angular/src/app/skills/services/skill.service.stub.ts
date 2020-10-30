@@ -1,27 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { StubCrudServiceBase } from 'src/app/shared/services/stub-service-base';
-import { HasId, searchInTree } from 'src/app/shared/services/utils.service';
+import { TreeNode } from 'src/app/shared/models/util.models';
 
-import { Page } from '../../shared/models/shared-models';
+import { Page } from '../../shared/models/shared.models';
 import {
-	SkillCategoryChangeActiveContract,
-	SkillCategoryCreateContract,
 	SkillCategoryItem,
-	SkillCategoryUpdateContract,
 	SkillChangeActiveContract,
-	SkillCreateContract,
 	SkillItem,
+	SkillCategoryUpdateContract,
+	SkillCategoryCreateContract,
+	SkillCreateContract,
 	SkillUpdateContract,
-	SkillLevelItem,
+	SkillCategoryChangeActiveContract,
 	SkillLevelCreateContract,
+	SkillLevelItem,
 	SkillLevelUpdateContract,
 	SkillLevelChangeActiveContract
-} from '../models/skill-models';
+} from '../../shared/models/skill.model';
+import { StubCrudServiceBase } from '../../shared/services/stub-service-base';
+import { HasId, searchInTree } from '../../shared/services/utils.service';
 import { SkillService } from './skill.service';
 
 @Injectable()
-export class SkillServiceStub extends StubCrudServiceBase<SkillCategoryItem> implements SkillService {
+export class SkillServiceStub extends StubCrudServiceBase<SkillCategoryItem & TreeNode<any>> implements SkillService {
 
 	public toggleActiveSkill(contract: SkillChangeActiveContract): Observable<SkillItem> {
 		let found;
@@ -141,7 +142,7 @@ export class SkillServiceStub extends StubCrudServiceBase<SkillCategoryItem> imp
 		return of(found);
 	}
 
-	protected fillStore(): SkillCategoryItem[] {
+	protected fillStore(): Array<SkillCategoryItem & TreeNode<any>> {
 		return [
 			{
 				Id: this.getNextId(),

@@ -4,6 +4,7 @@ using Kaizen.Comments.Api.Filter;
 using Kaizen.Comments.Api.Items;
 using Kaizen.Comments.Api.Services;
 using Kaizen.Comments.Api.Update;
+using Kaizen.Common.Service;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;

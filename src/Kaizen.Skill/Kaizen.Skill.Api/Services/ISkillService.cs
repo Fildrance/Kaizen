@@ -1,11 +1,11 @@
 ﻿using JetBrains.Annotations;
-using Kaizen.ApiGateway.Controllers;
 using Kaizen.Skill.Api.Create;
 using Kaizen.Skill.Api.ToggleActive;
 using Kaizen.Skill.Api.Filter;
 using Kaizen.Skill.Api.Items;
 using Kaizen.Skill.Api.Update;
 using System.Threading.Tasks;
+using Kaizen.Common.Service;
 
 namespace Kaizen.Skill.Api.Services
 {

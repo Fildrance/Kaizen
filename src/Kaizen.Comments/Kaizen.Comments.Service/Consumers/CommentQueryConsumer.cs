@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Kaizen.ApiGateway.Controllers;
 using Kaizen.Comments.Api.Filter;
 using Kaizen.Comments.Api.Items;
 using Kaizen.Comments.Service.DAL;

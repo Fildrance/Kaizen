@@ -1,9 +1,9 @@
 import { AfterViewInit } from '@angular/core';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { DxTreeViewComponent } from 'devextreme-angular';
 import DataSource from 'devextreme/data/data_source';
 
-import { TreeNode } from '../../models/skill-models';
+import { TreeNode } from '../../../shared/models/util.models';
 
 @Component({
 	selector: 'kai-selectable-tree-view',

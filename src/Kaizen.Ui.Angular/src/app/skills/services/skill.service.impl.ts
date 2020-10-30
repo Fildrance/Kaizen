@@ -2,21 +2,22 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Page } from '../../shared/models/shared-models';
+import { Page } from 'src/app/shared/models/shared.models';
 import {
-	SkillCategoryChangeActiveContract,
-	SkillCategoryCreateContract,
-	SkillCategoryItem,
-	SkillCategoryUpdateContract,
 	SkillChangeActiveContract,
-	SkillCreateContract,
 	SkillItem,
+	SkillCreateContract,
 	SkillUpdateContract,
-	SkillLevelItem,
-	SkillLevelChangeActiveContract,
+	SkillCategoryChangeActiveContract,
+	SkillCategoryItem,
+	SkillCategoryCreateContract,
+	SkillCategoryUpdateContract,
 	SkillLevelCreateContract,
-	SkillLevelUpdateContract
-} from '../models/skill-models';
+	SkillLevelItem,
+	SkillLevelUpdateContract,
+	SkillLevelChangeActiveContract
+} from 'src/app/shared/models/skill.model';
+
 import { SkillService } from './skill.service';
 
 

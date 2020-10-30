@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Kaizen.ApiGateway.Controllers
+namespace Kaizen.Common.Service
 {
 	/// <summary> Page of items. If <see cref="TotalCount"/> != <see cref="Items"/>. Length, then results are paged and only part of total results is present.</summary>
 	public class Page<T>

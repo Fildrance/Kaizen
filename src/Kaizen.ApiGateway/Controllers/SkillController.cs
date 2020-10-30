@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using NLog;
 using System;
 using System.Threading.Tasks;
+using Kaizen.Common.Service;
 
 namespace Kaizen.ApiGateway.Controllers
 {

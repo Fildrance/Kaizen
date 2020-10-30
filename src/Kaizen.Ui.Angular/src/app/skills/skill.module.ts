@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
 import {
 	DxTreeViewModule,
 	DxTextBoxModule,
@@ -15,7 +14,7 @@ import {
 
 import { environment } from 'src/environments/environment';
 import { SingleCardModule } from '../layouts/single-card/single-card.component';
-import { RoutesByTypes } from '../shared/models/shared-models';
+import { RoutesByTypes } from '../shared/models/util.models';
 import { SelectableTreeViewComponent } from './components/selectable-tree/selectableTreeView.component';
 import { SkillCategoryComponent } from './components/skill-category/skill-category.component';
 import { SkillManagerComponent } from './components/skill-manager/skill-manager.component';

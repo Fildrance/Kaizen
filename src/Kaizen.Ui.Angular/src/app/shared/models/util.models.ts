@@ -1,15 +1,22 @@
 import { Injectable } from '@angular/core';
 
-export interface Page<T> {
-	Items: T[];
-	TotalCount: number;
-}
-
 export class DxButtonOptions {
 	icon?: string;
 	type?: string;
 	onClick: () => void;
 	text?: string;
+}
+
+
+export interface TreeNode<TChildType> {
+	Id: number;
+	Name: string;
+	IsSelected?: boolean;
+	IsActive: boolean;
+	Items?: Array<TChildType>;
+	Parent?: TreeNode<any>;
+	NodeType?: string;
+	ItemsFilter?: (items?: Array<TreeNode<TChildType>>) => void;
 }
 
 @Injectable()

@@ -6,15 +6,12 @@ import DataSource from 'devextreme/data/data_source';
 import CustomStore from 'devextreme/data/custom_store';
 
 import { SkillService, SkillServiceToken } from '../../services/skill.service';
-import { DxButtonOptions, RoutesByTypes } from '../../../shared/models/shared-models';
-import {
-	SkillBase,
-	TreeNode
-} from '../../models/skill-models';
 import { SkillManagerState } from '../../models/skill-manager-state';
 import { createCustomStoreOptions } from '../selectable-tree/filterable-tree-data-source';
 import { HasId, searchInTree } from 'src/app/shared/services/utils.service';
 import { SkillManagerService } from './skill-manager.service';
+import { SkillBase } from 'src/app/shared/models/skill.model';
+import { TreeNode, RoutesByTypes, DxButtonOptions } from 'src/app/shared/models/util.models';
 
 @Component({
 	templateUrl: 'skill-manager.component.html',

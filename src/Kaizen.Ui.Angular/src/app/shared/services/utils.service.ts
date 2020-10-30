@@ -1,6 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 
-import { TreeNode, SkillBase } from '../../../app/skills/models/skill-models';
+import { SkillBase } from '../models/skill.model';
+import { TreeNode } from '../models/util.models';
 
 export function HasId(item: { Id?: number }): boolean {
 	return item.Id === 0 || item.Id > 0;
