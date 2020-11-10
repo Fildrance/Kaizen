@@ -62,5 +62,6 @@ To launch project locally:
   * go to build ("cd ./build/dev")
   * build all the stuff (execute ".\build-all.bat")
   * prepare env - call ".\prepare.bat". Follow instuctions until it is finished.
+  * install newly created dev certificates :D (on path /build/dev/nginx-certs install all *.crt and *.pfx stuff, pfx will require password you used in prepare.bat run previously)
   * up docker-compose using created bat (".\up.bat")
   * go to app ("http://localhost")
