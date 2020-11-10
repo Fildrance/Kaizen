@@ -36,8 +36,9 @@ namespace Kaizen.ApiGateway
 			var commentsInstaller = new CommentsApiInstaller();
 
 			return Host.CreateDefaultBuilder(args)
-				.ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
-				.ConfigureLogging(logging =>
+				.ConfigureWebHostDefaults(
+					webBuilder => webBuilder.ConfigureKestrel(opts => opts.AddServerHeader = false).UseStartup<Startup>()
+				).ConfigureLogging(logging =>
 				{
 					logging.ClearProviders();
 					logging.SetMinimumLevel(LogLevel.Trace);

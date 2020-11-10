@@ -8,6 +8,9 @@ import { AdminComponent } from './admin/admin.component';
 import { AdminModule } from './admin/admin.module';
 import { SkillComponent } from './skills/components/skill/skill.component';
 import { SkillLevelComponent } from './skills/components/skill-level/skill-level.component';
+import { AuthCallbackComponent } from './api-authorization/auth-callback/auth-callback.component';
+import { AuthGuard } from './api-authorization/authorize.guard';
+import { environment } from '../environments/environment';
 
 const routes: Routes = [
 	{
@@ -18,6 +21,7 @@ const routes: Routes = [
 			{
 				path: 'skill-manager',
 				component: SkillManagerComponent,
+				canActivate: [AuthGuard],
 				children: [
 					{ path: 'skill-category', component: SkillCategoryComponent },
 					{ path: 'skill-category/:id', component: SkillCategoryComponent },
@@ -30,13 +34,17 @@ const routes: Routes = [
 		]
 	},
 	{
+		path: 'auth-callback',
+		component: AuthCallbackComponent
+	},
+	{
 		path: '**',
 		redirectTo: 'admin'
 	}
 ];
 
 @NgModule({
-	imports: [RouterModule.forRoot(routes), CommonModule, AdminModule],
+	imports: [RouterModule.forRoot(routes, { enableTracing: environment.traceRouting }), CommonModule, AdminModule],
 	exports: [RouterModule]
 })
 export class AppRoutingModule { }

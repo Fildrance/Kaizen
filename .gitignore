@@ -355,3 +355,10 @@ package-lock.json
 
 # Visual paradigm
 *.vpp.*
+
+# user-dependant applicaiton files
+/build/dev/up.bat
+/build/dev/down.bat
+/build/dev/nginx-certs/*.*
+/build/dev/nginx-dhparam/*.*
+/build/dev/identity-init-data/identityserverdata.json

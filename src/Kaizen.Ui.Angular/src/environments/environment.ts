@@ -4,7 +4,8 @@
 
 export const environment = {
 	production: false,
-	useStubs: false
+	useStubs: false,
+	traceRouting: true
 };
 
 /*

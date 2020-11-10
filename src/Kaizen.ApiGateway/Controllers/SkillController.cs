@@ -9,10 +9,12 @@ using NLog;
 using System;
 using System.Threading.Tasks;
 using Kaizen.Common.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Kaizen.ApiGateway.Controllers
 {
 	[ApiController]
+	[Authorize(Policy = ApiGatewayConstants.ApiScopePolicyConstant)]
 	public class SkillController : ControllerBase
 	{
 		private static readonly ILogger Logger = LogManager.GetLogger(typeof(SkillController).FullName);
@@ -33,7 +35,7 @@ namespace Kaizen.ApiGateway.Controllers
 
 		[HttpGet]
 		[Route("api/skill-category/list")]
-		public Task<Page<SkillCategoryItem>> List([FromQuery]SkillCategoryFilterContract filter)
+		public Task<Page<SkillCategoryItem>> List([FromQuery] SkillCategoryFilterContract filter)
 		{
 			filter = filter ?? new SkillCategoryFilterContract();
 			return _service.Query(filter);

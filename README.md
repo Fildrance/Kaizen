@@ -18,10 +18,49 @@ Main idea of project is to create simple, yet usable application for managing em
  * Request clients (MQ client that awaits response on special queue after issuing request) have messages validated before passing to MQ (so invalid message - like update without id of object to be updated) won't even be sent to MQ.
 
 ## How to launch
+
+### dirty identity ssl hax
+
+For identity-server admin ui there are several more required actions. As work with identity requires SSL, we will need some dev certifictes, for nginx and dotnet apps. 
+
+As certificates require domain to be applied to, we will need to change our routing so we can handle our trusted dev site locally. 
+
+Following instruction is simplified to bat file (./build/dev/prepare.dev) but only for windows, so just go to 'How to actually launch' block if you use Windows as OS (not connected to docker container).
+
+add next line to C:\windows\system32\drivers\etc\hosts (for windows) or \etc\hosts (for linux)
+
+```
+127.0.0.1 skoruba.local sts.skoruba.local admin.skoruba.local admin-api.skoruba.local kaizen.skoruba.local
+```
+
+Then generate certs (you will need openssl installed):
+```
+cd build/identity/certs
+mkcert --install
+copy $env:LOCALAPPDATA\mkcert\rootCA.pem ./cacerts.pem
+copy $env:LOCALAPPDATA\mkcert\rootCA.pem ./cacerts.crt
+
+cd shared/nginx/certs
+mkcert -cert-file skoruba.local.crt -key-file skoruba.local.key skoruba.local *.skoruba.local
+mkcert -pkcs12 skoruba.local.pfx skoruba.local *.skoruba.local
+
+openssl pkcs12 -export -out skoruba.local.pfx -inkey skoruba.local.key -in skoruba.local.crt
+```
+
+Then set cert password, verify it. use same password as cert password for launching identity docker-compose
+
+After that we will need dhparam.pem for nginx to use Forward Secrecy.
+```
+openssl dhparam -out <put your path to project source folder here>/nginx-dhparam/dhparam.pem 4096
+```
+
+### How to actually launch
+
 To launch project locally:
 
   * clone project
-  * restore packages/build c# solution
-  * go to ui project, ("cd ./src/Kaizen.Ui.Angular"), restore packages ("npm i"), build solution ("ng build --prod")
-  * go to build ("cd ./build/dev"), compose project ("docker-compose up -d")
+  * go to build ("cd ./build/dev")
+  * build all the stuff (execute ".\build-all.bat")
+  * prepare env - call ".\prepare.bat". Follow instuctions until it is finished.
+  * up docker-compose using created bat (".\up.bat")
   * go to app ("http://localhost")

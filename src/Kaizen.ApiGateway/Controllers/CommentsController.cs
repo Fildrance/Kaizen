@@ -5,6 +5,7 @@ using Kaizen.Comments.Api.Items;
 using Kaizen.Comments.Api.Services;
 using Kaizen.Comments.Api.Update;
 using Kaizen.Common.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 namespace Kaizen.ApiGateway.Controllers
 {
 	[ApiController]
+	[Authorize(Policy = ApiGatewayConstants.ApiScopePolicyConstant)]
 	public class CommentsController : ControllerBase
 	{
 		private readonly ICommentsService _service;

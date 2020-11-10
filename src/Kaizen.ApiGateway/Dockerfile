@@ -6,4 +6,4 @@ EXPOSE 443
 # todo: build app within docker
 # todo: wait until rabbit is ready
 VOLUME ["/app/logs", "/app"]
-ENTRYPOINT ["dotnet", "Kaizen.ApiGateway.dll"]
+ENTRYPOINT update-ca-certificates && dotnet Kaizen.ApiGateway.dll

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -9,10 +9,14 @@ import { SideNavInnerToolbarModule } from './layouts/side-nav-inner-toolbar/side
 import { SingleCardModule } from './layouts/single-card/single-card.component';
 import { ScreenService } from './shared/services/screen.service';
 import { AppInfoService } from './shared/services/app-info.service';
+import { AuthService } from './api-authorization/authorize.service';
+import { AuthorizeInterceptor } from './api-authorization/authorize.interceptor';
+import { AuthCallbackComponent } from './api-authorization/auth-callback/auth-callback.component';
 
 @NgModule({
 	declarations: [
-		RootComponent
+		RootComponent,
+		AuthCallbackComponent
 	],
 	imports: [
 		BrowserModule,
@@ -22,7 +26,15 @@ import { AppInfoService } from './shared/services/app-info.service';
 		HttpClientModule,
 		NgbModule
 	],
-	providers: [ScreenService, AppInfoService],
+	providers: [
+		ScreenService,
+		AppInfoService,
+		AuthService,
+		{ provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }
+	],
 	bootstrap: [RootComponent]
 })
-export class RootModule { }
+export class RootModule {
+
+}
+

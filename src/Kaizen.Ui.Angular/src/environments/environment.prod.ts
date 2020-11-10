@@ -1,4 +1,5 @@
 export const environment = {
 	production: true,
-	useStubs: false
+	useStubs: false,
+	traceRouting: false
 };

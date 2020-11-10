@@ -1,15 +1,152 @@
 version: "3"
 
 volumes:
- skilldata:
- commentsdata:
- rabbitdata:
+ skill-data:
+ comments-data:
+ rabbit-data:
+ identity-data:
 
 networks:
  frontend:
  backend:
+ frontend:
+ identity-network:
 
 services:
+
+ kaizen-front:
+  container_name: "kaizen-front"
+  image: kaizen-front
+  build:
+   context: ../.
+   dockerfile: ../src/Kaizen.Ui.Angular/Dockerfile
+  volumes:
+   - '/var/run/docker.sock:/tmp/docker.sock:ro'
+   - ../../src/Kaizen.Ui.Angular/templates:/etc/nginx/templates
+   - './nginx-dhparam:/etc/nginx/dhparam/'
+   - type: bind
+     source: ./nginx-certs
+     target: /etc/nginx/certs
+   - type: bind
+     source: ../../src/Kaizen.Ui.Angular/dist/kaizen
+     target: /usr/share/nginx/html
+  ports: 
+   - '443:443'
+   - '80:80'
+  networks:
+   frontend:
+   identity-network:
+    aliases:
+     - sts.${DOMAIN_NAME:-kai.local}
+     - admin.${DOMAIN_NAME:-kai.local}
+     - admin-api.${DOMAIN_NAME:-kai.local}
+  environment: 
+   - API_URL=http://kaizen-api-gateway/api
+   - DOMAIN_NAME=${DOMAIN_NAME:-kai.local}
+  depends_on:
+   - kaizen-api-gateway
+
+ skoruba.identityserver4.admin:
+  image: skoruba/identityserver4-admin:rc4 
+  container_name: skoruba-identityserver4-admin
+  environment:
+   - ASPNETCORE_URLS=https://+;http://+
+   - 'Authority=https://sts.${DOMAIN_NAME:-kai.local}'
+   - 'AppUri=https://${DOMAIN_NAME:-kai.local}'
+   - 'ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASS:-pass1}'
+   - 'ASPNETCORE_Kestrel__Certificates__Default__Path=/usr/local/share/ca-certificates/${DOMAIN_NAME:-kai.local}.pfx'
+   - VIRTUAL_HOST=admin.${DOMAIN_NAME:-kai.local}
+   - "DatabaseProviderConfiguration__ProviderType=PostgreSQL"
+   - "ConnectionStrings__ConfigurationDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__PersistedGrantDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__IdentityDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__AdminLogDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__AdminAuditLogDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__DataProtectionDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.${DOMAIN_NAME:-kai.local}'
+   - 'AdminConfiguration__IdentityAdminRedirectUri=https://admin.${DOMAIN_NAME:-kai.local}/signin-oidc'
+   - 'AdminConfiguration__IdentityServerBaseUrl=https://sts.${DOMAIN_NAME:-kai.local}'
+   - AdminConfiguration__RequireHttpsMetadata=false
+   - DockerConfiguration__UpdateCaCertificate=true
+   - "Serilog__WriteTo__1__Args__connectionString=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+  depends_on:
+   - identity-db
+   - skoruba.identityserver4.sts.identity
+  volumes:
+   - type: bind
+     source: ./nginx-certs
+     target: /usr/local/share/ca-certificates
+   - ./identity-init-data/identityserverdata.json:/app/identityserverdata.json
+  networks:
+   frontend: 
+   identity-network:
+
+ skoruba.identityserver4.admin.api:
+  image: skoruba/identityserver4-admin-api:rc4
+  networks:
+   - frontend
+   - identity-network
+  environment:
+   - ASPNETCORE_URLS=https://+;http://+
+   - VIRTUAL_HOST=admin-api.${DOMAIN_NAME:-kai.local}
+   - 'ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASS:-pass1}'
+   - 'ASPNETCORE_Kestrel__Certificates__Default__Path=/usr/local/share/ca-certificates/${DOMAIN_NAME:-kai.local}.pfx'
+   - DockerConfiguration__UpdateCaCertificate=true
+   - AdminApiConfiguration__RequireHttpsMetadata=false
+   - 'AdminApiConfiguration__ApiBaseUrl=https://admin-api.${DOMAIN_NAME:-kai.local}'
+   - 'AdminApiConfiguration__IdentityServerBaseUrl=https://sts.${DOMAIN_NAME:-kai.local}'
+   - "DatabaseProviderConfiguration__ProviderType=PostgreSQL"
+   - "ConnectionStrings__ConfigurationDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__PersistedGrantDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__IdentityDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__AdminLogDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__AdminAuditLogDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__DataProtectionDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+  container_name: skoruba-identityserver4-admin-api
+  volumes:
+   - type: bind
+     source: ./nginx-certs
+     target: /usr/local/share/ca-certificates
+
+ skoruba.identityserver4.sts.identity:
+  image: skoruba/identityserver4-sts-identity:rc4
+  container_name: skoruba-identityserver4-sts-identity
+  environment:
+   - ASPNETCORE_URLS=https://+;http://+
+   - VIRTUAL_HOST=sts.${DOMAIN_NAME:-kai.local}
+   - "DatabaseProviderConfiguration__ProviderType=PostgreSQL"
+   - "ConnectionStrings__ConfigurationDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__PersistedGrantDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__IdentityDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - "ConnectionStrings__DataProtectionDbConnection=Host=identity-db;Port=5432;Database=IdentityServer4Admin;Username=sa;Password=${DB_PASSWORD:-Password_123}"
+   - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.${DOMAIN_NAME:-kai.local}'
+   - 'AdvancedConfiguration__PublicOrigin=https://sts.${DOMAIN_NAME:-kai.local}'
+   - 'AdvancedConfiguration__IssuerUri=https://sts.${DOMAIN_NAME:-kai.local}'
+   - 'ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASS:-pass1}'
+   - 'ASPNETCORE_Kestrel__Certificates__Default__Path=/usr/local/share/ca-certificates/${DOMAIN_NAME:-kai.local}.pfx'
+   - DockerConfiguration__UpdateCaCertificate=true
+  depends_on:
+   - identity-db
+  volumes:
+   - type: bind
+     source: ./nginx-certs
+     target: /usr/local/share/ca-certificates
+  networks:
+   identity-network:
+
+ identity-db:
+  image: postgres:11
+  ports:
+   - 5432:5432
+  container_name: identity-db
+  environment:
+   POSTGRES_USER: sa
+   POSTGRES_PASSWORD: "${DB_PASSWORD:-Password_123}"
+   POSTGRES_DB: IdentityServer4Admin
+  networks:
+   identity-network:
+  volumes:
+   - identity-data:/var/lib/postgresql/data
 
  kaizen-rabbit:
   container_name: "kaizen-rabbit"
@@ -21,31 +158,10 @@ services:
    - RABBITMQ_DEFAULT_USER=Nora 
    - RABBITMQ_DEFAULT_PASS=xTJD0eNCwADZJ4go
   volumes:
-   - rabbitdata:/var/lib/rabbitmq
+   - rabbit-data:/var/lib/rabbitmq
   ports:
   # manager ui is used only for debugging.
    - 8082:15672
-
- kaizen-front:
-  container_name: "kaizen-front"
-  image: kaizen-front
-  build:
-   context: ../.
-   dockerfile: ../src/Kaizen.Ui.Angular/Dockerfile
-  volumes:
-   - ../../src/Kaizen.Ui.Angular/templates:/etc/nginx/templates
-   # mounting with bind to translate changes faster w/o reboot
-   - type: bind
-     source: ../../src/Kaizen.Ui.Angular/dist/kaizen
-     target: /usr/share/nginx/html
-  ports: 
-   - 80:80
-  networks: 
-   - frontend
-  environment: 
-   - API_URL=http://kaizen-api-gateway/api
-  depends_on:
-   - kaizen-api-gateway
   
  kaizen-api-gateway:
   container_name: kaizen-api-gateway
@@ -62,12 +178,17 @@ services:
    - ASPNETCORE_ENVIRONMENT=Production
    - ASPNETCORE_URLS=http://+:80
    # debug settings end
+   - 'TokenAuthority=https://sts.${DOMAIN_NAME:-kai.local}'
+   - 'AppUri=https://${DOMAIN_NAME:-kai.local}'
+   - 'ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASS:-pass1}'
+   - 'ASPNETCORE_Kestrel__Certificates__Default__Path=/usr/local/share/ca-certificates/${DOMAIN_NAME:-kai.local}.pfx'
    - RABBITUSER=Nora
    - RABBITPASSWORD=xTJD0eNCwADZJ4go
    - RABBITHOST=kaizen-rabbit
   networks:
    - backend
    - frontend
+   - identity-network
   volumes:
    # direct binding is used for faster restart and debugging
    - type: bind
@@ -76,6 +197,9 @@ services:
    - type: bind
      source: ../../src/Kaizen.ApiGateway/bin/Debug/netcoreapp3.1
      target: /app
+   - type: bind
+     source: ./nginx-certs
+     target: /usr/local/share/ca-certificates
    - ~/.vsdbg:/remote_debugger:rw
   depends_on:
    - kaizen-rabbit
@@ -84,7 +208,7 @@ services:
   container_name: "kaizen-skills-db"
   image: "postgres"
   volumes: 
-    - skilldata:/var/lib/postgresql/data
+    - skill-data:/var/lib/postgresql/data
   networks:
     - backend
   ports:
@@ -174,10 +298,9 @@ services:
  kaizen-comments-db:
   image: mongo
   hostname: kaizen-comments-db
-  restart: always
   container_name: "kaizen-comments-db"
   volumes:
-   - commentsdata:/data/db
+   - comments-data:/data/db
   networks:
    - backend
   environment:
