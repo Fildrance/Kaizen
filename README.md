@@ -64,4 +64,4 @@ To launch project locally:
   * prepare env - call ".\prepare.bat". Follow instuctions until it is finished.
   * install newly created dev certificates :D (on path /build/dev/nginx-certs install all *.crt and *.pfx stuff, pfx will require password you used in prepare.bat run previously)
   * up docker-compose using created bat (".\up.bat")
-  * go to app - "http://<your app domain>" - where <your app domain> is domain name you used during run of prepare.bat, kai.local by default (if option were left empty). 
+  * go to app - "http://{your_app_domain}" - where {your_app_domain} is domain name you used during run of prepare.bat, kai.local by default (if option were left empty). 
