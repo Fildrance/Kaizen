@@ -11,7 +11,10 @@ namespace Kaizen.Common.DAL.Discover
 	/// <typeparam name="TSelector">Type of selector to be used in discovers.</typeparam>
 	/// <typeparam name="TEntity">Type of entity.</typeparam>
 	/// <typeparam name="TId">Type of id of entity.</typeparam>
-	public abstract class DiscoveringRepositoryBase<TSelector, TEntity, TId> : RepositoryBase<TEntity, TId>, IDiscoverer<TSelector, TEntity> where TEntity : EntityBase<TId>
+	public abstract class DiscoveringRepositoryBase<TSelector, TEntity, TId> 
+        : RepositoryBase<TEntity, TId>, 
+        IDiscoverer<TSelector, TEntity> 
+        where TEntity : EntityBase<TId>
 	{
 		#region [Fields]
 		private IEntityExtractor<TSelector, TEntity> _entityExtractor;
