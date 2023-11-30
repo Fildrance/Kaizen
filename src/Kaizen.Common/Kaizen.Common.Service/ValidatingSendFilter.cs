@@ -12,7 +12,7 @@ namespace Kaizen.Common.Service
 	{
 		private static readonly ILogger Logger = LogManager.GetLogger(typeof(ValidatingSendFilter<>).FullName);
 
-		private IReadOnlyCollection<IValidator> _validators;
+		private readonly IReadOnlyCollection<IValidator> _validators;
 
 		public ValidatingSendFilter(IReadOnlyCollection<IValidator> validators)
 		{

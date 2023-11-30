@@ -46,8 +46,8 @@ namespace Kaizen.Comments.Service.WindsorInstaller
 				container,
 				_rabbitHost,
 				_rabbitUser,
-				_rabbitPassword,
-				(cfg, cont) => cfg.AllServiceConsumersToEndpoint(CommentsConstants.CommentsQueueName, cont, RootAssembly, Logger)
+				_rabbitPassword
+				//(cfg, cont) => cfg.AllServiceConsumersToEndpoint(CommentsConstants.CommentsQueueName, cont, RootAssembly, Logger)
 			);
 		}
 	}

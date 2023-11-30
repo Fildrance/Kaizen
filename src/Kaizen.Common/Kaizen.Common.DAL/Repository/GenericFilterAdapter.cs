@@ -1,4 +1,4 @@
-﻿using Kaizen.Common.Service;
+﻿using Kaizen.Common.Service.Contracts;
 using Kaizen.Skill.Service.DAL;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Kaizen.Common.DAL.Repository
 {
-	/// <summary> Generic implementation of filter adapter, takes care of take/skip logic. </summary>
-	public class GenericFilterAdapter<TFilterContract, TEntity> : IFilterAdapter<TFilterContract, TEntity>
+    /// <summary> Generic implementation of filter adapter, takes care of take/skip logic. </summary>
+    public class GenericFilterAdapter<TFilterContract, TEntity> : IFilterAdapter<TFilterContract, TEntity>
 		where TEntity : class
 		where TFilterContract : FilterContractBase
 	{
