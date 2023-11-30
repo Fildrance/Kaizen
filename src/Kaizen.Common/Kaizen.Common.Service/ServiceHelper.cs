@@ -13,6 +13,7 @@ namespace Kaizen.Common.Service
 {
     public static class ServiceHelper
     {
+        
         public static async Task ExecuteInNlogWrap(string loggerName, Func<Task> hostRunTaskFactory)
         {
             var curDir = Directory.GetCurrentDirectory();

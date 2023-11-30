@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Kaizen.Comments.Api.Selector;
+﻿using Kaizen.Comments.Api.Selector;
 
 namespace Kaizen.Comments.Api.Update
 {
