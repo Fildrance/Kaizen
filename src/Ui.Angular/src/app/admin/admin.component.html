@@ -1,0 +1,18 @@
+<app-single-card headerText="Management">
+	<div class="row">
+		<div
+			class="col-md-4"
+			style="float:right"
+		>
+			<dx-tabs
+				class="admin-nav-tabs"
+				[dataSource]="adminTabs"
+				(onItemClick)="selectTab($event)"
+				[(selectedIndex)]="selectedIndex"
+			></dx-tabs>
+		</div>
+	</div>
+	<div>
+		<router-outlet></router-outlet>
+	</div>
+</app-single-card>
