@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+	</PropertyGroup>
+	
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="Enterprise.ApplicationBootstrap.Telemetry" Version="0.0.42" />
+    <PackageReference Include="Enterprise.ApplicationBootstrap.WebApi" Version="0.0.42" />
+    <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kaizen.Comments.Api\Kaizen.Comments.Api.csproj" />
+  </ItemGroup>
+
+</Project>

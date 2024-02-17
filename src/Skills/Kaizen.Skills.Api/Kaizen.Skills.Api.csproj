@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Enterprise.ApplicationBootstrap.Core.Api" Version="0.0.42" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Grade\Validators\" />
+      <Folder Include="Way\Validators\" />
+    </ItemGroup>
+
+</Project>
