@@ -1,8 +1,4 @@
-﻿using Kaizen.Comments.Api.WindsorInstaller;
-using Kaizen.Common.Service;
-using Kaizen.Skill.Api.WindsorInstaller;
-using Newtonsoft.Json.Serialization;
-using SkbKontur.TypeScript.ContractGenerator;
+﻿using SkbKontur.TypeScript.ContractGenerator;
 using SkbKontur.TypeScript.ContractGenerator.Abstractions;
 using System.Linq;
 
@@ -12,7 +8,6 @@ namespace Kaizen.TypeGen
 	{
 		static void Main(string[] args)
 		{
-			var apiAssemblies = new[] { typeof(SkillApiInstaller).Assembly, typeof(CommentsApiInstaller).Assembly };
 
 			var services = apiAssemblies.SelectMany(x => x.GetTypes().Where(x => x.BaseType == typeof(BusBasedService)));
 

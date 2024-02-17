@@ -7,10 +7,10 @@
 
   <ItemGroup>
     <PackageReference Include="SkbKontur.TypeScript.ContractGenerator" Version="2.0.81" />
+    <PackageReference Include="Enterprise.ApplicationBootstrap.Core.Api" Version="0.0.42" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Kaizen.Comments\Kaizen.Comments.Api\Kaizen.Comments.Api.csproj" />
     <ProjectReference Include="..\..\src\Kaizen.Skill\Kaizen.Skill.Api\Kaizen.Skill.Api.csproj" />
   </ItemGroup>
 
