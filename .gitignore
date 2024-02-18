@@ -359,3 +359,4 @@ package-lock.json
 # user-dependant applicaiton files
 /build/comments-db/*
 /build/skill-db/*
+/src/Ui.Angular/.angular
