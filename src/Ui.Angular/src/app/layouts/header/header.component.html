@@ -1,32 +1,43 @@
 <header>
-  <dx-toolbar class="header-toolbar">
-    <dxi-item
-      *ngIf="menuToggleEnabled"
-      location="before"
-      widget="dxButton"
-      cssClass="menu-button"
-      [options]="{
+	<dx-toolbar class="header-toolbar">
+		<dxi-item
+			*ngIf="menuToggleEnabled"
+			location="before"
+			widget="dxButton"
+			cssClass="menu-button"
+			[options]="{
         icon: 'menu',
         stylingMode: 'text',
         onClick: toggleMenu
-      }">
-    </dxi-item>
-    <dxi-item
-      location="before"
-      cssClass="header-title"
-      *ngIf="title"
-      [text]="title">
-    </dxi-item>
-    <dxi-item
-      location="after"
-      locateInMenu="auto"
-      menuItemTemplate="menuItem">
-      <div *dxTemplate="let data of 'item'">
-        <div></div>  
-      </div>
-    </dxi-item>
-    <div *dxTemplate="let data of 'menuItem'">
-      <div></div>
-    </div>
-  </dx-toolbar>
+      }"
+		>
+		</dxi-item>
+		<dxi-item
+			location="before"
+			cssClass="header-title"
+			*ngIf="title"
+			[text]="title"
+		>
+		</dxi-item>
+
+		<dxi-item
+			widget="dxButton"
+			locateInMenu="never"
+			location="after"
+			menuItemTemplate="menu-item"
+		>
+			<div *dxTemplate>
+				<dx-drop-down-button
+					icon="user"
+					type="success"
+					[text]="userName"
+					[items]="profileOptions"
+					displayExpr="name"
+					(onItemClick)="onProfileItemClick($event)"
+				>
+				</dx-drop-down-button>
+			</div>
+		</dxi-item>
+
+	</dx-toolbar>
 </header>
