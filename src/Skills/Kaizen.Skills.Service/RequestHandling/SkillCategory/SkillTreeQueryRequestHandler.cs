@@ -9,7 +9,7 @@ using Kaizen.Skills.Service.DAL.Skill;
 
 namespace Kaizen.Skills.Service.RequestHandling.SkillCategory;
 
-public class SkillCategoryQueryRequestHandler(ISkillCategoryRepository repository) : QueryRespondingRequestHandler<SkillTreeFilter, SkillTreeItem>
+public class SkillTreeQueryRequestHandler(ISkillCategoryRepository repository) : QueryRespondingRequestHandler<SkillTreeFilter, SkillTreeItem>
 {
     private readonly ISkillCategoryRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
 

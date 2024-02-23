@@ -11,6 +11,7 @@ using Kaizen.Skills.Service.DAL.Entities;
 
 namespace Kaizen.Skills.Service.DAL.Way;
 
+/// <inheritdoc />
 public class WayRepository(
     IDbContextManager dbContextManager,
     IEnumerable<IAdditionalExtractConfiguration<WaySelector, WayEntity>> additionalExtractConfiguration,
@@ -26,6 +27,6 @@ public class WayRepository(
     /// <inheritdoc />
     protected override void DoConfigureExtractor(EntityExtractorBuilder<WaySelector, WayEntity> builder)
     {
-        builder.AddDiscoverRule(x => x.Id.HasValue, (x, ct) => GetById(x.Id.Value, ct));
+        builder.AddDiscoverRule(x => x.Id.HasValue, (x, _, ct) => GetById(x.Id.Value, ct));
     }
 }
