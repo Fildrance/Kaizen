@@ -189,7 +189,7 @@ export class SkillManagerService {
 				ToUpdate: { Id: selected.Id },
 				Name: selected.Name,
 				ShortDescription: selected.ShortDescription,
-				FullDescription: selectedLevel.FullDescription,
+				Description: selectedLevel.Description,
 				Weight: selectedLevel.Weight
 			};
 			observable = this.skillService.updateSkillLevel(contract);
@@ -202,7 +202,7 @@ export class SkillManagerService {
 				Name: selected.Name,
 				ShortDescription: selected.ShortDescription,
 				Parent: { Id: parent.Id },
-				FullDescription: selectedLevel.FullDescription,
+				Description: selectedLevel.Description,
 				Weight: selectedLevel.Weight
 			};
 			observable = this.skillService.createSkillLevel(contract);

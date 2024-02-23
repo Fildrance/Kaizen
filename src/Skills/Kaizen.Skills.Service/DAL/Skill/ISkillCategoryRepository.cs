@@ -19,5 +19,5 @@ public interface ISkillCategoryRepository : IDiscoverer<SkillCategorySelector, S
     /// <param name="session">Session in which context request is called.</param>
     /// <param name="ct">Token for cancellation.</param>
     /// <returns>Tree of models to return.</returns>
-    Task<Page<SkillTreeItem>> QueryTree(SkillTreeFilter request, Session session, CancellationToken ct);
+    Task<Page<SkillCategoryEntity>> QueryTree(SkillTreeFilter request, Session session, CancellationToken ct);
 }

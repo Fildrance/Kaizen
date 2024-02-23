@@ -97,11 +97,8 @@ export class SkillServiceStub extends StubCrudServiceBase<SkillCategoryItem & Tr
 		return of(found);
 	}
 
-	public query(): Observable<Page<SkillCategoryItem>> {
-		return of({
-			TotalCount: this.store.length,
-			Items: this.store
-		});
+	public query(): Observable<SkillCategoryItem[]> {
+		return of(this.store);
 	}
 
 	public createSkillLevel(contract: SkillLevelCreateContract): Observable<SkillLevelItem> {
@@ -165,7 +162,7 @@ export class SkillServiceStub extends StubCrudServiceBase<SkillCategoryItem & Tr
 						IsActive: true,
 						NodeType: 'skill',
 						IsSelected: false,
-						FullDescription: 'this is full description',
+						Description: 'this is full description',
 						Weight: 8
 					}, {
 						Id: this.getNextId(),
@@ -175,7 +172,7 @@ export class SkillServiceStub extends StubCrudServiceBase<SkillCategoryItem & Tr
 						NodeType: 'skill',
 						IsSelected: false,
 						Weight: 0,
-						FullDescription: 'qreghqerhoiqe roigher'
+						Description: 'qreghqerhoiqe roigher'
 					}]
 				},
 				{

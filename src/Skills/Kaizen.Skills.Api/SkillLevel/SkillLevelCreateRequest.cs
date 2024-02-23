@@ -8,7 +8,7 @@ public class SkillLevelCreateRequest : IRequest<SkillLevelItem>
     public string Name { get; set; }
     public string ShortDescription { get; set; }
 
-    public string FullDescription { get; set; }
+    public string Description { get; set; }
     public int? Weight { get; set; }
 
     public SkillSelector Parent { get; set; }

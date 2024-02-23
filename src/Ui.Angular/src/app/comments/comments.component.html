@@ -18,7 +18,7 @@
 				[width]="450"
 				[height]="180"
 				[dragEnabled]="false"
-				[closeOnOutsideClick]="true"
+				[hideOnOutsideClick]="true"
 				[(visible)]="isPopupVisible"
 				[showCloseButton]="false"
 				[showTitle]="false"
@@ -67,33 +67,33 @@
 				></dx-button>
 			</dxi-item>
 
-			<dxi-item formatName="separator"></dxi-item>
+			<dxi-item name="separator"></dxi-item>
 
-			<dxi-item formatName="undo"></dxi-item>
-			<dxi-item formatName="redo"></dxi-item>
-			<dxi-item formatName="separator"></dxi-item>
+			<dxi-item name="undo"></dxi-item>
+			<dxi-item name="redo"></dxi-item>
+			<dxi-item name="separator"></dxi-item>
 
-			<dxi-item formatName="bold"></dxi-item>
-			<dxi-item formatName="italic"></dxi-item>
-			<dxi-item formatName="strike"></dxi-item>
-			<dxi-item formatName="underline"></dxi-item>
-			<dxi-item formatName="separator"></dxi-item>
+			<dxi-item name="bold"></dxi-item>
+			<dxi-item name="italic"></dxi-item>
+			<dxi-item name="strike"></dxi-item>
+			<dxi-item name="underline"></dxi-item>
+			<dxi-item name="separator"></dxi-item>
 
-			<dxi-item formatName="orderedList"></dxi-item>
-			<dxi-item formatName="bulletList"></dxi-item>
-			<dxi-item formatName="separator"></dxi-item>
+			<dxi-item name="orderedList"></dxi-item>
+			<dxi-item name="bulletList"></dxi-item>
+			<dxi-item name="separator"></dxi-item>
 
-			<dxi-item formatName="color"></dxi-item>
-			<dxi-item formatName="background"></dxi-item>
-			<dxi-item formatName="separator"></dxi-item>
+			<dxi-item name="color"></dxi-item>
+			<dxi-item name="background"></dxi-item>
+			<dxi-item name="separator"></dxi-item>
 
-			<dxi-item formatName="link"></dxi-item>
-			<dxi-item formatName="image"></dxi-item>
-			<dxi-item formatName="separator"></dxi-item>
+			<dxi-item name="link"></dxi-item>
+			<dxi-item name="image"></dxi-item>
+			<dxi-item name="separator"></dxi-item>
 
-			<dxi-item formatName="clear"></dxi-item>
-			<dxi-item formatName="codeBlock"></dxi-item>
-			<dxi-item formatName="blockquote"></dxi-item>
+			<dxi-item name="clear"></dxi-item>
+			<dxi-item name="codeBlock"></dxi-item>
+			<dxi-item name="blockquote"></dxi-item>
 
 		</dxo-toolbar>
 	</dx-html-editor>
@@ -104,7 +104,7 @@
 	[showTitle]="true"
 	title="Edit"
 	[(visible)]="editPopupVisible"
-	[closeOnOutsideClick]="false"
+	[hideOnOutsideClick]="false"
 	[showCloseButton]="false"
 >
 	<div *dxTemplate="let data of 'content'">
@@ -113,32 +113,32 @@
 				<dxo-toolbar>
 					<dxi-item><b>{{itemUnderEdit.DisplayName}}</b></dxi-item>
 					<dxi-item><i>{{itemUnderEdit.On | date:'yyyy/MM/dd HH:mm'}}</i></dxi-item>
-					<dxi-item formatName="separator"></dxi-item>
-					<dxi-item formatName="undo"></dxi-item>
-					<dxi-item formatName="redo"></dxi-item>
-					<dxi-item formatName="separator"></dxi-item>
+					<dxi-item name="separator"></dxi-item>
+					<dxi-item name="undo"></dxi-item>
+					<dxi-item name="redo"></dxi-item>
+					<dxi-item name="separator"></dxi-item>
 
-					<dxi-item formatName="bold"></dxi-item>
-					<dxi-item formatName="italic"></dxi-item>
-					<dxi-item formatName="strike"></dxi-item>
-					<dxi-item formatName="underline"></dxi-item>
-					<dxi-item formatName="separator"></dxi-item>
+					<dxi-item name="bold"></dxi-item>
+					<dxi-item name="italic"></dxi-item>
+					<dxi-item name="strike"></dxi-item>
+					<dxi-item name="underline"></dxi-item>
+					<dxi-item name="separator"></dxi-item>
 
-					<dxi-item formatName="orderedList"></dxi-item>
-					<dxi-item formatName="bulletList"></dxi-item>
-					<dxi-item formatName="separator"></dxi-item>
+					<dxi-item name="orderedList"></dxi-item>
+					<dxi-item name="bulletList"></dxi-item>
+					<dxi-item name="separator"></dxi-item>
 
-					<dxi-item formatName="color"></dxi-item>
-					<dxi-item formatName="background"></dxi-item>
-					<dxi-item formatName="separator"></dxi-item>
+					<dxi-item name="color"></dxi-item>
+					<dxi-item name="background"></dxi-item>
+					<dxi-item name="separator"></dxi-item>
 
-					<dxi-item formatName="link"></dxi-item>
-					<dxi-item formatName="image"></dxi-item>
-					<dxi-item formatName="separator"></dxi-item>
+					<dxi-item name="link"></dxi-item>
+					<dxi-item name="image"></dxi-item>
+					<dxi-item name="separator"></dxi-item>
 
-					<dxi-item formatName="clear"></dxi-item>
-					<dxi-item formatName="codeBlock"></dxi-item>
-					<dxi-item formatName="blockquote"></dxi-item>
+					<dxi-item name="clear"></dxi-item>
+					<dxi-item name="codeBlock"></dxi-item>
+					<dxi-item name="blockquote"></dxi-item>
 				</dxo-toolbar>
 			</dx-html-editor>
 			<div class="pull-right">

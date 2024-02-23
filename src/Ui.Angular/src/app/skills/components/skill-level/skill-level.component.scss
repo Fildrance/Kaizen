@@ -4,3 +4,10 @@
 .dx-fieldset{
 	margin: 30px 5px;
 }
+
+:host ::ng-deep .dx-overlay-content.dx-popup-normal.dx-popup-inherit-height.dx-resizable{
+	background-color: #ff5722;
+}
+:host ::ng-deep .dx-slider-handle .dx-tooltip-wrapper.dx-popover-wrapper .dx-popover-arrow::after{
+	background: #ff5722;
+}

@@ -1,5 +1,5 @@
 <ng-container *ngIf="data">
-	<h1>{{data.Parent.Parent.Name}} => {{data.Parent.Name}} => {{data.Name}} {{data.IsActive?'':'(Не активно)'}}</h1>
+	<h2 class="skill-header">{{data.Parent.Parent.Name}} => {{data.Parent.Name}} => {{data.Name}} {{data.IsActive?'':'(Не активно)'}}</h2>
 	<fieldset>
 		<legend class="heading-line">
 			<b>General information</b>
@@ -48,37 +48,37 @@
 			<div class="dx-field">
 				<div class="dx-field-label">Full skill level description and reference materials.</div>
 				<dx-html-editor
-					[(value)]="data.FullDescription"
+					[(value)]="data.Description"
 					[readOnly]="!this.canEdit"
 				>
 					<dxo-toolbar>
-						<dxi-item formatName="separator"></dxi-item>
+						<dxi-item name="separator"></dxi-item>
 
-						<dxi-item formatName="undo"></dxi-item>
-						<dxi-item formatName="redo"></dxi-item>
-						<dxi-item formatName="separator"></dxi-item>
+						<dxi-item name="undo"></dxi-item>
+						<dxi-item name="redo"></dxi-item>
+						<dxi-item name="separator"></dxi-item>
 
-						<dxi-item formatName="bold"></dxi-item>
-						<dxi-item formatName="italic"></dxi-item>
-						<dxi-item formatName="strike"></dxi-item>
-						<dxi-item formatName="underline"></dxi-item>
-						<dxi-item formatName="separator"></dxi-item>
+						<dxi-item name="bold"></dxi-item>
+						<dxi-item name="italic"></dxi-item>
+						<dxi-item name="strike"></dxi-item>
+						<dxi-item name="underline"></dxi-item>
+						<dxi-item name="separator"></dxi-item>
 
-						<dxi-item formatName="orderedList"></dxi-item>
-						<dxi-item formatName="bulletList"></dxi-item>
-						<dxi-item formatName="separator"></dxi-item>
+						<dxi-item name="orderedList"></dxi-item>
+						<dxi-item name="bulletList"></dxi-item>
+						<dxi-item name="separator"></dxi-item>
 
-						<dxi-item formatName="color"></dxi-item>
-						<dxi-item formatName="background"></dxi-item>
-						<dxi-item formatName="separator"></dxi-item>
+						<dxi-item name="color"></dxi-item>
+						<dxi-item name="background"></dxi-item>
+						<dxi-item name="separator"></dxi-item>
 
-						<dxi-item formatName="link"></dxi-item>
-						<dxi-item formatName="image"></dxi-item>
-						<dxi-item formatName="separator"></dxi-item>
+						<dxi-item name="link"></dxi-item>
+						<dxi-item name="image"></dxi-item>
+						<dxi-item name="separator"></dxi-item>
 
-						<dxi-item formatName="clear"></dxi-item>
-						<dxi-item formatName="codeBlock"></dxi-item>
-						<dxi-item formatName="blockquote"></dxi-item>
+						<dxi-item name="clear"></dxi-item>
+						<dxi-item name="codeBlock"></dxi-item>
+						<dxi-item name="blockquote"></dxi-item>
 
 					</dxo-toolbar>
 				</dx-html-editor>
