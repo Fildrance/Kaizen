@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 import { Page } from 'src/app/shared/models/shared.models';
 import {
@@ -53,8 +53,33 @@ export class SkillServiceImpl implements SkillService {
 		return this.httpClient.put<SkillCategoryItem>(this.baseUrl + '/api/skill-category', contract);
 	}
 
-	public query(): Observable<Page<SkillCategoryItem>> {
-		return this.httpClient.post<Page<SkillCategoryItem>>(this.baseUrl + '/api/skill/query', { IncludeActive: "IncludeOnlyActive" });
+	public query(): Observable<SkillCategoryItem[]> {
+		return this.httpClient.post<SkillCategoryItem[]>(this.baseUrl + '/api/skill/query', { IncludeActive: "IncludeOnlyActive" })
+			.pipe(
+				map(x => {
+					let items = x;
+					items = items.sort((x, y) => {
+						return (x.Name > y.Name ? 1 : -1)
+					});
+					items.forEach(n => {
+						if (n.Items && n.Items.length > 0) {
+							n.Items = n.Items.sort((x, y) => {
+								return (x.Name > y.Name ? 1 : -1)
+							});
+							n.Items.forEach(nn => {
+								if (nn.Items && nn.Items.length > 0) {
+									nn.Items = nn.Items.sort((x, y) => {
+										return (x.Name > y.Name ? 1 : -1)
+									});
+
+								}
+							})
+						}
+					})
+					return items;
+				}
+				)
+			);
 	}
 
 	public createSkillLevel(contract: SkillLevelCreateContract): Observable<SkillLevelItem> {

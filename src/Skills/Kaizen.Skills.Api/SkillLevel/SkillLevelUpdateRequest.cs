@@ -9,6 +9,6 @@ public class SkillLevelUpdateRequest : IRequest<SkillLevelItem>
     public string ShortDescription { get; set; }
     public bool? IsActive { get; set; }
 
-    public string FullDescription { get; set; }
+    public string Description { get; set; }
     public int? Weight { get; set; }
 }

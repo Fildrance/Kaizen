@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Enterprise.ApplicationBootstrap.Core.Api.Models;
 using JetBrains.Annotations;
 using Kaizen.Skills.Api.Skill;
 using Kaizen.Skills.Api.SkillCategory;
 using Kaizen.Skills.Api.SkillLevel;
-using Kaizen.Skills.Service.DAL.Skill;
 
 namespace Kaizen.Skills.Service.Services;
 
@@ -50,7 +48,7 @@ public interface ISkillService
     /// <returns>Promise of paged items. </returns>
     /// <exception cref="ArgumentNullException">Thrown if <see cref="filter"/> is null. </exception>
     [NotNull]
-    Task<Page<SkillTreeItem>> Query([NotNull] SkillTreeFilter filter, CancellationToken ct);
+    Task<SkillCategoryItem[]> Query([NotNull] SkillTreeFilter filter, CancellationToken ct);
 
     /// <summary>
     /// Creates skill.

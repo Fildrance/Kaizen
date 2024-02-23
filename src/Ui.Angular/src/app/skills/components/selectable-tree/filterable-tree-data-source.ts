@@ -1,5 +1,5 @@
+import { LoadOptions } from 'devextreme/data';
 import { CustomStoreOptions } from 'devextreme/data/custom_store';
-import { LoadOptions } from 'devextreme/data/load_options';
 import { Observable } from 'rxjs';
 
 import { Page } from 'src/app/shared/models/shared.models';
@@ -63,7 +63,7 @@ export class FilterableTreeDataStore<TRootLevelItems> {
 }
 
 export function createCustomStoreOptions<T>(
-	query: (filter: LoadOptions) => Observable<Page<any>>,
+	query: (filter: LoadOptions) => Observable<any[]>,
 	itemsFilter: (node: any[]) => void
 ): CustomStoreOptions {
 
@@ -76,9 +76,9 @@ export function createCustomStoreOptions<T>(
 				promise = new Promise((res, rej) => res(store));
 			} else {
 				promise = query(options).toPromise()
-					.then((result: Page<any>) => {
+					.then((result: any[]) => {
 						store = new FilterableTreeDataStore(
-							result.Items,
+							result,
 							itemsFilter
 						);
 						return store;

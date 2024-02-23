@@ -32,62 +32,21 @@ public class SkillCategoryRepository(
     }
 
     /// <inheritdoc />
-    public async Task<Page<SkillTreeItem>> QueryTree(SkillTreeFilter request, Session session, CancellationToken ct)
+    public async Task<Page<SkillCategoryEntity>> QueryTree(SkillTreeFilter request, Session session, CancellationToken ct)
     {
         var dbContext = await GetContextAsync(ct);
-        var result = request.AggregationLevel switch
-        {
-            SkillAggregationLevel.SkillCategory => dbContext.Set<SkillCategoryEntity>()
-                                                            .Select(x => new SkillTreeItem
-                                                            {
-                                                                Id = x.Id,
-                                                                Name = x.Name,
-                                                                IsActive = x.IsActive,
-                                                                HasItems = x.Skils.Any()
-                                                            }),
-            SkillAggregationLevel.Skill => dbContext.Set<SkillEntity>()
-                                                    .Where(x => x.Category.Id == request.ParentId)
-                                                    .Select(x => new SkillTreeItem
-                                                    {
-                                                        Id = x.Id,
-                                                        Name = x.Name,
-                                                        IsActive = x.IsActive,
-                                                        HasItems = x.SkillLevels.Any()
-                                                    }),
-            SkillAggregationLevel.SkillLevel => dbContext.Set<SkillLevelEntity>()
-                                                         .Where(x => x.Skill.Id == request.ParentId)
-                                                         .Select(x => new SkillTreeItem
-                                                         {
-                                                             Id = x.Id,
-                                                             Name = x.Name,
-                                                             IsActive = x.IsActive,
-                                                             HasItems = false
-                                                         }),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-        if (!string.IsNullOrWhiteSpace(request.SubstringToFind))
-        {
-            result = result.Where(x => EF.Functions.ILike(x.Name, $"%{request.SubstringToFind}%"));
-        }
-
-        result = result.OrderBy(x => x.Id);
-        if (request.Skip.HasValue)
-        {
-            result = result.Skip(request.Skip.Value);
-        }
+        var result = dbContext.Set<SkillCategoryEntity>()
+                              .Include(x => x.Skils)
+                              .ThenInclude(x => x.SkillLevels)
+                              .OrderBy(x => x.Id);
 
         var count = await result.CountAsync(cancellationToken: ct);
         if (count == 0)
         {
-            return new Page<SkillTreeItem>(Array.Empty<SkillTreeItem>(), 0);
-        }
-
-        if (request.Take.HasValue)
-        {
-            result = result.Take(request.Take.Value);
+            return new Page<SkillCategoryEntity>(Array.Empty<SkillCategoryEntity>(), 0);
         }
 
         var data = await result.ToArrayAsync(cancellationToken: ct);
-        return new Page<SkillTreeItem>(data, count);
+        return new Page<SkillCategoryEntity>(data, count);
     }
 }

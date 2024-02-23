@@ -26,7 +26,7 @@ export type SkillCreateContract = {
 export type SkillLevelCreateContract = {
     Name?: null | string;
     ShortDescription?: null | string;
-    FullDescription?: null | string;
+    Description?: null | string;
     Weight?: null | number;
     Parent?: null | SkillSelector;
 };
@@ -52,7 +52,7 @@ export type SkillLevelUpdateContract = {
     Name?: null | string;
     ShortDescription?: null | string;
     IsActive?: null | boolean;
-    FullDescription?: null | string;
+    Description?: null | string;
     Weight?: null | number;
 };
 export type SkillCategoryItem = {
@@ -80,7 +80,7 @@ export type SkillItem = {
 };
 export type SkillLevelItem = {
     Weight?: number;
-    FullDescription?: null | string;
+    Description?: null | string;
     NodeType?: null | string;
     Id?: number;
     IsActive?: boolean;

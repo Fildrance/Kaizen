@@ -1,10 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Enterprise.ApplicationBootstrap.Core.Api.Models;
 using Kaizen.Skills.Api.Skill;
 using Kaizen.Skills.Api.SkillCategory;
 using Kaizen.Skills.Api.SkillLevel;
-using Kaizen.Skills.Service.DAL.Skill;
 using MediatR;
 
 namespace Kaizen.Skills.Service.Services;
@@ -31,7 +29,7 @@ public class SkillService(IMediator mediator) : ISkillService
     public Task<SkillLevelItem> Create(SkillLevelCreateRequest request, CancellationToken ct) => mediator.Send(request, ct);
 
     /// <inheritdoc />
-    public Task<Page<SkillTreeItem>> Query(SkillTreeFilter filter, CancellationToken ct) => mediator.Send(filter, ct);
+    public Task<SkillCategoryItem[]> Query(SkillTreeFilter filter, CancellationToken ct) => mediator.Send(filter, ct);
 
     /// <inheritdoc />
     public Task<SkillCategoryItem> Update(SkillCategoryUpdateRequest request, CancellationToken ct) => mediator.Send(request, ct);

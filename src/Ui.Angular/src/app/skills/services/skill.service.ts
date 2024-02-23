@@ -40,5 +40,5 @@ export interface SkillService {
 
 	toggleActiveSkillLevel(contract: SkillLevelChangeActiveContract): Observable<SkillLevelItem>;
 
-	query(): Observable<Page<SkillCategoryItem>>;
+	query(): Observable<SkillCategoryItem[]>;
 }

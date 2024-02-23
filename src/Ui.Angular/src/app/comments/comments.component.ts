@@ -115,8 +115,8 @@ export class CommentsComponent {
 			SubjectKey: this._subjectKey.toString(),
 			SubjectType: this._subjectType
 		};
-		this.service.query(filter).subscribe(x => {
-			this.Comments = x.Items;
-		});
+		// this.service.query(filter).subscribe(x => {
+		// 	this.Comments = x.Items;
+		// });
 	}
 }
