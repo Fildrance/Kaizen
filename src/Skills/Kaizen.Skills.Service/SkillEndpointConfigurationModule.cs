@@ -20,21 +20,21 @@ internal class SkillEndpointConfigurationModule : EndpointRouteConfigureAwareMod
         {
             CreateAggregator<ISkillService>(builder => new[]
             {
-                builder.MapPost<SkillChangeActiveRequest>("api/skills/change-active").To((service, request, ct) => service.ChangeActive(request, ct)),
                 builder.MapPost<SkillUpdateRequest>("api/skills").To((service, request, ct) => service.Update(request, ct)),
                 builder.MapPut<SkillCreateRequest>("api/skills").To((service, request, ct) => service.Create(request, ct)),
+                builder.MapPost<SkillChangeActiveRequest>("api/skills/toggle-activity").To((service, request, ct) => service.ChangeActive(request, ct)),
             }).Override((x, _) => x.WithTags("Skills")),
             CreateAggregator<ISkillService>(builder => new[]
             {
                 builder.MapPut<SkillLevelCreateRequest>("api/skill-levels").To((service, request, ct) => service.Create(request, ct)),
                 builder.MapPost<SkillLevelUpdateRequest>("api/skill-levels").To((service, request, ct) => service.Update(request, ct)),
-                builder.MapPost<SkillLevelChangeActiveRequest>("api/skill-levels/change-active").To((service, request, ct) => service.ChangeActive(request, ct)),
+                builder.MapPost<SkillLevelChangeActiveRequest>("api/skill-levels/toggle-activity").To((service, request, ct) => service.ChangeActive(request, ct)),
             }).Override((x, _) => x.WithTags("SkillLevels")),
             CreateAggregator<ISkillService>(builder => new[]
                 {
                     builder.MapPut<SkillCategoryCreateRequest>("api/skill-categories").To((service, request, ct) => service.Create(request, ct)),
                     builder.MapPost<SkillCategoryUpdateRequest>("api/skill-categories").To((service, request, ct) => service.Update(request, ct)),
-                    builder.MapPost<SkillCategoryChangeActiveRequest>("api/skill-categories/change-active")
+                    builder.MapPost<SkillCategoryChangeActiveRequest>("api/ /toggle-activity")
                            .To((service, request, ct) => service.ChangeActive(request, ct)),
                     builder.MapPost<SkillTreeFilter>("api/skill/query").To((service, request, ct) => service.Query(request, ct))
                            .RequireAuthorization(x => x.RequireProtectedResource("skill-tree", "list"))

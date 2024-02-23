@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Enterprise.ApplicationBootstrap.DataAccessLayer.PgSql" Version="0.0.42" />
-        <PackageReference Include="Enterprise.ApplicationBootstrap.Telemetry" Version="0.0.42" />
-        <PackageReference Include="Enterprise.ApplicationBootstrap.WebApi" Version="0.0.42" />
+        <PackageReference Include="Enterprise.ApplicationBootstrap.DataAccessLayer.PgSql" Version="0.0.44" />
+        <PackageReference Include="Enterprise.ApplicationBootstrap.Telemetry" Version="0.0.44" />
+        <PackageReference Include="Enterprise.ApplicationBootstrap.WebApi" Version="0.0.44" />
         <PackageReference Include="AutoMapper" Version="12.0.1" />
         
         <PackageReference Include="Keycloak.AuthServices.Authentication" Version="1.6.0" />

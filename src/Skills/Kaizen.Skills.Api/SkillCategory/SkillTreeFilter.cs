@@ -11,4 +11,6 @@ public class SkillTreeFilter : FilterContractBase, IRequest<Page<SkillTreeItem>>
     public SkillAggregationLevel AggregationLevel { get; set; }
 
     [CanBeNull] public string SubstringToFind { get; set; }
+
+    [CanBeNull] public int? ParentId { get; set; }
 }

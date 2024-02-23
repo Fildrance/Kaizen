@@ -12,8 +12,9 @@ public class GradeRepository(
     IEnumerable<IAdditionalExtractConfiguration<GradeSelector, GradeEntity>> additionalConfigurations
 ) : DiscoveringRepositoryBase<GradeSelector, GradeEntity, int>(dbContextManager, additionalConfigurations), IGradeRepository
 {
+    /// <inheritdoc />
     protected override void DoConfigureExtractor(EntityExtractorBuilder<GradeSelector, GradeEntity> builder)
     {
-        builder.AddDiscoverRule(x => x.Id.HasValue, (x, ct) => GetById(x.Id.Value, ct));
+        builder.AddDiscoverRule(x => x.Id.HasValue, (x, _, ct) => GetById(x.Id.Value, ct));
     }
 }

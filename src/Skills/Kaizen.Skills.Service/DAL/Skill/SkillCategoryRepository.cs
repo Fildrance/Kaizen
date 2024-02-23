@@ -28,7 +28,7 @@ public class SkillCategoryRepository(
     protected override void DoConfigureExtractor(EntityExtractorBuilder<SkillCategorySelector, SkillCategoryEntity> builder)
     {
         // ReSharper disable once PossibleInvalidOperationException
-        builder.AddDiscoverRule(x => x.Id.HasValue, (x, ct) => GetById(x.Id.Value, ct));
+        builder.AddDiscoverRule(x => x.Id.HasValue, (x, _, ct) => GetById(x.Id.Value, ct));
     }
 
     /// <inheritdoc />
@@ -42,20 +42,25 @@ public class SkillCategoryRepository(
                                                             {
                                                                 Id = x.Id,
                                                                 Name = x.Name,
+                                                                IsActive = x.IsActive,
                                                                 HasItems = x.Skils.Any()
                                                             }),
             SkillAggregationLevel.Skill => dbContext.Set<SkillEntity>()
+                                                    .Where(x => x.Category.Id == request.ParentId)
                                                     .Select(x => new SkillTreeItem
                                                     {
                                                         Id = x.Id,
                                                         Name = x.Name,
+                                                        IsActive = x.IsActive,
                                                         HasItems = x.SkillLevels.Any()
                                                     }),
             SkillAggregationLevel.SkillLevel => dbContext.Set<SkillLevelEntity>()
+                                                         .Where(x => x.Skill.Id == request.ParentId)
                                                          .Select(x => new SkillTreeItem
                                                          {
                                                              Id = x.Id,
                                                              Name = x.Name,
+                                                             IsActive = x.IsActive,
                                                              HasItems = false
                                                          }),
             _ => throw new ArgumentOutOfRangeException()
@@ -70,14 +75,19 @@ public class SkillCategoryRepository(
         {
             result = result.Skip(request.Skip.Value);
         }
-        var count = result.CountAsync(cancellationToken: ct);
+
+        var count = await result.CountAsync(cancellationToken: ct);
+        if (count == 0)
+        {
+            return new Page<SkillTreeItem>(Array.Empty<SkillTreeItem>(), 0);
+        }
 
         if (request.Take.HasValue)
         {
             result = result.Take(request.Take.Value);
         }
 
-        var data = result.ToArrayAsync(cancellationToken: ct);
-        return new Page<SkillTreeItem>(await data, await count);
+        var data = await result.ToArrayAsync(cancellationToken: ct);
+        return new Page<SkillTreeItem>(data, count);
     }
 }

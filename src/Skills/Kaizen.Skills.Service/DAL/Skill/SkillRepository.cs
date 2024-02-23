@@ -12,8 +12,9 @@ public class SkillRepository(
     IEnumerable<IAdditionalExtractConfiguration<SkillSelector, SkillEntity>> additionalConfigurations
 ) : DiscoveringRepositoryBase<SkillSelector, SkillEntity, int>(dbContextManager, additionalConfigurations), ISkillRepository
 {
+    /// <inheritdoc />
     protected override void DoConfigureExtractor(EntityExtractorBuilder<SkillSelector, SkillEntity> builder)
     {
-        builder.AddDiscoverRule(x => x.Id.HasValue, (x, ct) => GetById(x.Id.Value, ct));
+        builder.AddDiscoverRule(x => x.Id.HasValue, (x, _, ct) => GetById(x.Id.Value, ct));
     }
 }
