@@ -1,6 +1,6 @@
 import { LoadOptions } from 'devextreme/data';
 import { CustomStoreOptions } from 'devextreme/data/custom_store';
-import { Observable } from 'rxjs';
+import { Observable, lastValueFrom, map } from 'rxjs';
 
 import { Page } from 'src/app/shared/models/shared.models';
 import { TreeNode } from 'src/app/shared/models/util.models';
@@ -75,14 +75,18 @@ export function createCustomStoreOptions<T>(
 			if (store) {
 				promise = new Promise((res, rej) => res(store));
 			} else {
-				promise = query(options).toPromise()
-					.then((result: any[]) => {
-						store = new FilterableTreeDataStore(
-							result,
-							itemsFilter
-						);
-						return store;
-					});
+				promise = lastValueFrom(
+					query(options)
+						.pipe(
+							map(m => {
+								store = new FilterableTreeDataStore(
+									m,
+									itemsFilter
+								);
+								return store;
+							})
+						)
+				);
 			}
 
 			return promise as Promise<any>;

@@ -7,9 +7,9 @@ import { KeycloakAngularModule, KeycloakService, KeycloakBearerInterceptor } fro
 import { AppRoutingModule } from './app-routing.module';
 import { RootComponent } from './root.component';
 import { SideNavInnerToolbarModule } from './layouts/side-nav-inner-toolbar/side-nav-inner-toolbar.component';
-import { SingleCardModule } from './layouts/single-card/single-card.component';
 import { ScreenService } from './shared/services/screen.service';
 import { AppInfoService } from './shared/services/app-info.service';
+import { SkillModule } from './skills/skill.module';
 
 
 function initializeKeycloak(keycloak: KeycloakService) {
@@ -51,11 +51,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
 	imports: [
 		BrowserModule,
 		SideNavInnerToolbarModule,
-		SingleCardModule,
 		AppRoutingModule,
 		HttpClientModule,
 		NgbModule,
-		KeycloakAngularModule
+		KeycloakAngularModule,
+		SkillModule
 	],
 	providers: [
 		ScreenService,

@@ -1,5 +1,4 @@
 import { Component, Input, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
 	selector: 'app-single-card',
@@ -12,10 +11,3 @@ export class SingleCardComponent {
 
 	constructor() { }
 }
-
-@NgModule({
-	imports: [CommonModule],
-	exports: [SingleCardComponent],
-	declarations: [SingleCardComponent]
-})
-export class SingleCardModule { }

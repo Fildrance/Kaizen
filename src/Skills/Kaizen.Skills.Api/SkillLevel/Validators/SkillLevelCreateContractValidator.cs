@@ -16,7 +16,7 @@ public class SkillLevelCreateContractValidator : AbstractValidator<SkillLevelCre
         RuleFor(x => x.Parent)
             .NotNull()
             .SetValidator(skillSelectorValidator);
-        RuleFor(x => x.FullDescription)
+        RuleFor(x => x.Description)
             .MaximumLength(8000);
         RuleFor(x => x.Weight)
             .GreaterThanOrEqualTo(0);
