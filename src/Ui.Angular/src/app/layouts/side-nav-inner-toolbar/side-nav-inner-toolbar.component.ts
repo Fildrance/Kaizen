@@ -5,7 +5,6 @@ import { DxToolbarModule } from 'devextreme-angular/ui/toolbar';
 import { CommonModule } from '@angular/common';
 
 import { Router, NavigationEnd } from '@angular/router';
-import { SideNavigationMenuModule } from '../side-navigation-menu/side-navigation-menu.component';
 import { HeaderModule } from '../header/header.component';
 import { ScreenService } from 'src/app/shared/services/screen.service';
 
@@ -99,7 +98,7 @@ export class SideNavInnerToolbarComponent implements OnInit {
 }
 
 @NgModule({
-	imports: [DxDrawerModule, DxToolbarModule, DxScrollViewModule, CommonModule, SideNavigationMenuModule, HeaderModule],
+	imports: [DxDrawerModule, DxToolbarModule, DxScrollViewModule, CommonModule, HeaderModule],
 	exports: [SideNavInnerToolbarComponent],
 	declarations: [SideNavInnerToolbarComponent]
 })

@@ -15,7 +15,7 @@ public class SkillLevelUpdateContractValidator : AbstractValidator<SkillLevelUpd
             .NotNull()
             .NotEmpty()
             .MaximumLength(1023);
-        RuleFor(x => x.FullDescription)
+        RuleFor(x => x.Description)
             .MaximumLength(8000);
         RuleFor(x => x.Weight)
             .GreaterThanOrEqualTo(0);

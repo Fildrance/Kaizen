@@ -13,7 +13,7 @@ import {
 } from 'devextreme-angular';
 
 import { environment } from 'src/environments/environment';
-import { SingleCardModule } from '../layouts/single-card/single-card.component';
+import { SingleCardComponent } from '../layouts/single-card/single-card.component';
 import { RoutesByTypes } from '../shared/models/util.models';
 import { SelectableTreeViewComponent } from './components/selectable-tree/selectableTreeView.component';
 import { SkillCategoryComponent } from './components/skill-category/skill-category.component';
@@ -40,7 +40,6 @@ const routesByTypes = new RoutesByTypes(map);
 		DxTreeViewModule,
 		DxTextBoxModule,
 		DxButtonModule,
-		SingleCardModule,
 		DxTextBoxModule,
 		DxTextAreaModule,
 		DxToolbarModule,
@@ -56,6 +55,7 @@ const routesByTypes = new RoutesByTypes(map);
 		SkillManagerService
 	],
 	declarations: [
+		SingleCardComponent,
 		SkillManagerComponent,
 		SelectableTreeViewComponent,
 		SkillCategoryComponent,

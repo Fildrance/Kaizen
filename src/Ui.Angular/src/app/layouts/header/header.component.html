@@ -21,6 +21,39 @@
 		</dxi-item>
 
 		<dxi-item
+			locateInMenu="never"
+			location="before"
+		>
+			<div *dxTemplate>
+				<div
+					class="header__logo"
+					(click)="goHome()"
+				>
+					KAIZEN
+				</div>
+			</div>
+		</dxi-item>
+
+		<dxi-item
+			locateInMenu="never"
+			location="before"
+		>
+			<div *dxTemplate>
+				<dx-menu
+					#menu
+					[dataSource]="navigationOptions"
+					displayExpr="name"
+					[showFirstSubmenuMode]="showFirstSubmenuModes"
+					orientation="horizontal"
+					[hideSubmenuOnMouseLeave]="false"
+					(onItemClick)="onNavigationItemClick($event)"
+				>
+				</dx-menu>
+			</div>
+		</dxi-item>
+
+
+		<dxi-item
 			widget="dxButton"
 			locateInMenu="never"
 			location="after"
