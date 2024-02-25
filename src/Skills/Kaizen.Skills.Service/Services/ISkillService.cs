@@ -107,4 +107,31 @@ public interface ISkillService
     /// <returns>Promise of changed record. </returns>
     [NotNull]
     Task<SkillLevelItem> ChangeActive([NotNull] SkillLevelChangeActiveRequest request, CancellationToken ct);
+
+    /// <summary>
+    /// Find skill by selector.
+    /// </summary>
+    /// <param name="request">Selector by which skill have to be found.</param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    /// <returns>Found skill item or null.</returns>
+    [NotNull]
+    Task<SkillItem> Find([NotNull] SkillSelector request, CancellationToken ct);
+
+    /// <summary>
+    /// Find skill level by selector.
+    /// </summary>
+    /// <param name="request">Selector by which skill level have to be found.</param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    /// <returns>Found skill level item or null.</returns>
+    [NotNull]
+    Task<SkillLevelItem> Find([NotNull] SkillLevelSelector request, CancellationToken ct);
+
+    /// <summary>
+    /// Find skill category by selector.
+    /// </summary>
+    /// <param name="request">Selector by which skill category have to be found.</param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    /// <returns>Found skill category item or null.</returns>
+    [NotNull]
+    Task<SkillCategoryItem> Find([NotNull] SkillCategorySelector request, CancellationToken ct);
 }
