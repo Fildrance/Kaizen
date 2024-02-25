@@ -30,27 +30,27 @@ export class SkillServiceImpl implements SkillService {
 	}
 
 	public toggleActiveSkill(contract: SkillChangeActiveContract): Observable<SkillItem> {
-		return this.httpClient.post<SkillItem>(this.baseUrl + '/api/skill/toggle-activity', contract);
+		return this.httpClient.post<SkillItem>(this.baseUrl + '/api/skills/toggle-activity', contract);
 	}
 
 	public createSkill(contract: SkillCreateContract): Observable<SkillItem> {
-		return this.httpClient.post<SkillItem>(this.baseUrl + '/api/skill', contract);
+		return this.httpClient.post<SkillItem>(this.baseUrl + '/api/skills', contract);
 	}
 
 	public updateSkill(contract: SkillUpdateContract): Observable<SkillItem> {
-		return this.httpClient.put<SkillItem>(this.baseUrl + '/api/skill', contract);
+		return this.httpClient.post<SkillItem>(this.baseUrl + '/api/skills', contract);
 	}
 
 	public toggleActiveCategory(contract: SkillCategoryChangeActiveContract): Observable<SkillCategoryItem> {
-		return this.httpClient.post<SkillCategoryItem>(this.baseUrl + '/api/skill-category/toggle-activity', contract);
+		return this.httpClient.put<SkillCategoryItem>(this.baseUrl + '/api/skill-categories/toggle-activity', contract);
 	}
 
 	public createCategory(contract: SkillCategoryCreateContract): Observable<SkillCategoryItem> {
-		return this.httpClient.post<SkillCategoryItem>(this.baseUrl + '/api/skill-category', contract);
+		return this.httpClient.put<SkillCategoryItem>(this.baseUrl + '/api/skill-categories', contract);
 	}
 
 	public updateCategory(contract: SkillCategoryUpdateContract): Observable<SkillCategoryItem> {
-		return this.httpClient.put<SkillCategoryItem>(this.baseUrl + '/api/skill-category', contract);
+		return this.httpClient.post<SkillCategoryItem>(this.baseUrl + '/api/skill-categories', contract);
 	}
 
 	public query(): Observable<SkillCategoryItem[]> {
@@ -83,14 +83,14 @@ export class SkillServiceImpl implements SkillService {
 	}
 
 	public createSkillLevel(contract: SkillLevelCreateContract): Observable<SkillLevelItem> {
-		return this.httpClient.post<SkillLevelItem>(this.baseUrl + '/api/skill-level', contract);
+		return this.httpClient.put<SkillLevelItem>(this.baseUrl + '/api/skill-levels', contract);
 	}
 
 	public updateSkillLevel(contract: SkillLevelUpdateContract): Observable<SkillLevelItem> {
-		return this.httpClient.put<SkillLevelItem>(this.baseUrl + '/api/skill-level', contract);
+		return this.httpClient.post<SkillLevelItem>(this.baseUrl + '/api/skill-levels', contract);
 	}
 
 	public toggleActiveSkillLevel(contract: SkillLevelChangeActiveContract): Observable<SkillLevelItem> {
-		return this.httpClient.post<SkillLevelItem>(this.baseUrl + '/api/skill-level/toggle-activity', contract);
+		return this.httpClient.post<SkillLevelItem>(this.baseUrl + '/api/skill-levels/toggle-activity', contract);
 	}
 }
