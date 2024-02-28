@@ -10,8 +10,9 @@ import { SkillManagerState } from '../../models/skill-manager-state';
 import { createCustomStoreOptions } from '../selectable-tree/filterable-tree-data-source';
 import { HasId, searchInTree } from 'src/app/shared/services/utils.service';
 import { SkillManagerService } from './skill-manager.service';
-import { SkillBase } from 'src/app/shared/models/skill.model';
-import { TreeNode, RoutesByTypes, DxButtonOptions } from 'src/app/shared/models/util.models';
+import { SkillAggregationLevel } from 'src/app/shared/models/skill.model';
+import { TreeNodeViewModel, RoutesByTypes, DxButtonOptions } from 'src/app/shared/models/util.models';
+import { SkillTreeItemViewModel } from './skill-models';
 
 @Component({
 	templateUrl: 'skill-manager.component.html',
@@ -20,16 +21,16 @@ import { TreeNode, RoutesByTypes, DxButtonOptions } from 'src/app/shared/models/
 export class SkillManagerComponent implements OnDestroy {
 
 	public dataSource: DataSource;
-	public get Selected(): TreeNode<any> & SkillBase {
+	public get Selected(): TreeNodeViewModel<any, SkillAggregationLevel> | null {
 		return this.selected;
 	}
-	public set Selected(value: TreeNode<any> & SkillBase) {
+	public set Selected(value: TreeNodeViewModel<any, SkillAggregationLevel> | null) {
 		this.tryNavigate(value);
 		this.selected = value;
 		this.state.selectNode(value);
 	}
 
-	private selected: TreeNode<any> & SkillBase;
+	private selected: TreeNodeViewModel<any, SkillAggregationLevel>;
 	private store: CustomStore;
 	private subscription: Subscription = new Subscription();
 
@@ -41,7 +42,16 @@ export class SkillManagerComponent implements OnDestroy {
 		route: ActivatedRoute,
 		private managerService: SkillManagerService
 	) {
-		const opts = createCustomStoreOptions(_ => this.client.query(), _ => { });
+		const opts = createCustomStoreOptions(_ => {
+			return this.client.query()
+				.pipe(
+					map(
+						x => {
+							return x.map(item => SkillTreeItemViewModel.create(item));
+						}
+					)
+				)
+		}, _ => { });
 		this.store = new CustomStore(opts);
 		this.dataSource = new DataSource(this.store);
 
@@ -97,11 +107,11 @@ export class SkillManagerComponent implements OnDestroy {
 		this.subscription.unsubscribe();
 	}
 
-	public hasId(node: TreeNode<any>): boolean {
+	public hasId(node: TreeNodeViewModel<any, SkillAggregationLevel>): boolean {
 		return HasId(node);
 	}
 
-	private tryNavigate(value: SkillBase & TreeNode<any>): void {
+	private tryNavigate(value: TreeNodeViewModel<any, SkillAggregationLevel>): void {
 		if (value === this.Selected) {
 			return;
 		}

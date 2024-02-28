@@ -1,10 +1,11 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 
-import { SkillCategoryItem } from 'src/app/shared/models/skill.model';
+import { SkillAggregationLevel, SkillCategoryItem } from 'src/app/shared/models/skill.model';
 import { SkillManagerState } from '../../models/skill-manager-state';
+import { SkillService, SkillServiceToken } from '../../services/skill.service';
 
 
 @Component({
@@ -19,11 +20,13 @@ export class SkillCategoryComponent implements OnDestroy {
 
 	constructor(
 		private state: SkillManagerState,
-		activeRoute: ActivatedRoute
+		activeRoute: ActivatedRoute,
+		@Inject(SkillServiceToken) private client: SkillService,
 	) {
 		this.subscription = activeRoute.url.pipe(
 			switchMap(_ => this.state.SelectedNode$),
-			filter(x => !x || x.NodeType === 'skill-category')
+			filter(x => x && x.NodeType === SkillAggregationLevel.SkillCategory),
+			switchMap(x => client.findSkillCategory(x.Id))
 		).subscribe(x => {
 			this.data = x;
 		});

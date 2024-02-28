@@ -1,9 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Enterprise.ApplicationBootstrap.DataAccessLayer.Discover;
 using Kaizen.Skills.Api.SkillCategory;
-using Kaizen.Skills.Service.DAL.Entities;
+using Kaizen.Skills.Service.DAL.Skill;
 using MediatR;
 
 namespace Kaizen.Skills.Service.RequestHandling.SkillCategory;
@@ -14,7 +13,7 @@ namespace Kaizen.Skills.Service.RequestHandling.SkillCategory;
 /// <param name="discoverer">Repository for skill category.</param>
 /// <param name="mapper">Automapper.</param>
 public class SkillCategoryFindRequestHandler(
-    IDiscoverer<SkillCategorySelector, SkillCategoryEntity> discoverer,
+    ISkillCategoryRepository discoverer,
     IMapper mapper
 ) : IRequestHandler<SkillCategorySelector, SkillCategoryItem>
 {

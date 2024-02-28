@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Enterprise.ApplicationBootstrap.Core.Api;
-using Enterprise.ApplicationBootstrap.Core.Api.Models;
 using Enterprise.ApplicationBootstrap.DataAccessLayer.Discover;
 using Enterprise.ApplicationBootstrap.DataAccessLayer.Discover.EntityExtractor;
 using Enterprise.ApplicationBootstrap.DataAccessLayer.Repository;
+using Kaizen.Skills.Api;
 using Kaizen.Skills.Api.SkillCategory;
+using Kaizen.Skills.Api.SkillTree;
 using Kaizen.Skills.Service.DAL.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Kaizen.Skills.Service.DAL.Skill;
 
@@ -32,21 +33,47 @@ public class SkillCategoryRepository(
     }
 
     /// <inheritdoc />
-    public async Task<Page<SkillCategoryEntity>> QueryTree(SkillTreeFilter request, Session session, CancellationToken ct)
+    public async Task<SkillTreeModel[]> QueryTree(SkillTreeFilter request, Session session, CancellationToken ct)
     {
         var dbContext = await GetContextAsync(ct);
-        var result = dbContext.Set<SkillCategoryEntity>()
-                              .Include(x => x.Skils)
-                              .ThenInclude(x => x.SkillLevels)
-                              .OrderBy(x => x.Id);
 
-        var count = await result.CountAsync(cancellationToken: ct);
-        if (count == 0)
+        WhereExpressionContainer whereExpressions = request.IncludeActive switch
         {
-            return new Page<SkillCategoryEntity>(Array.Empty<SkillCategoryEntity>(), 0);
-        }
+            IncludeActiveOption.IncludeOnlyActive => new WhereExpressionContainer(entity => entity.IsActive, entity => entity.IsActive, entity => entity.IsActive),
+            IncludeActiveOption.IncludeOnlyInactive => new WhereExpressionContainer(entity => !entity.IsActive, entity => !entity.IsActive, entity => !entity.IsActive),
+            IncludeActiveOption.IncludeAll => new WhereExpressionContainer(entity => true, entity => true, entity => true),
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
-        var data = await result.ToArrayAsync(cancellationToken: ct);
-        return new Page<SkillCategoryEntity>(data, count);
+
+        var results = dbContext.Set<SkillCategoryEntity>()
+                               .Where(whereExpressions.Category)
+                               .Select(x => new SkillTreeModel { Name = x.Name, Id = x.Id, IsActive = x.IsActive, ParentId = null, NodeType = SkillAggregationLevel.SkillCategory})
+                               .Concat(
+                                   dbContext.Set<SkillEntity>().Where(whereExpressions.Skill)
+                                            .Select(x => new SkillTreeModel { Name = x.Name, Id = x.Id, IsActive = x.IsActive, ParentId = x.CategoryId, NodeType = SkillAggregationLevel.Skill})
+                               ).Concat(
+                                   dbContext.Set<SkillLevelEntity>().Where(whereExpressions.Level)
+                                            .Select(x => new SkillTreeModel { Name = x.Name, Id = x.Id, IsActive = x.IsActive, ParentId = x.SkillId, NodeType = SkillAggregationLevel.SkillLevel })
+                               )
+                               .ToArray();
+
+
+        return results;
     }
+
+    private record WhereExpressionContainer(
+        Expression<Func<SkillCategoryEntity, bool>> Category,
+        Expression<Func<SkillEntity, bool>> Skill,
+        Expression<Func<SkillLevelEntity, bool>> Level
+    );
+}
+
+public class SkillTreeModel
+{
+    public string Name { get; set; }
+    public int Id { get; set; }
+    public bool IsActive { get; set; }
+    public int? ParentId { get; set; }
+    public SkillAggregationLevel NodeType { get; set; }
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { SkillAggregationLevel } from './skill.model';
 
 export class DxButtonOptions {
 	icon?: string;
@@ -7,24 +8,24 @@ export class DxButtonOptions {
 	text?: string;
 }
 
-
-export interface TreeNode<TChildType> {
-	Id: number;
-	Name: string;
+export interface TreeNodeViewModel<TChildType extends TreeNodeViewModel<any, TNodeTypeEnum>, TNodeTypeEnum> {
+	get Id(): number;
+	get Name(): string;
 	IsSelected?: boolean;
-	IsActive: boolean;
-	Items?: Array<TChildType>;
-	Parent?: TreeNode<any>;
-	NodeType?: string;
-	ItemsFilter?: (items?: Array<TreeNode<TChildType>>) => void;
+	IsExpanded?: boolean;
+	get IsActive(): boolean;
+	Items: TChildType[] | null;
+	Parent: TreeNodeViewModel<any, TNodeTypeEnum> | null;
+	get NodeType(): TNodeTypeEnum;
+	ItemsFilter?: (items?: Array<TreeNodeViewModel<TChildType, TNodeTypeEnum>>) => void;
 }
 
 @Injectable()
 export class RoutesByTypes {
 
-	constructor(private routesByTypes: Map<string, string>) { }
+	constructor(private routesByTypes: Map<SkillAggregationLevel, string>) { }
 
-	public get(type: string): string {
+	public get(type: SkillAggregationLevel): string {
 		return this.routesByTypes.get(type);
 	}
 }

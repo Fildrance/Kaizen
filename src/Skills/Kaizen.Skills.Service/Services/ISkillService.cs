@@ -5,12 +5,23 @@ using JetBrains.Annotations;
 using Kaizen.Skills.Api.Skill;
 using Kaizen.Skills.Api.SkillCategory;
 using Kaizen.Skills.Api.SkillLevel;
+using Kaizen.Skills.Api.SkillTree;
 
 namespace Kaizen.Skills.Service.Services;
 
 /// <summary> Service for management of skills.</summary>
 public interface ISkillService
 {
+    /// <summary>
+    /// Queries skill tree elements.
+    /// </summary>
+    /// <param name="filter">Filter contract with data for filtering logic. </param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    /// <returns>Promise of paged items. </returns>
+    /// <exception cref="ArgumentNullException">Thrown if <see cref="filter"/> is null. </exception>
+    [NotNull]
+    Task<SkillTreeItem[]> Query([NotNull] SkillTreeFilter filter, CancellationToken ct);
+
     /// <summary>
     /// Creates skill category.
     /// </summary>
@@ -39,16 +50,6 @@ public interface ISkillService
     /// <returns>Promise of changed record. </returns>
     [NotNull]
     Task<SkillCategoryItem> ChangeActive([NotNull] SkillCategoryChangeActiveRequest request, CancellationToken ct);
-
-    /// <summary>
-    /// Queries skill tree elements.
-    /// </summary>
-    /// <param name="filter">Filter contract with data for filtering logic. </param>
-    /// <param name="ct">Token for operation cancellation.</param>
-    /// <returns>Promise of paged items. </returns>
-    /// <exception cref="ArgumentNullException">Thrown if <see cref="filter"/> is null. </exception>
-    [NotNull]
-    Task<SkillCategoryItem[]> Query([NotNull] SkillTreeFilter filter, CancellationToken ct);
 
     /// <summary>
     /// Creates skill.

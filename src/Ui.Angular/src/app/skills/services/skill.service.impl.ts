@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
@@ -15,7 +15,8 @@ import {
 	SkillLevelCreateContract,
 	SkillLevelItem,
 	SkillLevelUpdateContract,
-	SkillLevelChangeActiveContract
+	SkillLevelChangeActiveContract,
+	SkillTreeItem
 } from 'src/app/shared/models/skill.model';
 
 import { SkillService } from './skill.service';
@@ -53,32 +54,21 @@ export class SkillServiceImpl implements SkillService {
 		return this.httpClient.post<SkillCategoryItem>(this.baseUrl + '/api/skill-categories', contract);
 	}
 
-	public query(): Observable<SkillCategoryItem[]> {
-		return this.httpClient.post<SkillCategoryItem[]>(this.baseUrl + '/api/skill/query', { IncludeActive: "IncludeOnlyActive" })
+	public queryOld(): Observable<SkillCategoryItem[]> {
+		return this.httpClient.post<SkillCategoryItem[]>(this.baseUrl + '/api/skill/query-old', { IncludeActive: "IncludeOnlyActive" })
 			.pipe(
 				map(x => {
-					let items = x;
-					items = items.sort((x, y) => {
-						return (x.Name > y.Name ? 1 : -1)
-					});
-					items.forEach(n => {
-						if (n.Items && n.Items.length > 0) {
-							n.Items = n.Items.sort((x, y) => {
-								return (x.Name > y.Name ? 1 : -1)
-							});
-							n.Items.forEach(nn => {
-								if (nn.Items && nn.Items.length > 0) {
-									nn.Items = nn.Items.sort((x, y) => {
-										return (x.Name > y.Name ? 1 : -1)
-									});
+					return x.map(item => item);
+				})
+			);
+	}
 
-								}
-							})
-						}
-					})
-					return items;
-				}
-				)
+	public query(): Observable<SkillTreeItem[]> {
+		return this.httpClient.post<SkillTreeItem[]>(this.baseUrl + '/api/skill/query', { IncludeActive: "IncludeOnlyActive" })
+			.pipe(
+				map(x => {
+					return x.map(item => item);
+				})
 			);
 	}
 
@@ -92,5 +82,23 @@ export class SkillServiceImpl implements SkillService {
 
 	public toggleActiveSkillLevel(contract: SkillLevelChangeActiveContract): Observable<SkillLevelItem> {
 		return this.httpClient.post<SkillLevelItem>(this.baseUrl + '/api/skill-levels/toggle-activity', contract);
+	}
+
+	public findSkillLevel(id: number): Observable<SkillLevelItem> {
+		let params = new HttpParams()
+			.set('Id', id);;
+		return this.httpClient.get<SkillLevelItem>(this.baseUrl + '/api/skill-levels', { params: params });
+	}
+
+	public findSkillCategory(id: number): Observable<SkillCategoryItem> {
+		let params = new HttpParams()
+			.set('Id', id);;
+		return this.httpClient.get<SkillLevelItem>(this.baseUrl + '/api/skill-categories', { params: params });
+	}
+
+	public findSkill(id: number): Observable<SkillItem> {
+		let params = new HttpParams()
+			.set('Id', id);
+		return this.httpClient.get<SkillLevelItem>(this.baseUrl + '/api/skills', { params: params });
 	}
 }

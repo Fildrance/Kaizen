@@ -14,7 +14,8 @@ import {
 	SkillLevelCreateContract,
 	SkillLevelItem,
 	SkillLevelUpdateContract,
-	SkillLevelChangeActiveContract
+	SkillLevelChangeActiveContract,
+	SkillTreeItem
 } from 'src/app/shared/models/skill.model';
 
 
@@ -22,6 +23,12 @@ import {
 export const SkillServiceToken = new InjectionToken<SkillService>('SkillServiceInterface')
 
 export interface SkillService {
+	findSkillLevel(Id: number): Observable<SkillLevelItem> ;
+
+	findSkillCategory(Id: number): Observable<SkillCategoryItem> ;
+
+	findSkill(Id: number): Observable<SkillItem> ;
+
 	createCategory(contract: SkillCategoryCreateContract): Observable<SkillCategoryItem>;
 
 	updateCategory(contract: SkillCategoryUpdateContract): Observable<SkillCategoryItem>;
@@ -40,5 +47,5 @@ export interface SkillService {
 
 	toggleActiveSkillLevel(contract: SkillLevelChangeActiveContract): Observable<SkillLevelItem>;
 
-	query(): Observable<SkillCategoryItem[]>;
+	query(): Observable<SkillTreeItem[]>;
 }

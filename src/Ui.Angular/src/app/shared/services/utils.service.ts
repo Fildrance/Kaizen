@@ -1,17 +1,17 @@
 import { HttpParams } from '@angular/common/http';
 
-import { SkillBase } from '../models/skill.model';
-import { TreeNode } from '../models/util.models';
+import { TreeNodeViewModel } from '../models/util.models';
+import { SkillAggregationLevel } from '../models/skill.model';
 
 export function HasId(item: { Id?: number }): boolean {
 	return item.Id === 0 || item.Id > 0;
 }
 
 export function searchInTree(
-	rootNodes: Array<TreeNode<any> & SkillBase>,
+	rootNodes: Array<TreeNodeViewModel<any, SkillAggregationLevel>>,
 	idToFind: number,
 	tierToBeSearched: string
-): TreeNode<any> & SkillBase {
+): TreeNodeViewModel<any, SkillAggregationLevel> {
 	if (tierToBeSearched === 'skill-category') {
 		return rootNodes.find(i => i.Id === idToFind);
 	} else if (tierToBeSearched === 'skill') {
@@ -21,11 +21,11 @@ export function searchInTree(
 	}
 }
 
-export function findSkillById(items: Array<TreeNode<any> & SkillBase>, id: number): TreeNode<any> & SkillBase {
+export function findSkillById(items: Array<TreeNodeViewModel<any, SkillAggregationLevel>>, id: number): TreeNodeViewModel<any, SkillAggregationLevel> {
 	let found;
 	for (const iterator of items) {
 		if (iterator.Items) {
-			found = iterator.Items.find((i: TreeNode<any>) => i.Id === id);
+			found = iterator.Items.find((i: TreeNodeViewModel<any, SkillAggregationLevel>) => i.Id === id);
 			if (found) {
 				break;
 			}
@@ -34,12 +34,12 @@ export function findSkillById(items: Array<TreeNode<any> & SkillBase>, id: numbe
 	return found;
 }
 
-export function findSkillLevelById(skillCats: Array<TreeNode<any> & SkillBase>, id: number): TreeNode<any> & SkillBase {
+export function findSkillLevelById(skillCats: Array<TreeNodeViewModel<any, SkillAggregationLevel>>, id: number): TreeNodeViewModel<any, SkillAggregationLevel> {
 	let found;
 	for (const skillCat of skillCats) {
 		for (const skill of skillCat.Items) {
 			if (skill.Items) {
-				found = skill.Items.find((i: TreeNode<any>) => i.Id === id);
+				found = skill.Items.find((i: TreeNodeViewModel<any, SkillAggregationLevel>) => i.Id === id);
 				if (found) {
 					break;
 				}

@@ -19,6 +19,8 @@ public class SkillEntity : SkillBaseEntity
 
     public string Description { get; set; }
 
+    public int CategoryId { get; set; }
+
     public SkillCategoryEntity Category { get; set; }
     public IList<SkillLevelEntity> SkillLevels { get; set; }
 }

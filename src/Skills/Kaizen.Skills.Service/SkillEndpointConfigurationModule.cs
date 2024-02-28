@@ -4,6 +4,7 @@ using Enterprise.ApplicationBootstrap.WebApi.Modules.Endpoints;
 using Kaizen.Skills.Api.Skill;
 using Kaizen.Skills.Api.SkillCategory;
 using Kaizen.Skills.Api.SkillLevel;
+using Kaizen.Skills.Api.SkillTree;
 using Kaizen.Skills.Service.Services;
 using Keycloak.AuthServices.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -40,7 +41,7 @@ internal class SkillEndpointConfigurationModule : EndpointRouteConfigureAwareMod
                 builder.MapPost<SkillCategoryUpdateRequest>("api/skill-categories").To((service, request, ct) => service.Update(request, ct)),
                 builder.MapPost<SkillCategoryChangeActiveRequest>("api/skill-categories/toggle-activity").To((service, request, ct) => service.ChangeActive(request, ct)),
                 builder.MapPost<SkillTreeFilter>("api/skill/query").To((service, request, ct) => service.Query(request, ct))
-                       .RequireAuthorization(x => x.RequireProtectedResource("skill-tree", "list"))
+                       .RequireAuthorization(x => x.RequireProtectedResource("skill-tree", "list")),
             }
             ).Override((x, _) => x.WithTags("SkillCategories"))
         };

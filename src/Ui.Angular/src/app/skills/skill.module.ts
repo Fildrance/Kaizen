@@ -21,16 +21,16 @@ import { SkillManagerComponent } from './components/skill-manager/skill-manager.
 import { SkillManagerState } from './models/skill-manager-state';
 import { SkillServiceImpl } from './services/skill.service.impl';
 import { SkillServiceToken } from './services/skill.service';
-import { SkillServiceStub } from './services/skill.service.stub';
 import { SkillComponent } from './components/skill/skill.component';
 import { SkillManagerService } from './components/skill-manager/skill-manager.service';
 import { SkillLevelComponent } from './components/skill-level/skill-level.component';
 import { CommentsModule } from '../comments/comments.module';
+import { SkillAggregationLevel } from '../shared/models/skill.model';
 
-const map = new Map<string, string>();
-map.set('skill-category', 'skill-category');
-map.set('skill', 'skill');
-map.set('skill-level', 'skill-level');
+const map = new Map<SkillAggregationLevel, string>();
+map.set(SkillAggregationLevel.SkillCategory, 'skill-category');
+map.set(SkillAggregationLevel.Skill, 'skill');
+map.set(SkillAggregationLevel.SkillLevel, 'skill-level');
 const routesByTypes = new RoutesByTypes(map);
 
 @NgModule({
@@ -49,7 +49,7 @@ const routesByTypes = new RoutesByTypes(map);
 		CommentsModule
 	],
 	providers: [
-		{ provide: SkillServiceToken, useClass: environment.useStubs ? SkillServiceStub : SkillServiceImpl },
+		{ provide: SkillServiceToken, useClass: SkillServiceImpl },
 		{ provide: RoutesByTypes, useValue: routesByTypes },
 		SkillManagerState,
 		SkillManagerService

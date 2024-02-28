@@ -1,9 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Enterprise.ApplicationBootstrap.DataAccessLayer.Discover;
 using Kaizen.Skills.Api.SkillLevel;
-using Kaizen.Skills.Service.DAL.Entities;
+using Kaizen.Skills.Service.DAL.Skill;
 using MediatR;
 
 namespace Kaizen.Skills.Service.RequestHandling.SkillLevel;
@@ -14,7 +13,7 @@ namespace Kaizen.Skills.Service.RequestHandling.SkillLevel;
 /// <param name="discoverer">Repository for skill level.</param>
 /// <param name="mapper">Automapper.</param>
 public class SkillLevelFindRequestHandler(
-    IDiscoverer<SkillLevelSelector, SkillLevelEntity> discoverer,
+    ISkillLevelRepository discoverer,
     IMapper mapper
 ) : IRequestHandler<SkillLevelSelector, SkillLevelItem>
 {

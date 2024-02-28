@@ -1,10 +1,12 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 
-import { SkillLevelItem } from 'src/app/shared/models/skill.model';
+import { SkillAggregationLevel, SkillLevelItem } from 'src/app/shared/models/skill.model';
 import { SkillManagerState } from '../../models/skill-manager-state';
+import { SkillService, SkillServiceToken } from '../../services/skill.service';
+import { TreeNodeViewModel } from 'src/app/shared/models/util.models';
 
 
 @Component({
@@ -14,18 +16,27 @@ import { SkillManagerState } from '../../models/skill-manager-state';
 export class SkillLevelComponent implements OnDestroy {
 
 	public data: SkillLevelItem;
+	public selectedNode: TreeNodeViewModel<any, SkillAggregationLevel>;
 
 	private subscription: Subscription;
 
 	constructor(
 		private state: SkillManagerState,
-		activeRoute: ActivatedRoute
+		activeRoute: ActivatedRoute,
+		@Inject(SkillServiceToken) private client: SkillService,
+
 	) {
 		this.subscription = activeRoute.url.pipe(
 			switchMap(_ => this.state.SelectedNode$),
-			filter(x => !x || x.NodeType === 'skill-level')
+			filter(x => x && x.NodeType === SkillAggregationLevel.SkillLevel),
+			switchMap(
+				x => client.findSkillLevel(x.Id)
+					.pipe(map(res => { return ({ data: res, selectedNode: x }); }))
+			)
 		).subscribe(x => {
-			this.data = x;
+			debugger;
+			this.data = x.data;
+			this.selectedNode = x.selectedNode;
 		});
 	}
 
