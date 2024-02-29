@@ -37,7 +37,7 @@ public class SkillCategoryConfiguration : IContextConfiguration
                         .ValueGeneratedOnAdd();
         skillLevelConfig.HasMany(x => x.Prerequisites)
                         .WithOne(x => x.ForSkillLevel)
-                        .HasForeignKey(CreateSkillLevelPrerequisites.SkillLevelIdId);
+                        .HasForeignKey(x => x.SkillLevelId);
         skillLevelConfig.Property(x => x.SkillId)
                         .HasColumnName(CreateSkillLevels.SkillForeignKeyColumnName);
 
@@ -46,6 +46,10 @@ public class SkillCategoryConfiguration : IContextConfiguration
         prerequisiteConfig.HasKey(x => new { x.RequiredSkillLevelId, ForSkillLevelId = x.SkillLevelId });
         prerequisiteConfig.HasOne(x => x.PrerequiteIs)
                           .WithMany()
-                          .HasForeignKey(CreateSkillLevelPrerequisites.RequiredSkillLevelId);
+                          .HasForeignKey(x => x.RequiredSkillLevelId);
+        prerequisiteConfig.Property(x => x.SkillLevelId)
+                          .HasColumnName(CreateSkillLevelPrerequisites.SkillLevelIdId);
+        prerequisiteConfig.Property(x => x.RequiredSkillLevelId)
+                          .HasColumnName(CreateSkillLevelPrerequisites.RequiredSkillLevelId);
     }
 }
