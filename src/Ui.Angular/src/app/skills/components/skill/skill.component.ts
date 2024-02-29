@@ -1,11 +1,12 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { Subscription, from, of } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 
 import { SkillAggregationLevel, SkillItem } from '../../../shared/models/skill.model';
 import { SkillManagerState } from '../../models/skill-manager-state';
 import { SkillService, SkillServiceToken } from '../../services/skill.service';
+import { TreeNodeViewModel } from 'src/app/shared/models/util.models';
 
 
 @Component({
@@ -14,9 +15,9 @@ import { SkillService, SkillServiceToken } from '../../services/skill.service';
 })
 export class SkillComponent implements OnDestroy {
 
-	public data: SkillItem;
-
 	private subscription: Subscription;
+
+	public data: SkillViewModel;
 
 	constructor(
 		private state: SkillManagerState,
@@ -26,9 +27,25 @@ export class SkillComponent implements OnDestroy {
 		this.subscription = activeRoute.url.pipe(
 			switchMap(_ => this.state.SelectedNode$),
 			filter(x => x && x.NodeType === SkillAggregationLevel.Skill),
-			switchMap(x => client.findSkill(x.Id))
+			switchMap(
+				x => {
+					if (x.Id) {
+						return client.findSkill(x.Id)
+							.pipe(map(res => { return ({ data: res, nodeFromTree: x }); }));
+					} else {
+						return of({
+							data: {
+								IsActive: true,
+								NodeType: SkillAggregationLevel.Skill.toFixed(),
+								Items: [],
+							} as SkillItem,
+							nodeFromTree: x
+						})
+					}
+				}
+			)
 		).subscribe(x => {
-			this.data = x;
+			this.data = new SkillViewModel(x.data, x.nodeFromTree);
 		});
 	}
 
@@ -38,5 +55,41 @@ export class SkillComponent implements OnDestroy {
 
 	public get canEdit(): boolean {
 		return true;
+	}
+}
+
+export class SkillViewModel {
+	constructor(
+		private item: SkillItem,
+		private fromTree: TreeNodeViewModel<any, SkillAggregationLevel>
+	) {
+		if (fromTree.Name !== item.Name) {
+			fromTree.Name = item.Name;
+		}
+	}
+
+	get Name(): string {
+		return this.item.Name;
+	}
+
+	set Name(value: string) {
+		this.fromTree.Name = value;
+		this.item.Name = value;
+	}
+
+	get IsActive(): boolean {
+		return this.item.IsActive;
+	}
+
+	get ShortDescription(): string | null {
+		return this.item.ShortDescription;
+	}
+
+	get Id(): number {
+		return this.item.Id;
+	}
+
+	set ShortDescription(value: string) {
+		this.item.ShortDescription = value;
 	}
 }

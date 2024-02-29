@@ -108,8 +108,12 @@ export class SkillManagerComponent implements OnDestroy {
 	}
 
 	public hasId(node: TreeNodeViewModel<any, SkillAggregationLevel>): boolean {
-		return HasId(node);
+		return !!node && HasId(node);
 	}
+	public canHaveChild(node: TreeNodeViewModel<any, SkillAggregationLevel>): any {
+		return !node || node.NodeType == SkillAggregationLevel.SkillCategory || node.NodeType == SkillAggregationLevel.Skill;
+	}
+
 
 	private tryNavigate(value: TreeNodeViewModel<any, SkillAggregationLevel>): void {
 		if (value === this.Selected) {

@@ -11,6 +11,7 @@ export class DxButtonOptions {
 export interface TreeNodeViewModel<TChildType extends TreeNodeViewModel<any, TNodeTypeEnum>, TNodeTypeEnum> {
 	get Id(): number;
 	get Name(): string;
+	set Name(value: string)
 	IsSelected?: boolean;
 	IsExpanded?: boolean;
 	get IsActive(): boolean;

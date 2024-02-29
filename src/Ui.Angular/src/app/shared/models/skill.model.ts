@@ -79,6 +79,7 @@ export type SkillLevelItem = {
 	IsActive?: boolean;
 	Name?: null | string;
 	ShortDescription?: null | string;
+	Prerequisites: SkillLevelPrerequisiteItem[]
 };
 export type SkillCategorySelector = {
 	Id?: null | number;
@@ -112,4 +113,14 @@ export interface TreeItem<T> {
 	IsActive: boolean;
 	Id: number;
 	Items?: TreeItem<any>[]
+}
+
+export class SkillLevelPrerequisiteItem {
+	PrerequisiteId: number;
+	RequiredSkillId: number;
+}
+
+export class SkillBriefItem {
+	Id: number;
+	Name: string;
 }

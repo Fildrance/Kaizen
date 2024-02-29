@@ -7,7 +7,7 @@
 						location="before"
 						widget="dxButton"
 						[options]="addButtonOptions"
-						*ngIf="!Selected || hasId(Selected)"
+						[disabled]="!canHaveChild(Selected) || !hasId(Selected)"
 					>
 					</dxi-item>
 					<dxi-item
@@ -22,7 +22,7 @@
 						widget="dxButton"
 						locateInMenu="auto"
 						[options]="saveButtonOptions"
-						*ngIf="Selected"
+						[disabled]="!Selected"
 					>
 					</dxi-item>
 					<dxi-item
@@ -30,7 +30,7 @@
 						widget="dxButton"
 						locateInMenu="auto"
 						[options]="toggleActiveButtonOptions"
-						*ngIf="Selected"
+						[disabled]="!Selected"
 					>
 					</dxi-item>
 				</dx-toolbar>

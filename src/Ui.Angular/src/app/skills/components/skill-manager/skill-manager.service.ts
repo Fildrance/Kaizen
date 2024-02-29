@@ -25,26 +25,26 @@ import { TreeNodeViewModel } from 'src/app/shared/models/util.models';
 export class SkillManagerService {
 
 	private addDelegatesByNodeType:
-		Map<string, (selected: TreeNodeViewModel<any, SkillAggregationLevel>, dataSource: DataSource) => Promise<TreeNodeViewModel<any, SkillAggregationLevel>>> = new Map();
+		Map<SkillAggregationLevel | null, (selected: TreeNodeViewModel<any, SkillAggregationLevel>, dataSource: DataSource) => Promise<TreeNodeViewModel<any, SkillAggregationLevel>>> = new Map();
 	private saveDelegatesByNodeType:
-		Map<string, (selected: TreeNodeViewModel<any, SkillAggregationLevel>, dataSource: DataSource) => void> = new Map();
+		Map<SkillAggregationLevel, (selected: TreeNodeViewModel<any, SkillAggregationLevel>, dataSource: DataSource) => void> = new Map();
 	private toggleDelegatesByNodeType:
-		Map<string, (selected: TreeNodeViewModel<any, SkillAggregationLevel>, dataSource: DataSource) => Observable<{ IsActive?: boolean }>> = new Map();
+		Map<SkillAggregationLevel, (selected: TreeNodeViewModel<any, SkillAggregationLevel>, dataSource: DataSource) => Observable<{ IsActive?: boolean }>> = new Map();
 
 	constructor(
 		@Inject(SkillServiceToken) private skillService: SkillService,
 	) {
 		this.addDelegatesByNodeType.set(null, (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.addCategory(s, dS));
-		this.addDelegatesByNodeType.set('skill-category', (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.addSkill(s, dS));
-		this.addDelegatesByNodeType.set('skill', (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.addSkillLevel(s, dS));
+		this.addDelegatesByNodeType.set(SkillAggregationLevel.SkillCategory, (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.addSkill(s, dS));
+		this.addDelegatesByNodeType.set(SkillAggregationLevel.Skill, (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.addSkillLevel(s, dS));
 
-		this.saveDelegatesByNodeType.set('skill-category', (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.saveCategory(s, dS));
-		this.saveDelegatesByNodeType.set('skill', (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.saveSkill(s, dS));
-		this.saveDelegatesByNodeType.set('skill-level', (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.saveSkillLevel(s, dS));
+		this.saveDelegatesByNodeType.set(SkillAggregationLevel.SkillCategory, (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.saveCategory(s, dS));
+		this.saveDelegatesByNodeType.set(SkillAggregationLevel.Skill, (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.saveSkill(s, dS));
+		this.saveDelegatesByNodeType.set(SkillAggregationLevel.SkillLevel, (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.saveSkillLevel(s, dS));
 
-		this.toggleDelegatesByNodeType.set('skill-category', (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.toggleCategory(s, dS));
-		this.toggleDelegatesByNodeType.set('skill', (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.toggleSkill(s, dS));
-		this.toggleDelegatesByNodeType.set('skill-level', (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.toggleSkillLevel(s, dS));
+		this.toggleDelegatesByNodeType.set(SkillAggregationLevel.SkillCategory, (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.toggleCategory(s, dS));
+		this.toggleDelegatesByNodeType.set(SkillAggregationLevel.Skill, (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.toggleSkill(s, dS));
+		this.toggleDelegatesByNodeType.set(SkillAggregationLevel.SkillLevel, (s: TreeNodeViewModel<any, SkillAggregationLevel>, dS: DataSource) => this.toggleSkillLevel(s, dS));
 	}
 
 	public addNode(selected: any, store: DataSource): Promise<TreeNodeViewModel<any, SkillAggregationLevel>> {
@@ -82,7 +82,7 @@ export class SkillManagerService {
 			return Promise.resolve(alreadyExistingUnsaved);
 		}
 		const newRecord = {
-			NodeType: 'skill-category'
+			NodeType: SkillAggregationLevel.SkillCategory
 		};
 		dataSource.store().insert(newRecord);
 		return dataSource.reload()
@@ -100,7 +100,7 @@ export class SkillManagerService {
 			}
 		}
 		const newRecord: any = {
-			NodeType: 'skill',
+			NodeType: SkillAggregationLevel.Skill,
 			Items: [],
 			IsActive: true,
 			Parent: selected
@@ -122,7 +122,7 @@ export class SkillManagerService {
 			}
 		}
 		const newRecord: any = {
-			NodeType: 'skill-level',
+			NodeType: SkillAggregationLevel.SkillLevel,
 			Items: [],
 			IsActive: true,
 			Parent: selected

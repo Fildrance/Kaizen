@@ -9,7 +9,8 @@ import {
 	DxToolbarModule,
 	DxSliderModule,
 	DxHtmlEditorModule,
-	DxTooltipModule
+	DxTooltipModule,
+	DxSelectBoxModule
 } from 'devextreme-angular';
 
 import { environment } from 'src/environments/environment';
@@ -46,6 +47,7 @@ const routesByTypes = new RoutesByTypes(map);
 		DxSliderModule,
 		DxTooltipModule,
 		DxHtmlEditorModule,
+		DxSelectBoxModule,
 		CommentsModule
 	],
 	providers: [
