@@ -1,4 +1,6 @@
-﻿namespace Kaizen.Skills.Api.SkillLevel;
+﻿using Kaizen.Skills.Api.SkillCategory;
+
+namespace Kaizen.Skills.Api.SkillLevel;
 
 public class SkillLevelItem : SkillBase
 {
@@ -7,5 +9,5 @@ public class SkillLevelItem : SkillBase
 
     public SkillLevelPrerequisiteItem[] Prerequisites { get; set; }
 
-    public override string NodeType => "skill-level";
+    public override SkillAggregationLevel NodeType => SkillAggregationLevel.SkillLevel;
 }

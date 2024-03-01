@@ -1,95 +1,95 @@
-import { Component, Inject, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription, of } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { Observable, map, pipe, switchMap, take, tap } from 'rxjs';
 
-import { SkillAggregationLevel, SkillCategoryItem } from 'src/app/shared/models/skill.model';
+import { SkillAggregationLevel, SkillCategoryChangeActiveContract, SkillCategoryCreateContract, SkillCategoryItem, SkillCategoryUpdateContract } from 'src/app/shared/models/skill.model';
 import { SkillManagerState } from '../../models/skill-manager-state';
-import { SkillService, SkillServiceToken } from '../../services/skill.service';
+import { SkillService } from '../../services/skill.service';
 import { TreeNodeViewModel } from 'src/app/shared/models/util.models';
+import { SkillEditorViewModel, SkillItemRelatedComponentBase } from '../skill-manager/skill-item-related-component-base';
 
 
 @Component({
 	templateUrl: 'skill-category.component.html',
 	styleUrls: ['./skill-category.component.scss']
 })
-export class SkillCategoryComponent implements OnDestroy {
+export class SkillCategoryComponent extends SkillItemRelatedComponentBase<SkillCategoryViewModel, SkillCategoryItem> {
+	protected get Level(): SkillAggregationLevel {
+		return SkillAggregationLevel.SkillCategory;
+	}
 
 	public data: SkillCategoryViewModel;
 
-	private subscription: Subscription;
-
 	constructor(
-		private state: SkillManagerState,
+		state: SkillManagerState,
 		activeRoute: ActivatedRoute,
-		@Inject(SkillServiceToken) private client: SkillService,
+		client: SkillService,
 	) {
-		this.subscription = activeRoute.url.pipe(
-			switchMap(_ => this.state.SelectedNode$),
-			filter(x => x && x.NodeType === SkillAggregationLevel.SkillCategory),
+		super(state, activeRoute, client);
+	}
+
+	protected find(id: number): Observable<SkillCategoryItem> {
+		return this.skillService.findSkillCategory(id);
+	}
+
+	protected createBlank(): SkillCategoryItem {
+		return {
+			IsActive: true,
+			NodeType: SkillAggregationLevel.SkillCategory.toString(),
+			Items: []
+		} as SkillCategoryItem;
+	}
+
+	protected createViewModel(data: SkillCategoryItem, nodeFromTree: TreeNodeViewModel<any, SkillAggregationLevel>): SkillCategoryViewModel {
+		return new SkillCategoryViewModel(data, nodeFromTree);
+	}
+
+	protected save(): Observable<any> {
+		let obs: Observable<SkillCategoryItem>;
+		if (this.data.Id) {
+			const contract: SkillCategoryUpdateContract = {
+				ToUpdate: { Id: this.data.Id },
+				Name: this.data.Name,
+				ShortDescription: this.data.ShortDescription
+			};
+			obs = this.skillService.updateCategory(contract);
+		} else {
+			const contract: SkillCategoryCreateContract = {
+				Name: this.data.Name,
+				ShortDescription: this.data.ShortDescription
+			};
+			obs = this.skillService.createCategory(contract);
+		}
+		return obs.pipe(
 			switchMap(
-				x => {
-					if (x.Id) {
-						return client.findSkillCategory(x.Id)
-							.pipe(map(res => { return ({ data: res, nodeFromTree: x }); }));
-					} else {
-						return of({
-							data: {
-								IsActive: true,
-								NodeType: SkillAggregationLevel.SkillCategory.toFixed(),
-								Items: []
-							} as SkillCategoryItem,
-							nodeFromTree: x
-						})
-					}
-				}
-			)
-		).subscribe(x => {
-			this.data = new SkillCategoryViewModel(x.data, x.nodeFromTree);
-		});
+				x => this.state.SelectedNode$
+					.pipe(
+						take(1),
+						map(nodeFromTree => { return { data: x, nodeFromTree }; })
+					)
+			),
+			tap(x => this.data = this.createViewModel(x.data, x.nodeFromTree))
+		);
 	}
 
-	public ngOnDestroy(): void {
-		this.subscription.unsubscribe();
+	protected toggleActive(): Observable<any> {
+		return this.toggleCategory(this.data);
 	}
 
-	public get canEdit(): boolean {
-		return true;
+	private toggleCategory(selected: SkillCategoryViewModel): Observable<{ IsActive?: boolean }> {
+		const contract: SkillCategoryChangeActiveContract = {
+			ToUpdate: { Id: selected.Id },
+			IsActive: !selected.IsActive
+		};
+		return this.skillService.toggleActiveCategory(contract);
 	}
 }
 
-export class SkillCategoryViewModel {
+export class SkillCategoryViewModel extends SkillEditorViewModel<SkillCategoryItem>{
 	constructor(
-		private item: SkillCategoryItem,
-		private fromTree: TreeNodeViewModel<any, SkillAggregationLevel>
+		item: SkillCategoryItem,
+		fromTree: TreeNodeViewModel<any, SkillAggregationLevel>
 	) {
-		if (fromTree.Name !== item.Name) {
-			fromTree.Name = item.Name;
-		}
-	}
-
-	get Name(): string {
-		return this.item.Name;
-	}
-
-	set Name(value: string) {
-		this.fromTree.Name = value;
-		this.item.Name = value;
-	}
-
-	get IsActive(): boolean {
-		return this.item.IsActive;
-	}
-
-	get ShortDescription(): string | null {
-		return this.item.ShortDescription;
-	}
-
-	get Id(): number {
-		return this.item.Id;
-	}
-
-	set ShortDescription(value: string) {
-		this.item.ShortDescription = value;
+		super(item, fromTree)
 	}
 }

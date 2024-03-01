@@ -21,14 +21,14 @@ export type SkillCategoryCreateContract = {
 export type SkillCreateContract = {
 	Name?: null | string;
 	ShortDescription?: null | string;
-	Parent?: null | SkillCategorySelector;
+	Parent:  SkillCategorySelector;
 };
 export type SkillLevelCreateContract = {
 	Name?: null | string;
 	ShortDescription?: null | string;
 	Description?: null | string;
 	Weight?: null | number;
-	Parent?: null | SkillSelector;
+	Parent: SkillSelector;
 };
 export type SkillCategoryFilterContract = {
 	IncludeActive?: null | IncludeActiveOption;
@@ -39,7 +39,7 @@ export type SkillCategoryUpdateContract = {
 	Name?: null | string;
 	ShortDescription?: null | string;
 	IsActive?: null | boolean;
-	ToUpdate?: null | SkillCategorySelector;
+	ToUpdate: SkillCategorySelector;
 };
 export type SkillUpdateContract = {
 	ToUpdate?: null | SkillSelector;
@@ -48,7 +48,7 @@ export type SkillUpdateContract = {
 	IsActive?: null | boolean;
 };
 export type SkillLevelUpdateContract = {
-	ToUpdate?: null | SkillLevelSelector;
+	ToUpdate: SkillLevelSelector;
 	Name?: null | string;
 	ShortDescription?: null | string;
 	IsActive?: null | boolean;
@@ -98,10 +98,10 @@ export enum IncludeActiveOption {
 }
 
 export enum SkillAggregationLevel {
-	None,
-	SkillCategory,
-	Skill,
-	SkillLevel
+	None = 'None',
+	SkillCategory = 'SkillCategory',
+	Skill = 'Skill',
+	SkillLevel = 'SkillLevel'
 }
 
 export interface SkillTreeItem extends TreeItem<SkillAggregationLevel> {

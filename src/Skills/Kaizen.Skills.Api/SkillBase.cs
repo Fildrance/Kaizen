@@ -1,3 +1,5 @@
+using Kaizen.Skills.Api.SkillCategory;
+
 namespace Kaizen.Skills.Api;
 
 public abstract class SkillBase
@@ -7,5 +9,5 @@ public abstract class SkillBase
 
     public string Name { get; set; }
     public string ShortDescription { get; set; }
-    public abstract string NodeType { get; }
+    public abstract SkillAggregationLevel NodeType { get; }
 }

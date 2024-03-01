@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SkillAggregationLevel } from './skill.model';
+import { SkillAggregationLevel, TreeItem } from './skill.model';
 
 export class DxButtonOptions {
 	icon?: string;
@@ -9,12 +9,15 @@ export class DxButtonOptions {
 }
 
 export interface TreeNodeViewModel<TChildType extends TreeNodeViewModel<any, TNodeTypeEnum>, TNodeTypeEnum> {
+
+	set original(value: TreeItem<TNodeTypeEnum>);
 	get Id(): number;
 	get Name(): string;
 	set Name(value: string)
 	IsSelected?: boolean;
 	IsExpanded?: boolean;
 	get IsActive(): boolean;
+	set IsActive(value: boolean);
 	Items: TChildType[] | null;
 	Parent: TreeNodeViewModel<any, TNodeTypeEnum> | null;
 	get NodeType(): TNodeTypeEnum;

@@ -22,7 +22,7 @@
 						widget="dxButton"
 						locateInMenu="auto"
 						[options]="saveButtonOptions"
-						[disabled]="!Selected"
+						[disabled]="!state.editorSave"
 					>
 					</dxi-item>
 					<dxi-item
@@ -30,7 +30,7 @@
 						widget="dxButton"
 						locateInMenu="auto"
 						[options]="toggleActiveButtonOptions"
-						[disabled]="!Selected"
+						[disabled]="!state.editorToggleActive"
 					>
 					</dxi-item>
 				</dx-toolbar>
