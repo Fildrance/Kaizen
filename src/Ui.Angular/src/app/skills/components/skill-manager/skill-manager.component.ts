@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, lastValueFrom } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import DataSource from 'devextreme/data/data_source';
 import CustomStore from 'devextreme/data/custom_store';
@@ -59,13 +59,14 @@ export class SkillManagerComponent implements OnDestroy {
 
 			const subRoute = route.firstChild.routeConfig.path.split('/')[0];
 
-			const routeChangedPromise = route.firstChild.params.pipe(map(x => parseInt(x.id, 10)), take(1)).toPromise();
+			const routeChangedPromise = lastValueFrom(route.firstChild.params.pipe(map(x => parseInt(x.id, 10)), take(1)));
 
 			const loadPromise = this.dataSource.load();
 
 			Promise.all([routeChangedPromise, loadPromise]).then(x => {
 				const idToFind = x[0];
-				const found = searchInTree(this.dataSource.items(), idToFind, subRoute);
+				const aggregationLevel = routesByTypes.getKeyFor(subRoute);
+				const found = searchInTree(this.dataSource.items(), idToFind, aggregationLevel);
 				this.Selected = found;
 			});
 		}

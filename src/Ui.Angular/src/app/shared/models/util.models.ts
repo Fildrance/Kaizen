@@ -23,10 +23,20 @@ export interface TreeNodeViewModel<TChildType extends TreeNodeViewModel<any, TNo
 
 @Injectable()
 export class RoutesByTypes {
+	private reverse: Map<string, SkillAggregationLevel>;
 
-	constructor(private routesByTypes: Map<SkillAggregationLevel, string>) { }
+	constructor(private routesByTypes: Map<SkillAggregationLevel, string>) {
+		this.reverse = new Map<string, SkillAggregationLevel>();
+		for (const [key, value] of routesByTypes) {
+			this.reverse.set(value, key);
+		}
+	}
 
 	public get(type: SkillAggregationLevel): string {
 		return this.routesByTypes.get(type);
+	}
+
+	public getKeyFor(value: string): SkillAggregationLevel {
+		return this.reverse.get(value);
 	}
 }

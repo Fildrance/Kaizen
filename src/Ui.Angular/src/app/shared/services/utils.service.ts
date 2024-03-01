@@ -10,43 +10,24 @@ export function HasId(item: { Id?: number }): boolean {
 export function searchInTree(
 	rootNodes: Array<TreeNodeViewModel<any, SkillAggregationLevel>>,
 	idToFind: number,
-	tierToBeSearched: string
+	aggregationLevel: SkillAggregationLevel
 ): TreeNodeViewModel<any, SkillAggregationLevel> {
-	if (tierToBeSearched === 'skill-category') {
-		return rootNodes.find(i => i.Id === idToFind);
-	} else if (tierToBeSearched === 'skill') {
-		return findSkillById(rootNodes, idToFind);
-	} else if (tierToBeSearched === 'skill-level') {
-		return findSkillLevelById(rootNodes, idToFind);
-	}
+	return findRecursive(rootNodes, idToFind, aggregationLevel);
 }
 
-export function findSkillById(items: Array<TreeNodeViewModel<any, SkillAggregationLevel>>, id: number): TreeNodeViewModel<any, SkillAggregationLevel> {
-	let found;
-	for (const iterator of items) {
-		if (iterator.Items) {
-			found = iterator.Items.find((i: TreeNodeViewModel<any, SkillAggregationLevel>) => i.Id === id);
-			if (found) {
-				break;
+function findRecursive(items: Array<TreeNodeViewModel<any, SkillAggregationLevel>>, id: number, aggregationLevel: SkillAggregationLevel) {
+	for (const item of items) {
+		if (item.NodeType === aggregationLevel && item.Id === id) {
+			return item;
+		}
+		if (item.Items && item.Items.length > 0) {
+			const found = findRecursive(item.Items, id, aggregationLevel);
+			if (found != null) {
+				return found;
 			}
 		}
 	}
-	return found;
-}
-
-export function findSkillLevelById(skillCats: Array<TreeNodeViewModel<any, SkillAggregationLevel>>, id: number): TreeNodeViewModel<any, SkillAggregationLevel> {
-	let found;
-	for (const skillCat of skillCats) {
-		for (const skill of skillCat.Items) {
-			if (skill.Items) {
-				found = skill.Items.find((i: TreeNodeViewModel<any, SkillAggregationLevel>) => i.Id === id);
-				if (found) {
-					break;
-				}
-			}
-		}
-	}
-	return found;
+	return null;
 }
 
 export class HttpParamsHelper {
