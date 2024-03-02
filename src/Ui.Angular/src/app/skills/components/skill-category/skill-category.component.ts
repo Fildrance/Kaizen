@@ -2,11 +2,15 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map, pipe, switchMap, take, tap } from 'rxjs';
 
-import { SkillAggregationLevel, SkillCategoryChangeActiveContract, SkillCategoryCreateContract, SkillCategoryItem, SkillCategoryUpdateContract } from 'src/app/shared/models/skill.model';
 import { SkillManagerState } from '../../models/skill-manager-state';
-import { SkillService } from '../../services/skill.service';
 import { TreeNodeViewModel } from 'src/app/shared/models/util.models';
 import { SkillEditorViewModel, SkillItemRelatedComponentBase } from '../skill-manager/skill-item-related-component-base';
+import { SkillCategoriesService } from '../../../shared/generated/api/skill-categories';
+import { SkillAggregationLevel } from '../../../shared/generated/model/skill-aggregation-level';
+import { SkillCategoryChangeActiveRequest } from '../../../shared/generated/model/skill-category-change-active-request';
+import { SkillCategoryCreateRequest } from '../../../shared/generated/model/skill-category-create-request';
+import { SkillCategoryItem } from '../../../shared/generated/model/skill-category-item';
+import { SkillCategoryUpdateRequest } from '../../../shared/generated/model/skill-category-update-request';
 
 
 @Component({
@@ -23,13 +27,13 @@ export class SkillCategoryComponent extends SkillItemRelatedComponentBase<SkillC
 	constructor(
 		state: SkillManagerState,
 		activeRoute: ActivatedRoute,
-		client: SkillService,
+		private skillService: SkillCategoriesService,
 	) {
-		super(state, activeRoute, client);
+		super(state, activeRoute);
 	}
 
 	protected find(id: number): Observable<SkillCategoryItem> {
-		return this.skillService.findSkillCategory(id);
+		return this.skillService.find(id);
 	}
 
 	protected createBlank(): SkillCategoryItem {
@@ -47,18 +51,18 @@ export class SkillCategoryComponent extends SkillItemRelatedComponentBase<SkillC
 	protected save(): Observable<any> {
 		let obs: Observable<SkillCategoryItem>;
 		if (this.data.Id) {
-			const contract: SkillCategoryUpdateContract = {
+			const contract: SkillCategoryUpdateRequest = {
 				ToUpdate: { Id: this.data.Id },
 				Name: this.data.Name,
 				ShortDescription: this.data.ShortDescription
 			};
-			obs = this.skillService.updateCategory(contract);
+			obs = this.skillService.update(contract);
 		} else {
-			const contract: SkillCategoryCreateContract = {
+			const contract: SkillCategoryCreateRequest = {
 				Name: this.data.Name,
 				ShortDescription: this.data.ShortDescription
 			};
-			obs = this.skillService.createCategory(contract);
+			obs = this.skillService.create(contract);
 		}
 		return obs.pipe(
 			switchMap(
@@ -77,11 +81,11 @@ export class SkillCategoryComponent extends SkillItemRelatedComponentBase<SkillC
 	}
 
 	private toggleCategory(selected: SkillCategoryViewModel): Observable<{ IsActive?: boolean }> {
-		const contract: SkillCategoryChangeActiveContract = {
+		const contract: SkillCategoryChangeActiveRequest = {
 			ToUpdate: { Id: selected.Id },
 			IsActive: !selected.IsActive
 		};
-		return this.skillService.toggleActiveCategory(contract);
+		return this.skillService.changeActive(contract);
 	}
 }
 

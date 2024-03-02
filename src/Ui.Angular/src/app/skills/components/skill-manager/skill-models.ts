@@ -1,5 +1,7 @@
-import { SkillAggregationLevel, SkillTreeItem, TreeItem } from "src/app/shared/models/skill.model";
-import { TreeNodeViewModel } from "src/app/shared/models/util.models";
+import { SkillAggregationLevel } from "../../../shared/generated/model/skill-aggregation-level";
+import { SkillTreeItem } from "../../../shared/generated/model/skill-tree-item";
+import { TreeItem } from "../../../shared/models/shared.models";
+import { TreeNodeViewModel } from "../../../shared/models/util.models";
 
 export class SkillTreeItemViewModel<TChildType extends TreeNodeViewModel<any, SkillAggregationLevel>> implements TreeNodeViewModel<any, SkillAggregationLevel> {
 	private _original: SkillTreeItem;
@@ -12,7 +14,7 @@ export class SkillTreeItemViewModel<TChildType extends TreeNodeViewModel<any, Sk
 	}
 
 	set original(value: TreeItem<SkillAggregationLevel>) {
-		this._original = value;
+		this._original = value as SkillTreeItem;
 	}
 
 	public Parent: TreeNodeViewModel<any, SkillAggregationLevel>;

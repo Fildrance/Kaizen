@@ -13,7 +13,6 @@ import {
 	DxSelectBoxModule
 } from 'devextreme-angular';
 
-import { environment } from 'src/environments/environment';
 import { SingleCardComponent } from '../layouts/single-card/single-card.component';
 import { RoutesByTypes } from '../shared/models/util.models';
 import { SelectableTreeViewComponent } from './components/selectable-tree/selectableTreeView.component';
@@ -23,8 +22,7 @@ import { SkillManagerState } from './models/skill-manager-state';
 import { SkillComponent } from './components/skill/skill.component';
 import { SkillLevelComponent } from './components/skill-level/skill-level.component';
 import { CommentsModule } from '../comments/comments.module';
-import { SkillAggregationLevel } from '../shared/models/skill.model';
-import { SkillService } from './services/skill.service';
+import { SkillAggregationLevel } from '../shared/generated/model/skill-aggregation-level';
 
 const map = new Map<SkillAggregationLevel, string>();
 map.set(SkillAggregationLevel.SkillCategory, 'skill-category');
@@ -49,7 +47,6 @@ const routesByTypes = new RoutesByTypes(map);
 		CommentsModule
 	],
 	providers: [
-		SkillService,
 		{ provide: RoutesByTypes, useValue: routesByTypes },
 		SkillManagerState
 	],

@@ -41,7 +41,7 @@ internal class SkillEndpointConfigurationModule : EndpointRouteConfigureAwareMod
                 builder.MapPost<SkillCategoryUpdateRequest>("api/skill-categories").To((service, request, ct) => service.Update(request, ct)),
                 builder.MapPost<SkillCategoryChangeActiveRequest>("api/skill-categories/toggle-activity").To((service, request, ct) => service.ChangeActive(request, ct)),
                 builder.MapPost<SkillTreeFilter>("api/skill/query").To((service, request, ct) => service.Query(request, ct))
-                       .RequireAuthorization(x => x.RequireProtectedResource("skill-tree", "list")),
+                       //.RequireAuthorization(x => x.RequireProtectedResource("skill-tree", "list")),
             }
             ).Override((x, _) => x.WithTags("SkillCategories"))
         };

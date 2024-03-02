@@ -1,7 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 
 import { TreeNodeViewModel } from '../models/util.models';
-import { SkillAggregationLevel } from '../models/skill.model';
+import { SkillAggregationLevel } from '../generated/model/skill-aggregation-level';
 
 export function HasId(item: { Id?: number }): boolean {
 	return item.Id === 0 || item.Id > 0;

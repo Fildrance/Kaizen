@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map, switchMap, take, tap } from 'rxjs';
 
-import { SkillAggregationLevel, SkillChangeActiveContract, SkillCreateContract, SkillItem, SkillUpdateContract } from '../../../shared/models/skill.model';
 import { SkillManagerState } from '../../models/skill-manager-state';
-import { SkillService } from '../../services/skill.service';
 import { TreeNodeViewModel } from 'src/app/shared/models/util.models';
 import { SkillEditorViewModel, SkillItemRelatedComponentBase } from '../skill-manager/skill-item-related-component-base';
-import DataSource from 'devextreme/data/data_source';
-import { HasId } from 'src/app/shared/services/utils.service';
+import { SkillAggregationLevel } from '../../../shared/generated/model/skill-aggregation-level';
+import { SkillChangeActiveRequest } from '../../../shared/generated/model/skill-change-active-request';
+import { SkillCreateRequest } from '../../../shared/generated/model/skill-create-request';
+import { SkillItem } from '../../../shared/generated/model/skill-item';
+import { SkillUpdateRequest } from '../../../shared/generated/model/skill-update-request';
+import { SkillsService } from '../../../shared/generated/api/api';
 
 @Component({
 	templateUrl: 'skill.component.html',
@@ -25,13 +27,13 @@ export class SkillComponent extends SkillItemRelatedComponentBase<SkillViewModel
 	constructor(
 		state: SkillManagerState,
 		activeRoute: ActivatedRoute,
-		client: SkillService,
+		private skillService: SkillsService,
 	) {
-		super(state, activeRoute, client);
+		super(state, activeRoute);
 	}
 
 	protected find(id: number): Observable<SkillItem> {
-		return this.skillService.findSkill(id)
+		return this.skillService.find(id)
 	}
 
 	protected createBlank(): SkillItem {
@@ -49,19 +51,19 @@ export class SkillComponent extends SkillItemRelatedComponentBase<SkillViewModel
 	protected save(): Observable<any> {
 		let obs: Observable<SkillItem>;
 		if (this.data.Id) {
-			const contract: SkillUpdateContract = {
+			const contract: SkillUpdateRequest = {
 				ToUpdate: { Id: this.data.Id },
 				Name: this.data.Name,
 				ShortDescription: this.data.ShortDescription
 			};
-			obs = this.skillService.updateSkill(contract);
+			obs = this.skillService.update(contract);
 		} else {
-			const contract: SkillCreateContract = {
+			const contract: SkillCreateRequest = {
 				Name: this.data.Name,
 				ShortDescription: this.data.ShortDescription,
 				Parent: { Id: this.data.ParentId }
 			};
-			obs = this.skillService.createSkill(contract);
+			obs = this.skillService.create(contract);
 		}
 		return obs.pipe(
 			switchMap(
@@ -79,11 +81,11 @@ export class SkillComponent extends SkillItemRelatedComponentBase<SkillViewModel
 	}
 
 	private toggleSkill(selected: SkillViewModel): Observable<{ IsActive?: boolean }> {
-		const contract: SkillChangeActiveContract = {
+		const contract: SkillChangeActiveRequest = {
 			ToUpdate: { Id: selected.Id },
 			IsActive: !selected.IsActive
 		};
-		return this.skillService.toggleActiveSkill(contract);
+		return this.skillService.changeActive(contract);
 	}
 }
 
@@ -94,5 +96,4 @@ export class SkillViewModel extends SkillEditorViewModel<SkillItem> {
 	) {
 		super(item, fromTree);
 	}
-
 }

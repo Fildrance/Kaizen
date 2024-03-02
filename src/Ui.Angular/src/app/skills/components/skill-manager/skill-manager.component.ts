@@ -5,13 +5,16 @@ import { map, take } from 'rxjs/operators';
 import DataSource from 'devextreme/data/data_source';
 import CustomStore from 'devextreme/data/custom_store';
 
-import { SkillService } from '../../services/skill.service';
 import { SkillManagerState } from '../../models/skill-manager-state';
 import { createCustomStoreOptions } from '../selectable-tree/filterable-tree-data-source';
-import { HasId, searchInTree } from 'src/app/shared/services/utils.service';
-import { SkillAggregationLevel, SkillTreeItem } from 'src/app/shared/models/skill.model';
 import { TreeNodeViewModel, RoutesByTypes, DxButtonOptions } from 'src/app/shared/models/util.models';
 import { SkillTreeItemViewModel } from './skill-models';
+import { SkillCategoriesService } from '../../../shared/generated/api/skill-categories';
+import { IncludeActiveOption } from '../../../shared/generated/model/include-active-option';
+import { SkillTreeFilter } from '../../../shared/generated/model/skill-tree-filter';
+import { SkillTreeItem } from '../../../shared/generated/model/skill-tree-item';
+import { SkillAggregationLevel } from '../../../shared/generated/model/skill-aggregation-level';
+import { searchInTree, HasId } from '../../../shared/services/utils.service';
 
 @Component({
 	templateUrl: 'skill-manager.component.html',
@@ -37,14 +40,14 @@ export class SkillManagerComponent implements OnDestroy {
 	}
 
 	constructor(
-		private client: SkillService,
+		private client: SkillCategoriesService,
 		private router: Router,
 		private routesByTypes: RoutesByTypes,
 		public state: SkillManagerState,
 		route: ActivatedRoute
 	) {
 		const opts = createCustomStoreOptions(_ => {
-			return this.client.query()
+			return this.client.query({ IncludeActive: IncludeActiveOption.IncludeAll } as SkillTreeFilter)
 				.pipe(
 					map(
 						x => {
@@ -180,7 +183,7 @@ export class SkillManagerComponent implements OnDestroy {
 			return Promise.resolve(alreadyExistingUnsaved);
 		}
 		const newRecord: SkillTreeItem = {
-			NodeType: SkillAggregationLevel.SkillCategory.toString(),
+			NodeType: SkillAggregationLevel.SkillCategory,
 			Items: [],
 			Name: '',
 			Id: 0,
@@ -202,7 +205,7 @@ export class SkillManagerComponent implements OnDestroy {
 			}
 		}
 		const newRecord: SkillTreeItem = {
-			NodeType: SkillAggregationLevel.Skill.toString(),
+			NodeType: SkillAggregationLevel.Skill,
 			Items: [],
 			Name: '',
 			Id: 0,
@@ -227,7 +230,7 @@ export class SkillManagerComponent implements OnDestroy {
 			}
 		}
 		const newRecord: SkillTreeItem = {
-			NodeType: SkillAggregationLevel.SkillLevel.toString(),
+			NodeType: SkillAggregationLevel.SkillLevel,
 			Items: [],
 			IsActive: true,
 			Name: '',

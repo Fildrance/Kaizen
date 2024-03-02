@@ -1,9 +1,8 @@
 import { LoadOptions } from 'devextreme/data';
 import { CustomStoreOptions } from 'devextreme/data/custom_store';
 import { Observable, lastValueFrom, map } from 'rxjs';
+import { TreeItem } from 'src/app/shared/models/shared.models';
 
-import { Page } from 'src/app/shared/models/shared.models';
-import { TreeItem } from 'src/app/shared/models/skill.model';
 import { TreeNodeViewModel } from 'src/app/shared/models/util.models';
 
 

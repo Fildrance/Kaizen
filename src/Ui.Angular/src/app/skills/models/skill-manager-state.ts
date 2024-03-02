@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { SkillAggregationLevel, TreeItem } from 'src/app/shared/models/skill.model';
 
-import { TreeNodeViewModel } from 'src/app/shared/models/util.models';
+import { SkillAggregationLevel } from '../../shared/generated/model/skill-aggregation-level';
+import { TreeItem } from '../../shared/models/shared.models';
+import { TreeNodeViewModel } from '../../shared/models/util.models';
 
 @Injectable()
 export class SkillManagerState {

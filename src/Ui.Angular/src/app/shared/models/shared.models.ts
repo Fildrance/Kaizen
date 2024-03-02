@@ -11,9 +11,13 @@ export type Page<T> = {
     Items?: Array<null | T>;
     TotalCount?: number;
 };
-export type IList<T> = {
-    Item?: null | T;
-};
+export interface TreeItem<T> {
+	NodeType: string;
+	Name: string;
+	IsActive: boolean;
+	Id: number;
+	Items?: TreeItem<any>[]
+}
 export type IReadOnlyCollection<T> = {
     Count?: number;
 };

@@ -10,6 +10,9 @@ import { SideNavInnerToolbarModule } from './layouts/side-nav-inner-toolbar/side
 import { ScreenService } from './shared/services/screen.service';
 import { AppInfoService } from './shared/services/app-info.service';
 import { SkillModule } from './skills/skill.module';
+import { ApiModule } from './shared/generated/api.module';
+import { BASE_PATH } from './shared/generated/variables';
+import { environment } from '../environments/environment';
 
 
 function initializeKeycloak(keycloak: KeycloakService) {
@@ -34,7 +37,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
 					url.includes(path)
 				);
 
-				let f =  !(isGetRequest && isAcceptablePathMatch);
+				let f = !(isGetRequest && isAcceptablePathMatch);
 				return f;
 			},
 			shouldUpdateToken(request) {
@@ -55,10 +58,12 @@ function initializeKeycloak(keycloak: KeycloakService) {
 		HttpClientModule,
 		NgbModule,
 		KeycloakAngularModule,
-		SkillModule
+		SkillModule,
+		ApiModule
 	],
 	providers: [
 		ScreenService,
+		{ provide: BASE_PATH, useValue: environment.apiUrl },
 		AppInfoService,
 		{
 			provide: HTTP_INTERCEPTORS,
