@@ -16,7 +16,6 @@ public class SkillModule : IServiceCollectionAwareModule
     /// <inheritdoc />
     public void Configure(IServiceCollection services, IConfiguration configuration)
     {
-
         services.ConfigureHttpJsonOptions(options =>
         {
             options.SerializerOptions.PropertyNamingPolicy = null;

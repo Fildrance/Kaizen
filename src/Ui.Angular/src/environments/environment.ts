@@ -5,7 +5,8 @@
 export const environment = {
 	production: false,
 	useStubs: false,
-	traceRouting: true
+	traceRouting: true,
+	apiUrl: "http://localhost:5000"
 };
 
 /*

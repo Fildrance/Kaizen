@@ -2,14 +2,16 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map, switchMap, take, tap } from 'rxjs';
 
-import { SkillAggregationLevel, SkillBriefItem, SkillLevelChangeActiveContract, SkillLevelCreateContract, SkillLevelItem, SkillLevelPrerequisiteItem, SkillLevelUpdateContract } from 'src/app/shared/models/skill.model';
 import { SkillManagerState } from '../../models/skill-manager-state';
-import { SkillService } from '../../services/skill.service';
 import { TreeNodeViewModel } from 'src/app/shared/models/util.models';
 import { SkillEditorViewModel, SkillItemRelatedComponentBase } from '../skill-manager/skill-item-related-component-base';
-import { HasId } from 'src/app/shared/services/utils.service';
-import DataSource from 'devextreme/data/data_source';
-import { SkillCategoryViewModel } from '../skill-category/skill-category.component';
+import { SkillAggregationLevel } from '../../../shared/generated/model/skill-aggregation-level';
+import { SkillLevelChangeActiveRequest } from '../../../shared/generated/model/skill-level-change-active-request';
+import { SkillLevelCreateRequest } from '../../../shared/generated/model/skill-level-create-request';
+import { SkillLevelItem } from '../../../shared/generated/model/skill-level-item';
+import { SkillLevelPrerequisiteItem } from '../../../shared/generated/model/skill-level-prerequisite-item';
+import { SkillLevelUpdateRequest } from '../../../shared/generated/model/skill-level-update-request';
+import { SkillLevelsService } from '../../../shared/generated/api/skill-levels';
 
 @Component({
 	templateUrl: 'skill-level.component.html',
@@ -21,7 +23,7 @@ export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLeve
 
 	public selectedNode: TreeNodeViewModel<any, SkillAggregationLevel>;
 
-	skillsLevelsDataSource: SkillBriefItem; // todo: fill and bind, calculated prerequisite chain, mark already obtained ones by current user
+	skillsLevelsDataSource: any; // todo: fill and bind, calculated prerequisite chain, mark already obtained ones by current user
 
 	protected get Level(): SkillAggregationLevel {
 		return SkillAggregationLevel.SkillLevel;
@@ -30,13 +32,13 @@ export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLeve
 	constructor(
 		state: SkillManagerState,
 		activeRoute: ActivatedRoute,
-		skillService: SkillService,
+		private skillService: SkillLevelsService,
 	) {
-		super(state, activeRoute, skillService);
+		super(state, activeRoute);
 	}
 
 	protected find(id: number): Observable<SkillLevelItem> {
-		return this.skillService.findSkillLevel(id)
+		return this.skillService.find(id)
 	}
 
 	protected createBlank(): SkillLevelItem {
@@ -58,23 +60,23 @@ export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLeve
 	protected save(): Observable<any> {
 		let obs: Observable<SkillLevelItem>;
 		if (this.data.Id) {
-			const contract: SkillLevelUpdateContract = {
+			const contract: SkillLevelUpdateRequest = {
 				ToUpdate: { Id: this.data.Id },
 				Name: this.data.Name,
 				ShortDescription: this.data.ShortDescription,
 				Description: this.data.Description,
 				Weight: this.data.Weight
 			};
-			obs = this.skillService.updateSkillLevel(contract);
+			obs = this.skillService.update(contract);
 		} else {
-			const contract: SkillLevelCreateContract = {
+			const contract: SkillLevelCreateRequest = {
 				Name: this.data.Name,
 				ShortDescription: this.data.ShortDescription,
 				Description: this.data.Description,
 				Weight: this.data.Weight,
 				Parent: { Id: this.data.ParentId }
 			};
-			obs = this.skillService.createSkillLevel(contract);
+			obs = this.skillService.create(contract);
 		}
 		return obs.pipe(
 			switchMap(
@@ -93,11 +95,11 @@ export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLeve
 	}
 
 	private toggleSkillLevel(selected: SkillLevelViewModel): Observable<{ IsActive?: boolean }> {
-		const contract: SkillLevelChangeActiveContract = {
+		const contract: SkillLevelChangeActiveRequest = {
 			ToUpdate: { Id: selected.Id },
 			IsActive: !selected.IsActive
 		};
-		return this.skillService.toggleActiveSkillLevel(contract);
+		return this.skillService.changeActive(contract);
 	}
 }
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { SkillAggregationLevel, TreeItem } from './skill.model';
+import { TreeItem } from './shared.models';
+import { SkillAggregationLevel } from '../generated/model/skill-aggregation-level';
 
 export class DxButtonOptions {
 	icon?: string;

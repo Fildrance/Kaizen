@@ -7,8 +7,8 @@
 	
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
-    <PackageReference Include="Enterprise.ApplicationBootstrap.Telemetry" Version="0.0.44" />
-    <PackageReference Include="Enterprise.ApplicationBootstrap.WebApi" Version="0.0.44" />
+    <PackageReference Include="Enterprise.ApplicationBootstrap.Telemetry" Version="0.0.47" />
+    <PackageReference Include="Enterprise.ApplicationBootstrap.WebApi" Version="0.0.47" />
     <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
   </ItemGroup>
 

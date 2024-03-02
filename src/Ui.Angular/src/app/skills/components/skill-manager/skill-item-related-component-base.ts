@@ -1,14 +1,13 @@
 import { Observable, Subscription, filter, map, of, switchMap, take, tap } from "rxjs";
-import { SkillAggregationLevel } from "src/app/shared/models/skill.model";
 import { TreeNodeViewModel } from "src/app/shared/models/util.models";
 import { SkillManagerState } from "../../models/skill-manager-state";
 import { ActivatedRoute } from "@angular/router";
-import { Component, OnDestroy } from "@angular/core";
-import { SkillService } from "../../services/skill.service";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { HasId } from "src/app/shared/services/utils.service";
+import { SkillAggregationLevel } from "../../../shared/generated/model/skill-aggregation-level";
 
 @Component({ template: '' })
-export abstract class SkillItemRelatedComponentBase<TEditorViewModel extends { IsActive: boolean, Id?: number }, TInputModel> implements OnDestroy {
+export abstract class SkillItemRelatedComponentBase<TEditorViewModel extends { IsActive: boolean, Id?: number }, TInputModel> implements OnDestroy, OnInit {
 
 	public data: TEditorViewModel;
 
@@ -18,12 +17,13 @@ export abstract class SkillItemRelatedComponentBase<TEditorViewModel extends { I
 
 	protected constructor(
 		protected state: SkillManagerState,
-		activeRoute: ActivatedRoute,
-		protected skillService: SkillService
-	) {
+		private activeRoute: ActivatedRoute
+	) {	}
+
+	ngOnInit(): void {
 		this.subscriptions.add(
-			activeRoute.url.pipe(
-				switchMap(_ => state.SelectedNode$),
+			this.activeRoute.url.pipe(
+				switchMap(_ => this.state.SelectedNode$),
 				filter(x => x && x.NodeType === this.Level),
 				switchMap(
 					x => {
@@ -39,7 +39,7 @@ export abstract class SkillItemRelatedComponentBase<TEditorViewModel extends { I
 					}
 				)
 			).subscribe(x => {
-				state.editorToggleActive = () => {
+				this.state.editorToggleActive = () => {
 					if (!HasId(this.data)) {
 						this.data.IsActive = !this.data.IsActive;
 						return;
@@ -53,9 +53,9 @@ export abstract class SkillItemRelatedComponentBase<TEditorViewModel extends { I
 							})
 						);
 				}
-				state.editorSave = () => this.save();
+				this.state.editorSave = () => this.save();
 				if (x.nodeFromTree.Id) {
-					state.editorRefresh = () => this.refresh();
+					this.state.editorRefresh = () => this.refresh();
 				}
 
 				this.data = this.createViewModel(x.data, x.nodeFromTree);

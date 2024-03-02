@@ -32,7 +32,7 @@ class Program : WebApiServiceProgramBase
             new SkillModule(),
             new SkillDataAccessLayerModule("SkillsRepository", context),
             new SkillEndpointConfigurationModule(),
-            new DefaultApiVersionModule(),
+            //new DefaultApiVersionModule(),
             new DefaultOpenApiModule(context),
             new KeycloakModule(),
         };
