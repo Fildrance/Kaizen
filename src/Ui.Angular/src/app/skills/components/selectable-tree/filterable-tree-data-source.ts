@@ -3,16 +3,17 @@ import { CustomStoreOptions } from 'devextreme/data/custom_store';
 import { Observable, lastValueFrom, map } from 'rxjs';
 
 import { Page } from 'src/app/shared/models/shared.models';
-import { TreeNode } from 'src/app/shared/models/util.models';
+import { TreeItem } from 'src/app/shared/models/skill.model';
+import { TreeNodeViewModel } from 'src/app/shared/models/util.models';
 
 
-export class FilterableTreeDataStore<TRootLevelItems> {
-	private _data: TreeNode<TRootLevelItems>[];
+export class FilterableTreeDataStore<TRootLevelItems extends TreeNodeViewModel<any, TNodeTypeEnum>, TNodeTypeEnum> {
+	private _data: TreeNodeViewModel<TRootLevelItems, TNodeTypeEnum>[];
 	private _filter: (node: any[]) => void;
 
 	public totalCount: number;
 
-	constructor(items: TreeNode<TRootLevelItems>[], filter?: (node: any[]) => void) {
+	constructor(items: TreeNodeViewModel<TRootLevelItems, TNodeTypeEnum>[], filter?: (node: any[]) => void) {
 		for (const item of items) {
 			this.fillParent(item);
 		}
@@ -25,7 +26,7 @@ export class FilterableTreeDataStore<TRootLevelItems> {
 
 	}
 
-	public get data(): TreeNode<TRootLevelItems>[] {
+	public get data(): TreeNodeViewModel<TRootLevelItems, TNodeTypeEnum>[] {
 		const duplicate = this._data.slice(0);
 		if (this._filter) {
 			this._filter(duplicate);
@@ -33,11 +34,11 @@ export class FilterableTreeDataStore<TRootLevelItems> {
 		return duplicate;
 	}
 
-	public set data(value: TreeNode<TRootLevelItems>[]) {
+	public set data(value: TreeNodeViewModel<TRootLevelItems, TNodeTypeEnum>[]) {
 		this._data = value;
 	}
 
-	private fillParent(node: TreeNode<any>): void {
+	private fillParent(node: TreeNodeViewModel<any, TNodeTypeEnum>): void {
 		if (!node || !node.Items) {
 			return;
 		}
@@ -47,7 +48,7 @@ export class FilterableTreeDataStore<TRootLevelItems> {
 		}
 	}
 
-	private doApplyFilter(items: TreeNode<any>[], filter: (node: any[]) => void): void {
+	private doApplyFilter(items: TreeNodeViewModel<any, TNodeTypeEnum>[], filter: (node: any[]) => void): void {
 		items.forEach(x => {
 			x.ItemsFilter = filter;
 			if (x.Items && x.Items.length) {
@@ -56,31 +57,31 @@ export class FilterableTreeDataStore<TRootLevelItems> {
 		});
 	}
 
-	public push(node: TreeNode<TRootLevelItems>): void {
+	public push(node: TreeNodeViewModel<TRootLevelItems, TNodeTypeEnum>): void {
 		node.ItemsFilter = this._filter;
 		this._data.push(node);
 	}
 }
 
-export function createCustomStoreOptions<T>(
-	query: (filter: LoadOptions) => Observable<any[]>,
-	itemsFilter: (node: any[]) => void
+export function createCustomStoreOptions<T extends TreeNodeViewModel<any, TNodeTypeEnum>, TNodeTypeEnum>(
+	query: (filter: LoadOptions) => Observable<TreeNodeViewModel<T, TNodeTypeEnum>[]>,
+	itemsFilter: (node: TreeItem<T>[]) => void
 ): CustomStoreOptions {
 
-	let store: FilterableTreeDataStore<T>;
+	let store: FilterableTreeDataStore<T, TNodeTypeEnum>;
 
 	return {
 		load: (options: LoadOptions) => {
-			let promise: Promise<FilterableTreeDataStore<T>>;
+			let promise: Promise<FilterableTreeDataStore<T, TNodeTypeEnum>>;
 			if (store) {
 				promise = new Promise((res, rej) => res(store));
 			} else {
 				promise = lastValueFrom(
 					query(options)
 						.pipe(
-							map(m => {
+							map(items => {
 								store = new FilterableTreeDataStore(
-									m,
+									items,
 									itemsFilter
 								);
 								return store;

@@ -1,52 +1,33 @@
 import { HttpParams } from '@angular/common/http';
 
-import { SkillBase } from '../models/skill.model';
-import { TreeNode } from '../models/util.models';
+import { TreeNodeViewModel } from '../models/util.models';
+import { SkillAggregationLevel } from '../models/skill.model';
 
 export function HasId(item: { Id?: number }): boolean {
 	return item.Id === 0 || item.Id > 0;
 }
 
 export function searchInTree(
-	rootNodes: Array<TreeNode<any> & SkillBase>,
+	rootNodes: Array<TreeNodeViewModel<any, SkillAggregationLevel>>,
 	idToFind: number,
-	tierToBeSearched: string
-): TreeNode<any> & SkillBase {
-	if (tierToBeSearched === 'skill-category') {
-		return rootNodes.find(i => i.Id === idToFind);
-	} else if (tierToBeSearched === 'skill') {
-		return findSkillById(rootNodes, idToFind);
-	} else if (tierToBeSearched === 'skill-level') {
-		return findSkillLevelById(rootNodes, idToFind);
-	}
+	aggregationLevel: SkillAggregationLevel
+): TreeNodeViewModel<any, SkillAggregationLevel> {
+	return findRecursive(rootNodes, idToFind, aggregationLevel);
 }
 
-export function findSkillById(items: Array<TreeNode<any> & SkillBase>, id: number): TreeNode<any> & SkillBase {
-	let found;
-	for (const iterator of items) {
-		if (iterator.Items) {
-			found = iterator.Items.find((i: TreeNode<any>) => i.Id === id);
-			if (found) {
-				break;
+function findRecursive(items: Array<TreeNodeViewModel<any, SkillAggregationLevel>>, id: number, aggregationLevel: SkillAggregationLevel) {
+	for (const item of items) {
+		if (item.NodeType === aggregationLevel && item.Id === id) {
+			return item;
+		}
+		if (item.Items && item.Items.length > 0) {
+			const found = findRecursive(item.Items, id, aggregationLevel);
+			if (found != null) {
+				return found;
 			}
 		}
 	}
-	return found;
-}
-
-export function findSkillLevelById(skillCats: Array<TreeNode<any> & SkillBase>, id: number): TreeNode<any> & SkillBase {
-	let found;
-	for (const skillCat of skillCats) {
-		for (const skill of skillCat.Items) {
-			if (skill.Items) {
-				found = skill.Items.find((i: TreeNode<any>) => i.Id === id);
-				if (found) {
-					break;
-				}
-			}
-		}
-	}
-	return found;
+	return null;
 }
 
 export class HttpParamsHelper {

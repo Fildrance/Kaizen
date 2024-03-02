@@ -5,12 +5,23 @@ using JetBrains.Annotations;
 using Kaizen.Skills.Api.Skill;
 using Kaizen.Skills.Api.SkillCategory;
 using Kaizen.Skills.Api.SkillLevel;
+using Kaizen.Skills.Api.SkillTree;
 
 namespace Kaizen.Skills.Service.Services;
 
 /// <summary> Service for management of skills.</summary>
 public interface ISkillService
 {
+    /// <summary>
+    /// Queries skill tree elements.
+    /// </summary>
+    /// <param name="filter">Filter contract with data for filtering logic. </param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    /// <returns>Promise of paged items. </returns>
+    /// <exception cref="ArgumentNullException">Thrown if <see cref="filter"/> is null. </exception>
+    [NotNull]
+    Task<SkillTreeItem[]> Query([NotNull] SkillTreeFilter filter, CancellationToken ct);
+
     /// <summary>
     /// Creates skill category.
     /// </summary>
@@ -39,16 +50,6 @@ public interface ISkillService
     /// <returns>Promise of changed record. </returns>
     [NotNull]
     Task<SkillCategoryItem> ChangeActive([NotNull] SkillCategoryChangeActiveRequest request, CancellationToken ct);
-
-    /// <summary>
-    /// Queries skill tree elements.
-    /// </summary>
-    /// <param name="filter">Filter contract with data for filtering logic. </param>
-    /// <param name="ct">Token for operation cancellation.</param>
-    /// <returns>Promise of paged items. </returns>
-    /// <exception cref="ArgumentNullException">Thrown if <see cref="filter"/> is null. </exception>
-    [NotNull]
-    Task<SkillCategoryItem[]> Query([NotNull] SkillTreeFilter filter, CancellationToken ct);
 
     /// <summary>
     /// Creates skill.
@@ -107,4 +108,31 @@ public interface ISkillService
     /// <returns>Promise of changed record. </returns>
     [NotNull]
     Task<SkillLevelItem> ChangeActive([NotNull] SkillLevelChangeActiveRequest request, CancellationToken ct);
+
+    /// <summary>
+    /// Find skill by selector.
+    /// </summary>
+    /// <param name="request">Selector by which skill have to be found.</param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    /// <returns>Found skill item or null.</returns>
+    [NotNull]
+    Task<SkillItem> Find([NotNull] SkillSelector request, CancellationToken ct);
+
+    /// <summary>
+    /// Find skill level by selector.
+    /// </summary>
+    /// <param name="request">Selector by which skill level have to be found.</param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    /// <returns>Found skill level item or null.</returns>
+    [NotNull]
+    Task<SkillLevelItem> Find([NotNull] SkillLevelSelector request, CancellationToken ct);
+
+    /// <summary>
+    /// Find skill category by selector.
+    /// </summary>
+    /// <param name="request">Selector by which skill category have to be found.</param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    /// <returns>Found skill category item or null.</returns>
+    [NotNull]
+    Task<SkillCategoryItem> Find([NotNull] SkillCategorySelector request, CancellationToken ct);
 }

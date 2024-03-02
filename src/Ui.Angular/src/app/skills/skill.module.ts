@@ -9,7 +9,8 @@ import {
 	DxToolbarModule,
 	DxSliderModule,
 	DxHtmlEditorModule,
-	DxTooltipModule
+	DxTooltipModule,
+	DxSelectBoxModule
 } from 'devextreme-angular';
 
 import { environment } from 'src/environments/environment';
@@ -19,18 +20,16 @@ import { SelectableTreeViewComponent } from './components/selectable-tree/select
 import { SkillCategoryComponent } from './components/skill-category/skill-category.component';
 import { SkillManagerComponent } from './components/skill-manager/skill-manager.component';
 import { SkillManagerState } from './models/skill-manager-state';
-import { SkillServiceImpl } from './services/skill.service.impl';
-import { SkillServiceToken } from './services/skill.service';
-import { SkillServiceStub } from './services/skill.service.stub';
 import { SkillComponent } from './components/skill/skill.component';
-import { SkillManagerService } from './components/skill-manager/skill-manager.service';
 import { SkillLevelComponent } from './components/skill-level/skill-level.component';
 import { CommentsModule } from '../comments/comments.module';
+import { SkillAggregationLevel } from '../shared/models/skill.model';
+import { SkillService } from './services/skill.service';
 
-const map = new Map<string, string>();
-map.set('skill-category', 'skill-category');
-map.set('skill', 'skill');
-map.set('skill-level', 'skill-level');
+const map = new Map<SkillAggregationLevel, string>();
+map.set(SkillAggregationLevel.SkillCategory, 'skill-category');
+map.set(SkillAggregationLevel.Skill, 'skill');
+map.set(SkillAggregationLevel.SkillLevel, 'skill-level');
 const routesByTypes = new RoutesByTypes(map);
 
 @NgModule({
@@ -46,13 +45,13 @@ const routesByTypes = new RoutesByTypes(map);
 		DxSliderModule,
 		DxTooltipModule,
 		DxHtmlEditorModule,
+		DxSelectBoxModule,
 		CommentsModule
 	],
 	providers: [
-		{ provide: SkillServiceToken, useClass: environment.useStubs ? SkillServiceStub : SkillServiceImpl },
+		SkillService,
 		{ provide: RoutesByTypes, useValue: routesByTypes },
-		SkillManagerState,
-		SkillManagerService
+		SkillManagerState
 	],
 	declarations: [
 		SingleCardComponent,

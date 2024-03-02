@@ -17,6 +17,7 @@ public class SkillLevelEntity : SkillBaseEntity
         Skill = skill;
     }
 
+    public int SkillId { get; set; }
     public SkillEntity Skill { get; set; }
 
     public int? Weight { get; set; }

@@ -17,7 +17,7 @@ public class SkillCategoryConfiguration : IContextConfiguration
                       .ValueGeneratedOnAdd();
         categoryConfig.HasMany(x => x.Skils)
                       .WithOne(x => x.Category)
-                      .HasForeignKey(CreateSkills.CategoryForeignKeyColumnName);
+                      .HasForeignKey(x => x.CategoryId);
 
         var skillConfig = modelBuilder.Entity<SkillEntity>();
         skillConfig.ToTable(CreateSkills.TableName, CreateSkillSchema.SchemaName);
@@ -26,7 +26,9 @@ public class SkillCategoryConfiguration : IContextConfiguration
                    .ValueGeneratedOnAdd();
         skillConfig.HasMany(x => x.SkillLevels)
                    .WithOne(x => x.Skill)
-                   .HasForeignKey(CreateSkillLevels.SkillForeignKeyColumnName);
+                   .HasForeignKey(x => x.SkillId);
+        skillConfig.Property(x => x.CategoryId)
+                   .HasColumnName(CreateSkills.CategoryForeignKeyColumnName);
 
         var skillLevelConfig = modelBuilder.Entity<SkillLevelEntity>();
         skillLevelConfig.ToTable(CreateSkillLevels.TableName, CreateSkillSchema.SchemaName);
@@ -35,13 +37,19 @@ public class SkillCategoryConfiguration : IContextConfiguration
                         .ValueGeneratedOnAdd();
         skillLevelConfig.HasMany(x => x.Prerequisites)
                         .WithOne(x => x.ForSkillLevel)
-                        .HasForeignKey(CreateSkillLevelPrerequisites.SkillLevelIdId);
+                        .HasForeignKey(x => x.SkillLevelId);
+        skillLevelConfig.Property(x => x.SkillId)
+                        .HasColumnName(CreateSkillLevels.SkillForeignKeyColumnName);
 
         var prerequisiteConfig = modelBuilder.Entity<SkillLevelPrerequisiteEntity>();
         prerequisiteConfig.ToTable(CreateSkillLevelPrerequisites.PrerequisiteTableName, CreateSkillSchema.SchemaName);
         prerequisiteConfig.HasKey(x => new { x.RequiredSkillLevelId, ForSkillLevelId = x.SkillLevelId });
         prerequisiteConfig.HasOne(x => x.PrerequiteIs)
                           .WithMany()
-                          .HasForeignKey(CreateSkillLevelPrerequisites.RequiredSkillLevelId);
+                          .HasForeignKey(x => x.RequiredSkillLevelId);
+        prerequisiteConfig.Property(x => x.SkillLevelId)
+                          .HasColumnName(CreateSkillLevelPrerequisites.SkillLevelIdId);
+        prerequisiteConfig.Property(x => x.RequiredSkillLevelId)
+                          .HasColumnName(CreateSkillLevelPrerequisites.RequiredSkillLevelId);
     }
 }

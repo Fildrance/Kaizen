@@ -5,7 +5,8 @@ namespace Kaizen.Skills.Api.SkillCategory;
 
 public class SkillCategoryItem : SkillBase
 {
-    public override string NodeType => "skill-category";
-
     public IList<SkillItem> Items { get; set; }
+
+    /// <inheritdoc />
+    public override SkillAggregationLevel NodeType => SkillAggregationLevel.SkillCategory;
 }

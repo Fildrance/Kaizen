@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using Kaizen.Skills.Api.Skill;
 using Kaizen.Skills.Api.SkillCategory;
 using Kaizen.Skills.Api.SkillLevel;
@@ -60,6 +61,14 @@ public class SkillMappingProfile : Profile
                     return src.IsActive.Value;
                 })
             );
-        CreateMap<SkillLevelEntity, SkillLevelItem>();
+        CreateMap<SkillLevelEntity, SkillLevelItem>()
+            .ForMember(
+                x => x.Prerequisites,
+                opts => opts.MapFrom(src => src.Prerequisites.Select(x => new SkillLevelPrerequisiteItem
+                {
+                    PrerequisiteId = x.RequiredSkillLevelId,
+                    RequiredSkillId = x.RequiredSkillLevelId
+                }))
+            );
     }
 }

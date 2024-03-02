@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { SkillAggregationLevel, TreeItem } from './skill.model';
 
 export class DxButtonOptions {
 	icon?: string;
@@ -7,24 +8,38 @@ export class DxButtonOptions {
 	text?: string;
 }
 
+export interface TreeNodeViewModel<TChildType extends TreeNodeViewModel<any, TNodeTypeEnum>, TNodeTypeEnum> {
 
-export interface TreeNode<TChildType> {
-	Id: number;
-	Name: string;
+	set original(value: TreeItem<TNodeTypeEnum>);
+	get Id(): number;
+	get Name(): string;
+	set Name(value: string)
 	IsSelected?: boolean;
-	IsActive: boolean;
-	Items?: Array<TChildType>;
-	Parent?: TreeNode<any>;
-	NodeType?: string;
-	ItemsFilter?: (items?: Array<TreeNode<TChildType>>) => void;
+	IsExpanded?: boolean;
+	get IsActive(): boolean;
+	set IsActive(value: boolean);
+	Items: TChildType[] | null;
+	Parent: TreeNodeViewModel<any, TNodeTypeEnum> | null;
+	get NodeType(): TNodeTypeEnum;
+	ItemsFilter?: (items?: Array<TreeNodeViewModel<TChildType, TNodeTypeEnum>>) => void;
 }
 
 @Injectable()
 export class RoutesByTypes {
+	private reverse: Map<string, SkillAggregationLevel>;
 
-	constructor(private routesByTypes: Map<string, string>) { }
+	constructor(private routesByTypes: Map<SkillAggregationLevel, string>) {
+		this.reverse = new Map<string, SkillAggregationLevel>();
+		for (const [key, value] of routesByTypes) {
+			this.reverse.set(value, key);
+		}
+	}
 
-	public get(type: string): string {
+	public get(type: SkillAggregationLevel): string {
 		return this.routesByTypes.get(type);
+	}
+
+	public getKeyFor(value: string): SkillAggregationLevel {
+		return this.reverse.get(value);
 	}
 }

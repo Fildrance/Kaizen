@@ -1,11 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Enterprise.ApplicationBootstrap.Core.Api;
-using Enterprise.ApplicationBootstrap.Core.Api.Models;
 using Enterprise.ApplicationBootstrap.DataAccessLayer.Discover;
 using Enterprise.ApplicationBootstrap.DataAccessLayer.Repository;
 using Kaizen.Skills.Api.SkillCategory;
+using Kaizen.Skills.Api.SkillTree;
 using Kaizen.Skills.Service.DAL.Entities;
+using static Kaizen.Skills.Service.DAL.Skill.SkillCategoryRepository;
 
 namespace Kaizen.Skills.Service.DAL.Skill;
 
@@ -19,5 +20,5 @@ public interface ISkillCategoryRepository : IDiscoverer<SkillCategorySelector, S
     /// <param name="session">Session in which context request is called.</param>
     /// <param name="ct">Token for cancellation.</param>
     /// <returns>Tree of models to return.</returns>
-    Task<Page<SkillCategoryEntity>> QueryTree(SkillTreeFilter request, Session session, CancellationToken ct);
+    Task<SkillTreeModel[]> QueryTree(SkillTreeFilter request, Session session, CancellationToken ct);
 }
