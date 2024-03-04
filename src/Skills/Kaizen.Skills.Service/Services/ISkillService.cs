@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Enterprise.ApplicationBootstrap.Core.Api.Models;
 using JetBrains.Annotations;
 using Kaizen.Skills.Api.Skill;
 using Kaizen.Skills.Api.SkillCategory;
@@ -79,6 +80,15 @@ public interface ISkillService
     /// <returns>Promise of changed record. </returns>
     [NotNull]
     Task<SkillItem> ChangeActive([NotNull] SkillChangeActiveRequest request, CancellationToken ct);
+
+    /// <summary>
+    /// Gets page of skill level prerequisites.
+    /// </summary>
+    /// <param name="request">Filter for request.</param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    /// <returns>Promise of request resp.</returns>
+    [NotNull]
+    Task<Page<SkillLevelPrerequisiteItem>> Query(SkillLevelPrerequisiteFilter request, CancellationToken ct);
 
     /// <summary>
     /// Creates skill level.

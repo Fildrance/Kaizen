@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Enterprise.ApplicationBootstrap.Core.Api.Models;
 using Kaizen.Skills.Api.Skill;
 using Kaizen.Skills.Api.SkillCategory;
 using Kaizen.Skills.Api.SkillLevel;
@@ -19,6 +20,9 @@ public class SkillService(IMediator mediator) : ISkillService
 
     /// <inheritdoc />
     public Task<SkillItem> ChangeActive(SkillChangeActiveRequest request, CancellationToken ct) => mediator.Send(request, ct);
+
+    /// <inheritdoc />
+    public Task<Page<SkillLevelPrerequisiteItem>> Query(SkillLevelPrerequisiteFilter request, CancellationToken ct) => mediator.Send(request, ct);
 
     /// <inheritdoc />
     public Task<SkillLevelItem> ChangeActive(SkillLevelChangeActiveRequest request, CancellationToken ct) => mediator.Send(request, ct);
