@@ -23,6 +23,8 @@ import { SkillComponent } from './components/skill/skill.component';
 import { SkillLevelComponent } from './components/skill-level/skill-level.component';
 import { CommentsModule } from '../comments/comments.module';
 import { SkillAggregationLevel } from '../shared/generated/model/skill-aggregation-level';
+import { SkillLevelPrerequisiteService } from './components/skill-manager/skill-level-prerequisite.service';
+import { SkillTreeService } from './components/skill-manager/skill-tree.service';
 
 const map = new Map<SkillAggregationLevel, string>();
 map.set(SkillAggregationLevel.SkillCategory, 'skill-category');
@@ -48,7 +50,9 @@ const routesByTypes = new RoutesByTypes(map);
 	],
 	providers: [
 		{ provide: RoutesByTypes, useValue: routesByTypes },
-		SkillManagerState
+		SkillManagerState,
+		SkillTreeService,
+		SkillLevelPrerequisiteService
 	],
 	declarations: [
 		SingleCardComponent,

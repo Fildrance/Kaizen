@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Enterprise.ApplicationBootstrap.Core.Api.Models;
 using JetBrains.Annotations;
 using Kaizen.Skills.Api.Skill;
 using Kaizen.Skills.Api.SkillCategory;
 using Kaizen.Skills.Api.SkillLevel;
 using Kaizen.Skills.Api.SkillTree;
+using MediatR;
 
 namespace Kaizen.Skills.Service.Services;
 
@@ -81,6 +83,15 @@ public interface ISkillService
     Task<SkillItem> ChangeActive([NotNull] SkillChangeActiveRequest request, CancellationToken ct);
 
     /// <summary>
+    /// Gets page of skill level prerequisites.
+    /// </summary>
+    /// <param name="request">Filter for request.</param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    /// <returns>Promise of request resp.</returns>
+    [NotNull]
+    Task<Page<SkillLevelPrerequisiteItem>> Query(SkillLevelPrerequisiteFilter request, CancellationToken ct);
+
+    /// <summary>
     /// Creates skill level.
     /// </summary>
     /// <param name="request">Contract to be used in creation.</param>
@@ -135,4 +146,21 @@ public interface ISkillService
     /// <returns>Found skill category item or null.</returns>
     [NotNull]
     Task<SkillCategoryItem> Find([NotNull] SkillCategorySelector request, CancellationToken ct);
+
+    /// <summary>
+    /// Attach skill level prerequisite.
+    /// </summary>
+    /// <param name="request">Request with info for prerequisite creation.</param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    /// <returns>Info about created prerequisite.</returns>
+    [NotNull]
+    Task<SkillLevelPrerequisiteItem> Attach([NotNull] SkillLevelPrerequisiteAttachRequest request, CancellationToken ct);
+
+    /// <summary>
+    /// Detach skill level prerequisite.
+    /// </summary>
+    /// <param name="request">Request with info of prerequisite to be removed.</param>
+    /// <param name="ct">Token for operation cancellation.</param>
+    [NotNull]
+    Task<Unit> Detach([NotNull] SkillLevelPrerequisiteDetachRequest request, CancellationToken ct);
 }

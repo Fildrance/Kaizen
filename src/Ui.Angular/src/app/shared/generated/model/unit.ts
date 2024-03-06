@@ -10,7 +10,5 @@
  * Do not edit the class manually.
  */
 
-export interface SkillLevelPrerequisiteItem { 
-    ForSkillLevelId?: number;
-    RequiredSkillId?: number;
+export interface Unit { 
 }

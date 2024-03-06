@@ -15,6 +15,7 @@ import { SkillTreeFilter } from '../../../shared/generated/model/skill-tree-filt
 import { SkillTreeItem } from '../../../shared/generated/model/skill-tree-item';
 import { SkillAggregationLevel } from '../../../shared/generated/model/skill-aggregation-level';
 import { searchInTree, HasId } from '../../../shared/services/utils.service';
+import { SkillTreeService } from './skill-tree.service';
 
 @Component({
 	templateUrl: 'skill-manager.component.html',
@@ -23,7 +24,6 @@ import { searchInTree, HasId } from '../../../shared/services/utils.service';
 export class SkillManagerComponent implements OnDestroy {
 
 	private selected: TreeNodeViewModel<any, SkillAggregationLevel>;
-	private store: CustomStore;
 	private subscription: Subscription = new Subscription();
 	private addHandlers = new Map<SkillAggregationLevel, (_: any, dataSource: DataSource) => Promise<TreeNodeViewModel<any, SkillAggregationLevel>>>();
 
@@ -40,10 +40,10 @@ export class SkillManagerComponent implements OnDestroy {
 	}
 
 	constructor(
-		private client: SkillCategoriesService,
 		private router: Router,
 		private routesByTypes: RoutesByTypes,
 		public state: SkillManagerState,
+		private client: SkillTreeService,
 		route: ActivatedRoute
 	) {
 		const opts = createCustomStoreOptions(_ => {
@@ -56,8 +56,10 @@ export class SkillManagerComponent implements OnDestroy {
 					)
 				)
 		}, _ => { });
-		this.store = new CustomStore(opts);
-		this.dataSource = new DataSource(this.store);
+
+		this.dataSource = new DataSource(
+			new CustomStore(opts)
+		);
 
 		if (route.firstChild) {
 

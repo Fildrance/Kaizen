@@ -66,7 +66,7 @@ public class SkillMappingProfile : Profile
                 x => x.Prerequisites,
                 opts => opts.MapFrom(src => src.Prerequisites.Select(x => new SkillLevelPrerequisiteItem
                 {
-                    PrerequisiteId = x.RequiredSkillLevelId,
+                    ForSkillLevelId = x.SkillLevelId,
                     RequiredSkillId = x.RequiredSkillLevelId
                 }))
             );

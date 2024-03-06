@@ -28,21 +28,29 @@ internal class SkillEndpointConfigurationModule : EndpointRouteConfigureAwareMod
             }).Override((x, _) => x.WithTags("Skills")),
             CreateAggregator<ISkillService>(builder => new[]
             {
+                builder.MapGet<SkillLevelPrerequisiteFilter>("api/skill-levels/prerequisites").To((service, request, ct) => service.Query(request, ct))
+                       .WithOpenApi(operation =>
+                       {
+                           operation.OperationId = "query-prerequisites";
+                           return operation;
+                       }),
                 builder.MapGet<SkillLevelSelector>("api/skill-levels").To((service, request, ct) => service.Find(request, ct)),
                 builder.MapPut<SkillLevelCreateRequest>("api/skill-levels").To((service, request, ct) => service.Create(request, ct)),
                 builder.MapPost<SkillLevelUpdateRequest>("api/skill-levels").To((service, request, ct) => service.Update(request, ct)),
+                builder.MapPost<SkillLevelPrerequisiteAttachRequest>("api/skill-levels/prerequisite-attach").To((service, request, ct) => service.Attach(request, ct)),
+                builder.MapPost<SkillLevelPrerequisiteDetachRequest>("api/skill-levels/prerequisite-detach").To((service, request, ct) => service.Detach(request, ct)),
                 builder.MapPost<SkillLevelChangeActiveRequest>("api/skill-levels/toggle-activity").To((service, request, ct) => service.ChangeActive(request, ct)),
             }).Override((x, _) => x.WithTags("SkillLevels")),
             CreateAggregator<ISkillService>(builder => new[]
-            {
-
-                builder.MapGet<SkillCategorySelector>("api/skill-categories").To((service, request, ct) => service.Find(request, ct)),
-                builder.MapPut<SkillCategoryCreateRequest>("api/skill-categories").To((service, request, ct) => service.Create(request, ct)),
-                builder.MapPost<SkillCategoryUpdateRequest>("api/skill-categories").To((service, request, ct) => service.Update(request, ct)),
-                builder.MapPost<SkillCategoryChangeActiveRequest>("api/skill-categories/toggle-activity").To((service, request, ct) => service.ChangeActive(request, ct)),
-                builder.MapPost<SkillTreeFilter>("api/skill/query").To((service, request, ct) => service.Query(request, ct))
-                       //.RequireAuthorization(x => x.RequireProtectedResource("skill-tree", "list")),
-            }
+                {
+                    builder.MapGet<SkillCategorySelector>("api/skill-categories").To((service, request, ct) => service.Find(request, ct)),
+                    builder.MapPut<SkillCategoryCreateRequest>("api/skill-categories").To((service, request, ct) => service.Create(request, ct)),
+                    builder.MapPost<SkillCategoryUpdateRequest>("api/skill-categories").To((service, request, ct) => service.Update(request, ct)),
+                    builder.MapPost<SkillCategoryChangeActiveRequest>("api/skill-categories/toggle-activity")
+                           .To((service, request, ct) => service.ChangeActive(request, ct)),
+                    builder.MapPost<SkillTreeFilter>("api/skill/query").To((service, request, ct) => service.Query(request, ct))
+                    //.RequireAuthorization(x => x.RequireProtectedResource("skill-tree", "list")),
+                }
             ).Override((x, _) => x.WithTags("SkillCategories"))
         };
 
