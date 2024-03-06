@@ -9,8 +9,9 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { SkillLevelSelector } from './skill-level-selector';
 
-export interface SkillLevelPrerequisiteItem { 
-    ForSkillLevelId?: number;
-    RequiredSkillId?: number;
+export interface SkillLevelPrerequisiteDetachRequest { 
+    ForSkillLevel?: SkillLevelSelector;
+    ReuireSkillLevel?: SkillLevelSelector;
 }

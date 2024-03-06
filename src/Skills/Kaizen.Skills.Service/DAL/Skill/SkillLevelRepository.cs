@@ -59,4 +59,27 @@ public class SkillLevelRepository(
 
         return new Page<SkillLevelPrerequisiteEntity>(items, totalCount);
     }
+
+    /// <inheritdoc />
+    public async Task AttachPrerequisite(SkillLevelEntity forLevel, SkillLevelEntity requiredLevel, CancellationToken ct)
+    {
+        var context = await GetContextAsync(ct);
+        var entity = new SkillLevelPrerequisiteEntity
+        {
+            ForSkillLevel = forLevel,
+            PrerequiteIs = requiredLevel
+        };
+        context.Set<SkillLevelPrerequisiteEntity>()
+               .Add(entity);
+        await context.SaveChangesAsync(ct);
+    }
+
+    /// <inheritdoc />
+    public async Task DetachPrerequisite(SkillLevelSelector forSkillLevel, SkillLevelSelector requiredIs, CancellationToken ct)
+    {
+        var context = await GetContextAsync(ct);
+        await context.Set<SkillLevelPrerequisiteEntity>()
+                     .Where(x => x.RequiredSkillLevelId == requiredIs.Id && x.SkillLevelId == forSkillLevel.Id)
+                     .ExecuteDeleteAsync(cancellationToken: ct);
+    }
 }

@@ -13,6 +13,8 @@ import { SkillModule } from './skills/skill.module';
 import { ApiModule } from './shared/generated/api.module';
 import { BASE_PATH } from './shared/generated/variables';
 import { environment } from '../environments/environment';
+import { CacheDroppingHttpInterceptor } from './shared/services/cache-dropping-http-interceptor';
+import { CacheService } from './shared/services/cache-managing.service';
 
 
 function initializeKeycloak(keycloak: KeycloakService) {
@@ -63,11 +65,17 @@ function initializeKeycloak(keycloak: KeycloakService) {
 	],
 	providers: [
 		ScreenService,
+		CacheService,
 		{ provide: BASE_PATH, useValue: environment.apiUrl },
 		AppInfoService,
 		{
 			provide: HTTP_INTERCEPTORS,
 			useClass: KeycloakBearerInterceptor,
+			multi: true
+		},
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: CacheDroppingHttpInterceptor,
 			multi: true
 		},
 		{

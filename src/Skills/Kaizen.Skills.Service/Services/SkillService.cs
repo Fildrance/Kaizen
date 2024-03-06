@@ -37,6 +37,12 @@ public class SkillService(IMediator mediator) : ISkillService
     public Task<SkillCategoryItem> Find(SkillCategorySelector request, CancellationToken ct) => mediator.Send(request, ct);
 
     /// <inheritdoc />
+    public Task<SkillLevelPrerequisiteItem> Attach(SkillLevelPrerequisiteAttachRequest request, CancellationToken ct) => mediator.Send(request, ct);
+
+    /// <inheritdoc />
+    public Task<Unit> Detach(SkillLevelPrerequisiteDetachRequest request, CancellationToken ct) => mediator.Send(request, ct);
+
+    /// <inheritdoc />
     public Task<SkillCategoryItem> Create(SkillCategoryCreateRequest request, CancellationToken ct) => mediator.Send(request, ct);
 
     /// <inheritdoc />

@@ -9,8 +9,9 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { SkillLevelPrerequisiteItem } from './skill-level-prerequisite-item';
 
-export interface SkillLevelPrerequisiteItem { 
-    ForSkillLevelId?: number;
-    RequiredSkillId?: number;
+export interface SkillLevelPrerequisiteItemPage { 
+    Items?: Array<SkillLevelPrerequisiteItem>;
+    TotalCount?: number;
 }

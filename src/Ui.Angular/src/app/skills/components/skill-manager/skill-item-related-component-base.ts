@@ -20,7 +20,7 @@ export abstract class SkillItemRelatedComponentBase<TEditorViewModel extends { I
 		private activeRoute: ActivatedRoute
 	) {	}
 
-	ngOnInit(): void {
+	public ngOnInit(): void {
 		this.subscriptions.add(
 			this.activeRoute.url.pipe(
 				switchMap(_ => this.state.SelectedNode$),

@@ -37,6 +37,8 @@ internal class SkillEndpointConfigurationModule : EndpointRouteConfigureAwareMod
                 builder.MapGet<SkillLevelSelector>("api/skill-levels").To((service, request, ct) => service.Find(request, ct)),
                 builder.MapPut<SkillLevelCreateRequest>("api/skill-levels").To((service, request, ct) => service.Create(request, ct)),
                 builder.MapPost<SkillLevelUpdateRequest>("api/skill-levels").To((service, request, ct) => service.Update(request, ct)),
+                builder.MapPost<SkillLevelPrerequisiteAttachRequest>("api/skill-levels/prerequisite-attach").To((service, request, ct) => service.Attach(request, ct)),
+                builder.MapPost<SkillLevelPrerequisiteDetachRequest>("api/skill-levels/prerequisite-detach").To((service, request, ct) => service.Detach(request, ct)),
                 builder.MapPost<SkillLevelChangeActiveRequest>("api/skill-levels/toggle-activity").To((service, request, ct) => service.ChangeActive(request, ct)),
             }).Override((x, _) => x.WithTags("SkillLevels")),
             CreateAggregator<ISkillService>(builder => new[]

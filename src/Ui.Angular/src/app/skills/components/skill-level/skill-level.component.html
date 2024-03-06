@@ -87,35 +87,39 @@
 		</div>
 
 		<div
-			class="dx-fieldset col-md-12"
+			class="dx-fieldset col-md-6"
 			*ngIf="data.Id"
 		>
 			<div class="dx-field">
 				<div class="dx-field-label">Prerequisite</div>
 				<br />
 				<div *ngFor="let prerequisite of data.Prerequisites">
-					<div class="m-grid">
-						<div class="m-grid-row">
-							<div class="m-grid-col m-grid-col-md-9 m-grid-col-left">
-								{{prerequisite.Name}}
-							</div>
-							<div class="m-grid-col m-grid-col-md-3 m-grid-col-right">
-								<button
-									class="btn btn-primary"
-									(click)="removePrerequisite(prerequisite)"
-								>
-									<i class="fa fa-trash"></i> Delete
-								</button>
-							</div>
+
+					<div class="row">
+						<div class="col skill-level__prerequisite-table__name-label">
+							{{prerequisite.TreeName}}
+						</div>
+
+						<div class="col">
+							<dx-button
+								stylingMode="text"
+								text="remove"
+								type="danger"
+								icon="remove"
+								(onClick)="removePrerequisite(prerequisite)"
+							>
+							</dx-button>
 						</div>
 					</div>
+
 				</div>
 				<br />
 				<dx-select-box
 					class="dx-field-value"
 					valueExpr='Id'
-					displayExpr='Name'
-					[dataSource]="skillsLevelsDataSource"
+					displayExpr='TreeName'
+					(onValueChanged)="prerequisiteSelected($event)"
+					[items]="nonSelectedSkillLevels"
 					[searchEnabled]="true"
 				>
 				</dx-select-box>

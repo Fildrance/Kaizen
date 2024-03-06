@@ -20,7 +20,12 @@ import { Observable }                                        from 'rxjs';
 import { SkillLevelChangeActiveRequest } from '../model/skill-level-change-active-request';
 import { SkillLevelCreateRequest } from '../model/skill-level-create-request';
 import { SkillLevelItem } from '../model/skill-level-item';
+import { SkillLevelPrerequisiteAttachRequest } from '../model/skill-level-prerequisite-attach-request';
+import { SkillLevelPrerequisiteDetachRequest } from '../model/skill-level-prerequisite-detach-request';
+import { SkillLevelPrerequisiteItem } from '../model/skill-level-prerequisite-item';
+import { SkillLevelPrerequisiteItemPage } from '../model/skill-level-prerequisite-item-page';
 import { SkillLevelUpdateRequest } from '../model/skill-level-update-request';
+import { Unit } from '../model/unit';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -57,6 +62,55 @@ export class SkillLevelsService {
         return false;
     }
 
+
+    /**
+     * 
+     * 
+     * @param body 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public attach(body?: SkillLevelPrerequisiteAttachRequest, observe?: 'body', reportProgress?: boolean): Observable<SkillLevelPrerequisiteItem>;
+    public attach(body?: SkillLevelPrerequisiteAttachRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<SkillLevelPrerequisiteItem>>;
+    public attach(body?: SkillLevelPrerequisiteAttachRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<SkillLevelPrerequisiteItem>>;
+    public attach(body?: SkillLevelPrerequisiteAttachRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys && this.configuration.apiKeys["Authorization"]) {
+            headers = headers.set('Authorization', this.configuration.apiKeys["Authorization"]);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.request<SkillLevelPrerequisiteItem>('post',`${this.basePath}/api/skill-levels/prerequisite-attach`,
+            {
+                body: body,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
 
     /**
      * 
@@ -159,6 +213,55 @@ export class SkillLevelsService {
     /**
      * 
      * 
+     * @param body 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public detach(body?: SkillLevelPrerequisiteDetachRequest, observe?: 'body', reportProgress?: boolean): Observable<Unit>;
+    public detach(body?: SkillLevelPrerequisiteDetachRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Unit>>;
+    public detach(body?: SkillLevelPrerequisiteDetachRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Unit>>;
+    public detach(body?: SkillLevelPrerequisiteDetachRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys && this.configuration.apiKeys["Authorization"]) {
+            headers = headers.set('Authorization', this.configuration.apiKeys["Authorization"]);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.request<Unit>('post',`${this.basePath}/api/skill-levels/prerequisite-detach`,
+            {
+                body: body,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * 
      * @param Id 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -195,6 +298,68 @@ export class SkillLevelsService {
         ];
 
         return this.httpClient.request<SkillLevelItem>('get',`${this.basePath}/api/skill-levels`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * 
+     * @param IncludeOnlyBoundWithActiveSkillLevels 
+     * @param Take 
+     * @param Skip 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public queryPrerequisites(IncludeOnlyBoundWithActiveSkillLevels: boolean, Take?: number, Skip?: number, observe?: 'body', reportProgress?: boolean): Observable<SkillLevelPrerequisiteItemPage>;
+    public queryPrerequisites(IncludeOnlyBoundWithActiveSkillLevels: boolean, Take?: number, Skip?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<SkillLevelPrerequisiteItemPage>>;
+    public queryPrerequisites(IncludeOnlyBoundWithActiveSkillLevels: boolean, Take?: number, Skip?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<SkillLevelPrerequisiteItemPage>>;
+    public queryPrerequisites(IncludeOnlyBoundWithActiveSkillLevels: boolean, Take?: number, Skip?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (IncludeOnlyBoundWithActiveSkillLevels === null || IncludeOnlyBoundWithActiveSkillLevels === undefined) {
+            throw new Error('Required parameter IncludeOnlyBoundWithActiveSkillLevels was null or undefined when calling queryPrerequisites.');
+        }
+
+
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (IncludeOnlyBoundWithActiveSkillLevels !== undefined && IncludeOnlyBoundWithActiveSkillLevels !== null) {
+            queryParameters = queryParameters.set('IncludeOnlyBoundWithActiveSkillLevels', <any>IncludeOnlyBoundWithActiveSkillLevels);
+        }
+        if (Take !== undefined && Take !== null) {
+            queryParameters = queryParameters.set('Take', <any>Take);
+        }
+        if (Skip !== undefined && Skip !== null) {
+            queryParameters = queryParameters.set('Skip', <any>Skip);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys && this.configuration.apiKeys["Authorization"]) {
+            headers = headers.set('Authorization', this.configuration.apiKeys["Authorization"]);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<SkillLevelPrerequisiteItemPage>('get',`${this.basePath}/api/skill-levels/prerequisites`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
