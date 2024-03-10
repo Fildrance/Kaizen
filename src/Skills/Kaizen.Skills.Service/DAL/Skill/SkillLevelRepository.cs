@@ -52,7 +52,7 @@ public class SkillLevelRepository(
 
         if (filter.Take.HasValue)
         {
-            requirementsQuery = requirementsQuery.Skip(filter.Take.Value);
+            requirementsQuery = requirementsQuery.Take(filter.Take.Value);
         }
 
         var items = await requirementsQuery.ToArrayAsync(ct);

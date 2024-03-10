@@ -1,17 +1,31 @@
-.dx-field{
+.dx-field {
 	display: grid
 }
-.dx-fieldset{
+
+.dx-fieldset {
 	margin: 30px 5px;
 }
 
-:host ::ng-deep .dx-overlay-content.dx-popup-normal.dx-popup-inherit-height.dx-resizable{
+:host ::ng-deep .dx-overlay-content.dx-popup-normal.dx-popup-inherit-height.dx-resizable {
 	background-color: #ff5722;
 }
-:host ::ng-deep .dx-slider-handle .dx-tooltip-wrapper.dx-popover-wrapper .dx-popover-arrow::after{
+
+:host ::ng-deep .dx-slider-handle .dx-tooltip-wrapper.dx-popover-wrapper .dx-popover-arrow::after {
 	background: #ff5722;
 }
 
-.skill-level__prerequisite-table__name-label{
+.skill-level__prerequisite-table__name-label {
 	margin-top: 6px;
+}
+
+.skill-level__prerequisite-table__display-mode-switch-container {
+	display: flex;
+
+	span {
+		min-width: 150px;
+	}
+
+	dx-switch {
+		margin-left: 20px;
+	}
 }

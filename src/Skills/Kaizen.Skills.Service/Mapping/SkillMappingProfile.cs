@@ -70,5 +70,8 @@ public class SkillMappingProfile : Profile
                     RequiredSkillId = x.RequiredSkillLevelId
                 }))
             );
+        CreateMap<SkillLevelPrerequisiteEntity, SkillLevelPrerequisiteItem>()
+            .ForMember(x => x.RequiredSkillId, opts => opts.MapFrom(src => src.RequiredSkillLevelId))
+            .ForMember(x => x.ForSkillLevelId, opts => opts.MapFrom(src => src.SkillLevelId));
     }
 }
