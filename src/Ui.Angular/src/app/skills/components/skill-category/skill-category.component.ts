@@ -44,8 +44,10 @@ export class SkillCategoryComponent extends SkillItemRelatedComponentBase<SkillC
 		} as SkillCategoryItem;
 	}
 
-	protected createViewModel(data: SkillCategoryItem, nodeFromTree: TreeNodeViewModel<any, SkillAggregationLevel>): SkillCategoryViewModel {
-		return new SkillCategoryViewModel(data, nodeFromTree);
+	protected createViewModel(obs: Observable<{ data: SkillCategoryItem, nodeFromTree: TreeNodeViewModel<any, SkillAggregationLevel> }>): Observable<SkillCategoryViewModel> {
+		return obs.pipe(
+			map(x => new SkillCategoryViewModel(x.data, x.nodeFromTree))
+		);
 	}
 
 	protected save(): Observable<any> {
@@ -64,16 +66,17 @@ export class SkillCategoryComponent extends SkillItemRelatedComponentBase<SkillC
 			};
 			obs = this.skillService.create(contract);
 		}
-		return obs.pipe(
+		let selectedWithTreeData = obs.pipe(
 			switchMap(
 				x => this.state.SelectedNode$
 					.pipe(
 						take(1),
 						map(nodeFromTree => { return { data: x, nodeFromTree }; })
 					)
-			),
-			tap(x => this.data = this.createViewModel(x.data, x.nodeFromTree))
+			)
 		);
+		return this.createViewModel(selectedWithTreeData)
+			.pipe(tap(x => this.data = x));
 	}
 
 	protected toggleActive(): Observable<any> {

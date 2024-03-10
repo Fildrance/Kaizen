@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { SkillCategoriesService } from "../../../shared/generated/api/api";
-import { IncludeActiveOption, SkillTreeFilter, SkillTreeItem } from "../../../shared/generated/model/models";
+import { SkillCategoriesService } from "../../shared/generated/api/api";
+import { IncludeActiveOption, SkillTreeFilter, SkillTreeItem } from "../../shared/generated/model/models";
 import { Observable, shareReplay } from "rxjs";
 
 @Injectable()
@@ -26,6 +26,5 @@ export class SkillTreeService {
 		found = serverData$.pipe(shareReplay(1));
 		this.map.set(body.IncludeActive, found);
 		return found;
-
 	}
 }

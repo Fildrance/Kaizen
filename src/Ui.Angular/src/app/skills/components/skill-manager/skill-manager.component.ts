@@ -8,14 +8,14 @@ import CustomStore from 'devextreme/data/custom_store';
 import { SkillManagerState } from '../../models/skill-manager-state';
 import { createCustomStoreOptions } from '../selectable-tree/filterable-tree-data-source';
 import { TreeNodeViewModel, RoutesByTypes, DxButtonOptions } from 'src/app/shared/models/util.models';
-import { SkillTreeItemViewModel } from './skill-models';
+import { SkillTreeItemViewModel } from '../../models/skill-models';
 import { SkillCategoriesService } from '../../../shared/generated/api/skill-categories';
 import { IncludeActiveOption } from '../../../shared/generated/model/include-active-option';
 import { SkillTreeFilter } from '../../../shared/generated/model/skill-tree-filter';
 import { SkillTreeItem } from '../../../shared/generated/model/skill-tree-item';
 import { SkillAggregationLevel } from '../../../shared/generated/model/skill-aggregation-level';
 import { searchInTree, HasId } from '../../../shared/services/utils.service';
-import { SkillTreeService } from './skill-tree.service';
+import { SkillTreeService } from '../../services/skill-tree.service';
 
 @Component({
 	templateUrl: 'skill-manager.component.html',

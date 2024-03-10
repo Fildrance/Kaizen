@@ -87,11 +87,18 @@
 		</div>
 
 		<div
-			class="dx-fieldset col-md-6"
+			class="dx-fieldset col-md-12"
 			*ngIf="data.Id"
 		>
 			<div class="dx-field">
 				<div class="dx-field-label">Prerequisite</div>
+				<br />
+				<div class="skill-level__prerequisite-table__display-mode-switch-container">
+					<span>{{prerequisiteSwithcLabel}}</span>
+					<div>
+						<dx-switch [(value)]="displayFullPrerequisiteList"></dx-switch>
+					</div>
+				</div>
 				<br />
 				<div *ngFor="let prerequisite of data.Prerequisites">
 
@@ -124,6 +131,9 @@
 				>
 				</dx-select-box>
 			</div>
+		</div>
+		<div *ngIf="!data.Id">
+			Skill level prerquisites can be set after saving current skill-level record!
 		</div>
 	</fieldset>
 

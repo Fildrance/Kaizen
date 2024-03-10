@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, map, switchMap, take, tap } from 'rxjs';
+import { Observable, combineLatest, map, switchMap, take, tap } from 'rxjs';
 import { DxSelectBoxComponent } from 'devextreme-angular';
 
 import { SkillManagerState } from '../../models/skill-manager-state';
@@ -13,8 +13,9 @@ import { SkillLevelItem } from '../../../shared/generated/model/skill-level-item
 import { SkillLevelPrerequisiteItem } from '../../../shared/generated/model/skill-level-prerequisite-item';
 import { SkillLevelUpdateRequest } from '../../../shared/generated/model/skill-level-update-request';
 import { SkillLevelsService } from '../../../shared/generated/api/skill-levels';
-import { SkillLevelPrerequisiteService } from '../skill-manager/skill-level-prerequisite.service';
+import { SkillLevelPrerequisiteService } from '../../services/skill-level-prerequisite.service';
 import { SkillLevelPrerequisiteAttachRequest, SkillLevelPrerequisiteDetachRequest } from '../../../shared/generated/model/models';
+import { SkillTreeListItem } from '../../models/skill-tree-list-item';
 
 @Component({
 	templateUrl: 'skill-level.component.html',
@@ -23,14 +24,25 @@ import { SkillLevelPrerequisiteAttachRequest, SkillLevelPrerequisiteDetachReques
 export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLevelViewModel, SkillLevelItem> {
 
 	public data: SkillLevelViewModel;
-
+	public prerequisiteSwithcLabel: PrerquisiteDisplayModeType = 'Only direct prerequisites';
+	public nonSelectedSkillLevels: SkillTreeListItem[];
 	public selectedNode: TreeNodeViewModel<any, SkillAggregationLevel>;
 
-	private skillsLevels: { Id: number, Name: string, TreeName: string, IsActive: boolean }[]; // todo: fill and bind, calculated prerequisite chain, mark already obtained ones by current user
-	public nonSelectedSkillLevels: { Id: number, Name: string, TreeName: string, IsActive: boolean }[];
+	private skillsLevels: SkillTreeListItem[]; // todo: fill and bind, calculated prerequisite chain, mark already obtained ones by current user
+	private _displayFullPrerequisiteList: boolean = false;
 
 	protected get Level(): SkillAggregationLevel {
 		return SkillAggregationLevel.SkillLevel;
+	}
+
+	public get displayFullPrerequisiteList(): boolean {
+		return this._displayFullPrerequisiteList;
+	}
+
+	public set displayFullPrerequisiteList(value: boolean) {
+		this._displayFullPrerequisiteList = value;
+		this.data.setDisplayPrerequisiteMode(value);
+		this.updatePrerequisiteSwithcLabel(value);
 	}
 
 	constructor(
@@ -40,37 +52,6 @@ export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLeve
 		private prerequisiteService: SkillLevelPrerequisiteService
 	) {
 		super(state, activeRoute);
-	}
-
-	public ngOnInit(): void {
-		super.ngOnInit();
-
-		this.prerequisiteService.querySkillLevels()
-			.subscribe(
-				x => {
-					this.skillsLevels = x;
-					this.nonSelectedSkillLevels = [...this.skillsLevels]
-				}
-			);
-	}
-
-	protected find(id: number): Observable<SkillLevelItem> {
-		return this.skillService.find(id)
-	}
-
-	protected createBlank(): SkillLevelItem {
-		return {
-			IsActive: true,
-			NodeType: SkillAggregationLevel.SkillLevel.toString(),
-			Prerequisites: []
-		} as SkillLevelItem;
-	}
-
-	protected createViewModel(data: SkillLevelItem, nodeFromTree: TreeNodeViewModel<any, SkillAggregationLevel>): SkillLevelViewModel {
-		const created = new SkillLevelViewModel(data, nodeFromTree, this.skillsLevels);
-		let prerequisites = created.Prerequisites
-		this.nonSelectedSkillLevels = this.skillsLevels.filter(x => !prerequisites.some(p => p.RequiredSkillId == x.Id))
-		return created;
 	}
 
 	public prerequisiteSelected(e: { value?: number, component: DxSelectBoxComponent }): void {
@@ -86,10 +67,9 @@ export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLeve
 		}
 		this.skillService.attach(request)
 			.subscribe(x => {
-				this.data.Prerequisites.push(new SkillLevelPrerequisiteViewModel(x, this.skillsLevels));
+				this.data.addPrerequisite(x, this.skillsLevels)
 
-				let index = this.nonSelectedSkillLevels.indexOf(found);
-				this.nonSelectedSkillLevels.splice(index, 1);
+				this.updateNonSelectedSkillLevelList(this.data);
 
 				//@ts-ignore
 				e.component.instance().clear()
@@ -103,18 +83,49 @@ export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLeve
 		};
 		this.skillService.detach(request)
 			.subscribe(_ => {
-				let index = this.data.Prerequisites.findIndex(x => x === item);
-				this.data.Prerequisites.splice(index, 1);
+				this.data.removePrerequisite(item);
 
-				let skillLevel = this.skillsLevels.find(x => x.Id === item.RequiredSkillId);
-
-				this.nonSelectedSkillLevels.push({
-					Id: skillLevel.Id,
-					IsActive: skillLevel.IsActive,
-					Name: skillLevel.Name,
-					TreeName: skillLevel.TreeName,
-				} as { Id: number, Name: string, TreeName: string, IsActive: boolean })
+				this.updateNonSelectedSkillLevelList(this.data);
 			})
+	}
+
+	protected find(id: number): Observable<SkillLevelItem> {
+		return this.skillService.find(id)
+	}
+
+	protected createBlank(): SkillLevelItem {
+		return {
+			IsActive: true,
+			NodeType: SkillAggregationLevel.SkillLevel.toString(),
+			Prerequisites: []
+		} as SkillLevelItem;
+	}
+	protected createViewModel(obs: Observable<{ data: SkillLevelItem, nodeFromTree: TreeNodeViewModel<any, SkillAggregationLevel> }>): Observable<SkillLevelViewModel> {
+		return obs.pipe(
+			switchMap(currentInfo => combineLatest([
+				this.prerequisiteService.querySkillLevels().pipe(take(1)),
+				this.prerequisiteService.queryPrerequisites().pipe(take(1))
+			]).pipe(
+				map(
+					([skillLevels, prerequisitesFullList]) => ({
+						skillLevels: skillLevels,
+						prerequisitesFullList: prerequisitesFullList,
+						currentInfo: currentInfo
+					})
+				)
+			)
+			),
+			map(x => {
+
+				this.skillsLevels = x.skillLevels;
+
+				let chainBuilder = new PrerequisiteChainBuilder(x.skillLevels, x.prerequisitesFullList);
+				let newViewModel = new SkillLevelViewModel(x.currentInfo.data, x.currentInfo.nodeFromTree, chainBuilder)
+				this.updateNonSelectedSkillLevelList(newViewModel);
+
+				return newViewModel;
+			})
+		)
 	}
 
 	protected save(): Observable<any> {
@@ -138,16 +149,17 @@ export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLeve
 			};
 			obs = this.skillService.create(contract);
 		}
-		return obs.pipe(
+		let selectedWithTreeData = obs.pipe(
 			switchMap(
 				x => this.state.SelectedNode$
 					.pipe(
 						take(1),
 						map(nodeFromTree => { return { data: x, nodeFromTree }; })
 					)
-			),
-			tap(x => this.data = this.createViewModel(x.data, x.nodeFromTree))
+			)
 		);
+		return this.createViewModel(selectedWithTreeData)
+			.pipe(tap(x => this.data = x));
 	}
 
 	protected toggleActive(): Observable<any> {
@@ -161,24 +173,117 @@ export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLeve
 		};
 		return this.skillService.changeActive(contract);
 	}
+
+	private updatePrerequisiteSwithcLabel(value: boolean) {
+		if (value) {
+			this.prerequisiteSwithcLabel = 'Full prerequisite chain';
+		} else {
+			this.prerequisiteSwithcLabel = 'Only direct prerequisites';
+		}
+	}
+
+	private updateNonSelectedSkillLevelList(data: SkillLevelViewModel): void {
+		if (data.Prerequisites && data.Prerequisites.length) {
+			this.nonSelectedSkillLevels = this.skillsLevels.filter(x => !data.Prerequisites.some(p => p.RequiredSkillId == x.Id) && data.Id !== x.Id);
+		} else {
+			this.nonSelectedSkillLevels = this.skillsLevels.filter(x => x.Id !== data.Id);
+		}
+	}
+
+}
+
+class PrerequisiteChainBuilder {
+
+	constructor(private skillLevels: SkillTreeListItem[], private prerequisiteFullList: SkillLevelPrerequisiteItem[]) {
+
+	}
+
+	public withList(items: Array<SkillLevelPrerequisiteItem>): PrerequisiteChain {
+		return new PrerequisiteChain(items, this.prerequisiteFullList, this.skillLevels)
+	}
+}
+
+class PrerequisiteChain {
+	private fullList: SkillLevelPrerequisiteViewModel[] = [];
+	private directList: SkillLevelPrerequisiteViewModel[] = [];
+	private map: Map<number, SkillLevelPrerequisiteViewModel[]> = new Map();
+
+	constructor(
+		items: Array<SkillLevelPrerequisiteItem>,
+		prerequisiteFullList: SkillLevelPrerequisiteItem[],
+		skillLevels: SkillTreeListItem[]
+	) {
+		if (!items || !items.length) {
+			return;
+		}
+
+		this.directList = items.map(x => new SkillLevelPrerequisiteViewModel(x, skillLevels))
+
+		for (const prerequisite of items) {
+			let viewModel = new SkillLevelPrerequisiteViewModel(prerequisite, skillLevels);
+			this.fullList.push(...this.extractPrerequisiteTree(viewModel, prerequisiteFullList, skillLevels, this.map));
+		}
+	}
+
+	public getDirect(): SkillLevelPrerequisiteViewModel[] {
+		return this.directList;
+	}
+
+	public getFull(): SkillLevelPrerequisiteViewModel[] {
+		return this.fullList;
+	}
+
+	public remove(item: SkillLevelPrerequisiteViewModel): void {
+		let index = this.directList.indexOf(item);
+		this.directList.splice(index, 1);
+
+		// remove from map, then from full list
+	}
+
+	public add(item: SkillLevelPrerequisiteViewModel): void {
+		this.directList.push(item)
+
+		//todo: add from chain!
+		//this.prerequisitesFullList.push(new SkillLevelPrerequisiteViewModel(x, skillsLevels))
+	}
+
+	private extractPrerequisiteTree(
+		prerequisite: SkillLevelPrerequisiteViewModel,
+		fullList: SkillLevelPrerequisiteItem[],
+		skillsLevels: SkillTreeListItem[],
+		map: Map<number, SkillLevelPrerequisiteViewModel[]>
+	): SkillLevelPrerequisiteViewModel[] {
+		const list = [prerequisite];
+		const foundNext = fullList.filter(x => x.ForSkillLevelId == prerequisite.RequiredSkillId);
+		if (foundNext && foundNext.length) {
+			for (const next of foundNext) {
+				const viewModel = new SkillLevelPrerequisiteViewModel(next, skillsLevels)
+				if (map.has(viewModel.ForSkillLevelId)) {
+					map.get(viewModel.ForSkillLevelId).push(viewModel);
+				} else {
+					map.set(viewModel.ForSkillLevelId, [viewModel]);
+				}
+				list.push(...this.extractPrerequisiteTree(viewModel, fullList, skillsLevels, map))
+			}
+
+		}
+		return list;
+	}
 }
 
 export class SkillLevelViewModel extends SkillEditorViewModel<SkillLevelItem>{
-	private prerequisites: SkillLevelPrerequisiteViewModel[] = [];
+
+	private prerequisiteChain: PrerequisiteChain;
+	private _displayFullPrerequisiteTree: boolean;
 
 	constructor(
 		item: SkillLevelItem,
 		fromTree: TreeNodeViewModel<any, SkillAggregationLevel>,
-		skillLevels: { Name: string, Id: number, IsActive: boolean, TreeName: string }[]
+		chainBuilder: PrerequisiteChainBuilder
 	) {
 		super(item, fromTree);
 
-		if (item.Prerequisites && item.Prerequisites.length) {
-			for (const prerequisite of item.Prerequisites) {
-				const prerequisiteViewModel = new SkillLevelPrerequisiteViewModel(prerequisite, skillLevels);
-				this.prerequisites.push(prerequisiteViewModel);
-			}
-		}
+		this.prerequisiteChain = chainBuilder.withList(item.Prerequisites);
 	}
 
 	get NameWithPath(): string {
@@ -201,17 +306,33 @@ export class SkillLevelViewModel extends SkillEditorViewModel<SkillLevelItem>{
 		this.item.Weight = value;
 	}
 
+	public setDisplayPrerequisiteMode(value: boolean): void {
+		this._displayFullPrerequisiteTree = value;
+	}
+
 	public get Prerequisites(): SkillLevelPrerequisiteViewModel[] {
-		return this.prerequisites;
+		if (this._displayFullPrerequisiteTree) {
+			return this.prerequisiteChain.getFull();
+		} else {
+			return this.prerequisiteChain.getDirect();
+		}
+	}
+
+	public addPrerequisite(x: SkillLevelPrerequisiteItem, skillsLevels: SkillTreeListItem[]) {
+		this.prerequisiteChain?.add(new SkillLevelPrerequisiteViewModel(x, skillsLevels))
+	}
+
+	public removePrerequisite(item: SkillLevelPrerequisiteViewModel) {
+		this.prerequisiteChain?.remove(item);
 	}
 }
 
 export class SkillLevelPrerequisiteViewModel {
-	private requiredSkillLevel: { Name: string, Id: number, IsActive: boolean, TreeName: string };
+	private requiredSkillLevel: SkillTreeListItem;
 
 	constructor(
 		private item: SkillLevelPrerequisiteItem,
-		skillLevels: { Name: string, Id: number, IsActive: boolean, TreeName: string }[]
+		skillLevels: SkillTreeListItem[]
 	) {
 		this.requiredSkillLevel = skillLevels.find(x => x.Id == item.RequiredSkillId);
 	}
@@ -220,7 +341,6 @@ export class SkillLevelPrerequisiteViewModel {
 		return this.requiredSkillLevel.Name;
 	}
 
-
 	get TreeName(): string {
 		return this.requiredSkillLevel.TreeName;
 	}
@@ -228,8 +348,10 @@ export class SkillLevelPrerequisiteViewModel {
 	get ForSkillLevelId(): number {
 		return this.item.ForSkillLevelId;
 	}
+
 	get RequiredSkillId(): number {
 		return this.item.RequiredSkillId;
 	}
-
 }
+
+type PrerquisiteDisplayModeType = 'Only direct prerequisites' | 'Full prerequisite chain';

@@ -10,7 +10,8 @@ import {
 	DxSliderModule,
 	DxHtmlEditorModule,
 	DxTooltipModule,
-	DxSelectBoxModule
+	DxSelectBoxModule,
+	DxSwitchModule
 } from 'devextreme-angular';
 
 import { SingleCardComponent } from '../layouts/single-card/single-card.component';
@@ -23,8 +24,8 @@ import { SkillComponent } from './components/skill/skill.component';
 import { SkillLevelComponent } from './components/skill-level/skill-level.component';
 import { CommentsModule } from '../comments/comments.module';
 import { SkillAggregationLevel } from '../shared/generated/model/skill-aggregation-level';
-import { SkillLevelPrerequisiteService } from './components/skill-manager/skill-level-prerequisite.service';
-import { SkillTreeService } from './components/skill-manager/skill-tree.service';
+import { SkillLevelPrerequisiteService } from './services/skill-level-prerequisite.service';
+import { SkillTreeService } from './services/skill-tree.service';
 
 const map = new Map<SkillAggregationLevel, string>();
 map.set(SkillAggregationLevel.SkillCategory, 'skill-category');
@@ -46,6 +47,7 @@ const routesByTypes = new RoutesByTypes(map);
 		DxTooltipModule,
 		DxHtmlEditorModule,
 		DxSelectBoxModule,
+		DxSwitchModule,
 		CommentsModule
 	],
 	providers: [
