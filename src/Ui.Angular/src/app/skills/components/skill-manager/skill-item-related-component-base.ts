@@ -21,7 +21,7 @@ export abstract class SkillItemRelatedComponentBase<TEditorViewModel extends { I
 	) { }
 
 	public ngOnInit(): void {
-		let updatePipe = this.activeRoute.url.pipe(
+		let updateSelectedPipe = this.activeRoute.url.pipe(
 			switchMap(_ => this.state.SelectedNode$),
 			filter(x => x && x.NodeType === this.Level),
 			switchMap(
@@ -60,7 +60,7 @@ export abstract class SkillItemRelatedComponentBase<TEditorViewModel extends { I
 				}
 			)
 		);
-		const subscription = this.createViewModel(updatePipe)
+		const subscription = this.createViewModel(updateSelectedPipe)
 			.subscribe(x => this.data = x);
 
 		this.subscriptions.add(subscription);
@@ -99,7 +99,6 @@ export abstract class SkillItemRelatedComponentBase<TEditorViewModel extends { I
 	protected abstract get Level(): SkillAggregationLevel;
 	protected abstract find(id: number): Observable<TInputModel>;
 	protected abstract createBlank(): TInputModel;
-
 	protected abstract createViewModel(obs: Observable<{ data: TInputModel, nodeFromTree: TreeNodeViewModel<any, SkillAggregationLevel> }>): Observable<TEditorViewModel>
 
 	protected abstract save(): Observable<any>;

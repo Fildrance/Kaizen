@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { SkillLevelsService } from "../../shared/generated/api/skill-levels";
-import { EMPTY, Observable, Subject, expand, reduce, switchMap } from "rxjs";
+import { BehaviorSubject, EMPTY, Observable, Subject, expand, reduce, switchMap } from "rxjs";
 import { SkillLevelPrerequisiteItem, SkillTreeItem } from "../../shared/generated/model/models";
-import { map, shareReplay } from "rxjs/operators";
+import { map, refCount, shareReplay } from "rxjs/operators";
 import { CacheService as CacheManagingService } from "../../shared/services/cache-managing.service";
 import { SkillManagerState } from "../models/skill-manager-state";
 import { SkillTreeService } from "./skill-tree.service";
@@ -11,7 +11,7 @@ import { SkillTreeListItem } from "../models/skill-tree-list-item";
 @Injectable()
 export class SkillLevelPrerequisiteService {
 
-	private refresh$ = new Subject<boolean>();
+	private refresh$ = new BehaviorSubject<boolean>(false);
 	cachedData$: Observable<SkillLevelPrerequisiteItem[]>;
 
 	constructor(
@@ -58,17 +58,19 @@ export class SkillLevelPrerequisiteService {
 	}
 
 	private cachedPrerequisites(): Observable<SkillLevelPrerequisiteItem[]> {
-		return this.queryRawPrerequisites();
-		//this.cachedData$ = backendData$.pipe(shareReplay(1));
-
-		// return this.refresh$
-		// 	.pipe(
-		// 		switchMap(
-		// 			refresh => refresh
-		// 				? backendData$
-		// 				: this.cachedData$
-		// 		)
-		// 	)
+		return this.refresh$
+			.pipe(
+				switchMap(
+					refresh => {
+						if (refresh || !this.cachedData$) {
+							this.cachedData$ = this.queryRawPrerequisites().pipe(
+								shareReplay(1, 10_000)
+							)
+						}
+						return this.cachedData$;
+					}
+				)
+			)
 	}
 
 	private queryRawPrerequisites(): Observable<SkillLevelPrerequisiteItem[]> {

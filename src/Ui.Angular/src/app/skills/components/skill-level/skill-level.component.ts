@@ -29,7 +29,7 @@ export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLeve
 	public nonSelectedSkillLevels: SkillTreeListItem[];
 	public selectedNode: TreeNodeViewModel<any, SkillAggregationLevel>;
 
-	private skillsLevels: SkillTreeListItem[]; // todo: fill and bind, calculated prerequisite chain, mark already obtained ones by current user
+	private skillsLevels: SkillTreeListItem[];
 	private _displayFullPrerequisiteList: boolean = false;
 
 	protected get Level(): SkillAggregationLevel {
@@ -242,11 +242,11 @@ export class SkillLevelViewModel extends SkillEditorViewModel<SkillLevelItem>{
 	}
 
 	public addPrerequisite(x: SkillLevelPrerequisiteItem, skillsLevels: SkillTreeListItem[]) {
-		this.prerequisiteChain?.add(new SkillLevelPrerequisiteViewModel(x, skillsLevels))
+		this.prerequisiteChain.add(new SkillLevelPrerequisiteViewModel(x, skillsLevels))
 	}
 
 	public removePrerequisite(item: SkillLevelPrerequisiteViewModel) {
-		this.prerequisiteChain?.remove(item);
+		this.prerequisiteChain.remove(item);
 	}
 }
 
