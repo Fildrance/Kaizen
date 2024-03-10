@@ -100,7 +100,7 @@
 					</div>
 				</div>
 				<br />
-				<div *ngFor="let prerequisite of data.Prerequisites">
+				<div *ngFor="let prerequisite of data.getPrerequisites(displayFullPrerequisiteList)">
 
 					<div class="row">
 						<div class="col skill-level__prerequisite-table__name-label">
@@ -109,6 +109,7 @@
 
 						<div class="col">
 							<dx-button
+								[disabled]="prerequisite.ForSkillLevelId !== data.Id"
 								stylingMode="text"
 								text="remove"
 								type="danger"

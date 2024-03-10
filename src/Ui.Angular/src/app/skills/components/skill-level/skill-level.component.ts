@@ -16,6 +16,7 @@ import { SkillLevelsService } from '../../../shared/generated/api/skill-levels';
 import { SkillLevelPrerequisiteService } from '../../services/skill-level-prerequisite.service';
 import { SkillLevelPrerequisiteAttachRequest, SkillLevelPrerequisiteDetachRequest } from '../../../shared/generated/model/models';
 import { SkillTreeListItem } from '../../models/skill-tree-list-item';
+import { PrerequisiteChainBuilder, PrerequisiteChain } from '../../models/prerequisite-chain';
 
 @Component({
 	templateUrl: 'skill-level.component.html',
@@ -183,92 +184,14 @@ export class SkillLevelComponent extends SkillItemRelatedComponentBase<SkillLeve
 	}
 
 	private updateNonSelectedSkillLevelList(data: SkillLevelViewModel): void {
-		if (data.Prerequisites && data.Prerequisites.length) {
-			this.nonSelectedSkillLevels = this.skillsLevels.filter(x => !data.Prerequisites.some(p => p.RequiredSkillId == x.Id) && data.Id !== x.Id);
+		let prerequisites = data.getPrerequisites(true);
+		if (prerequisites && prerequisites.length) {
+			this.nonSelectedSkillLevels = this.skillsLevels.filter(x => !prerequisites.some(p => p.RequiredSkillId == x.Id) && data.Id !== x.Id);
 		} else {
 			this.nonSelectedSkillLevels = this.skillsLevels.filter(x => x.Id !== data.Id);
 		}
 	}
 
-}
-
-class PrerequisiteChainBuilder {
-
-	constructor(private skillLevels: SkillTreeListItem[], private prerequisiteFullList: SkillLevelPrerequisiteItem[]) {
-
-	}
-
-	public withList(items: Array<SkillLevelPrerequisiteItem>): PrerequisiteChain {
-		return new PrerequisiteChain(items, this.prerequisiteFullList, this.skillLevels)
-	}
-}
-
-class PrerequisiteChain {
-	private fullList: SkillLevelPrerequisiteViewModel[] = [];
-	private directList: SkillLevelPrerequisiteViewModel[] = [];
-	private map: Map<number, SkillLevelPrerequisiteViewModel[]> = new Map();
-
-	constructor(
-		items: Array<SkillLevelPrerequisiteItem>,
-		prerequisiteFullList: SkillLevelPrerequisiteItem[],
-		skillLevels: SkillTreeListItem[]
-	) {
-		if (!items || !items.length) {
-			return;
-		}
-
-		this.directList = items.map(x => new SkillLevelPrerequisiteViewModel(x, skillLevels))
-
-		for (const prerequisite of items) {
-			let viewModel = new SkillLevelPrerequisiteViewModel(prerequisite, skillLevels);
-			this.fullList.push(...this.extractPrerequisiteTree(viewModel, prerequisiteFullList, skillLevels, this.map));
-		}
-	}
-
-	public getDirect(): SkillLevelPrerequisiteViewModel[] {
-		return this.directList;
-	}
-
-	public getFull(): SkillLevelPrerequisiteViewModel[] {
-		return this.fullList;
-	}
-
-	public remove(item: SkillLevelPrerequisiteViewModel): void {
-		let index = this.directList.indexOf(item);
-		this.directList.splice(index, 1);
-
-		// remove from map, then from full list
-	}
-
-	public add(item: SkillLevelPrerequisiteViewModel): void {
-		this.directList.push(item)
-
-		//todo: add from chain!
-		//this.prerequisitesFullList.push(new SkillLevelPrerequisiteViewModel(x, skillsLevels))
-	}
-
-	private extractPrerequisiteTree(
-		prerequisite: SkillLevelPrerequisiteViewModel,
-		fullList: SkillLevelPrerequisiteItem[],
-		skillsLevels: SkillTreeListItem[],
-		map: Map<number, SkillLevelPrerequisiteViewModel[]>
-	): SkillLevelPrerequisiteViewModel[] {
-		const list = [prerequisite];
-		const foundNext = fullList.filter(x => x.ForSkillLevelId == prerequisite.RequiredSkillId);
-		if (foundNext && foundNext.length) {
-			for (const next of foundNext) {
-				const viewModel = new SkillLevelPrerequisiteViewModel(next, skillsLevels)
-				if (map.has(viewModel.ForSkillLevelId)) {
-					map.get(viewModel.ForSkillLevelId).push(viewModel);
-				} else {
-					map.set(viewModel.ForSkillLevelId, [viewModel]);
-				}
-				list.push(...this.extractPrerequisiteTree(viewModel, fullList, skillsLevels, map))
-			}
-
-		}
-		return list;
-	}
 }
 
 export class SkillLevelViewModel extends SkillEditorViewModel<SkillLevelItem>{
@@ -283,7 +206,7 @@ export class SkillLevelViewModel extends SkillEditorViewModel<SkillLevelItem>{
 	) {
 		super(item, fromTree);
 
-		this.prerequisiteChain = chainBuilder.withList(item.Prerequisites);
+		this.prerequisiteChain = chainBuilder.withListOwner(item);
 	}
 
 	get NameWithPath(): string {
@@ -310,8 +233,8 @@ export class SkillLevelViewModel extends SkillEditorViewModel<SkillLevelItem>{
 		this._displayFullPrerequisiteTree = value;
 	}
 
-	public get Prerequisites(): SkillLevelPrerequisiteViewModel[] {
-		if (this._displayFullPrerequisiteTree) {
+	public getPrerequisites(displayFullPrerequisiteList: boolean): SkillLevelPrerequisiteViewModel[] {
+		if (displayFullPrerequisiteList) {
 			return this.prerequisiteChain.getFull();
 		} else {
 			return this.prerequisiteChain.getDirect();
