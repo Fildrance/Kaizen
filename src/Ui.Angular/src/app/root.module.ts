@@ -22,7 +22,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
 		keycloak.init({
 			config: {
 				url: 'http://localhost:8080',
-				realm: 'kaizen-realm',
+				realm: 'kaizen',
 				clientId: 'kaizen-client'
 			},
 			initOptions: {

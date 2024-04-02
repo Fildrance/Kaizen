@@ -6,12 +6,7 @@ This project is work in progress, and should be observed as such.
 Main idea of project is to create simple, yet usable application for managing employees skills, grades, knowledge and growth in scalable companies.
 
 ### Notable patterns
- * Project uses docker-compose for managing network cooperation and service management
- * Micro-service architecture is used as overall approach. Masstransit (https://masstransit-project.com/) is used as bus to control message flow (and build abstraction over mq) and as entry point that can be decorated
- * Nginx is used as static content provider and  forward-proxy so no cors problems would require handling
- * Front-end is provided as SPA based on angular and dev-extreme
- * Record discovery - for every entity class there is selector class that can be used to find certain record in some way. Selector class can just be holder of id, or can hold some other unique paramters by which entity can be found. Selector class is part of API and is separated from search logic.
- * Single WebApi service is used as api-gateway, which accepts forwarded api requests. All other services contact MQ only. This provides single entry point for application. With this we can separate all services from front-end network.
+// todo:
 
 ### Other stuff
  * 'Services' (classes that end with 'Service') are just proxy for dispatching calls on MassTransit bus in simple way, hiding actual usage of bus, that otherwise may appear as service locator anti-pattern. Also allowing only service to be called in other code (not bus itself) makes it more maintanable (as there must be only one methods by which usages of consumer can be found)
@@ -19,49 +14,26 @@ Main idea of project is to create simple, yet usable application for managing em
 
 ## How to launch
 
-### dirty identity ssl hax
+//todo:
 
-For identity-server admin ui there are several more required actions. As work with identity requires SSL, we will need some dev certifictes, for nginx and dotnet apps. 
+### How to actually launch (for development)
 
-As certificates require domain to be applied to, we will need to change our routing so we can handle our trusted dev site locally. 
-
-Following instruction is simplified to bat file (./build/dev/prepare.dev) but only for windows, so just go to 'How to actually launch' block if you use Windows as OS (not connected to docker container).
-
-add next line to C:\windows\system32\drivers\etc\hosts (for windows) or \etc\hosts (for linux)
-
-```
-127.0.0.1 skoruba.local sts.skoruba.local admin.skoruba.local admin-api.skoruba.local kaizen.skoruba.local
-```
-
-Then generate certs (you will need openssl installed):
-```
-cd build/identity/certs
-mkcert --install
-copy $env:LOCALAPPDATA\mkcert\rootCA.pem ./cacerts.pem
-copy $env:LOCALAPPDATA\mkcert\rootCA.pem ./cacerts.crt
-
-cd shared/nginx/certs
-mkcert -cert-file skoruba.local.crt -key-file skoruba.local.key skoruba.local *.skoruba.local
-mkcert -pkcs12 skoruba.local.pfx skoruba.local *.skoruba.local
-
-openssl pkcs12 -export -out skoruba.local.pfx -inkey skoruba.local.key -in skoruba.local.crt
-```
-
-Then set cert password, verify it. use same password as cert password for launching identity docker-compose
-
-After that we will need dhparam.pem for nginx to use Forward Secrecy.
-```
-openssl dhparam -out <put your path to project source folder here>/nginx-dhparam/dhparam.pem 4096
-```
-
-### How to actually launch
+Prerequisites: 
+* dotnet aspnet core runtime 8
+* docker installed and up to date. Ensure its started.
 
 To launch project locally:
 
-  * clone project
-  * go to build ("cd ./build/dev")
-  * build all the stuff (execute ".\build-all.bat")
-  * prepare env - call ".\prepare.bat". Follow instuctions until it is finished.
-  * install newly created dev certificates :D (on path /build/dev/nginx-certs install all *.crt and *.pfx stuff, pfx will require password you used in prepare.bat run previously)
-  * up docker-compose using created bat (".\up.bat")
-  * go to app - "http://{your_app_domain}" - where {your_app_domain} is domain name you used during run of prepare.bat, kai.local by default (if option were left empty). 
+  1 clone project
+  2 go to postgres 
+  3 build and start ("cd ./build/postgres" and "./build.bat" + "./start.bat")
+  4 go to keycloak build ("cd ./build/keycloak")
+  5 build and start all the stuff (execute "./build.bat" and "./start.bat")
+  6 go to http://localhost:8080 for keycloak console (login using 'admin'/'admin' default credentials)
+  7 for client 'admin-cli' turn on 'Client authentication' and 'Authorization' then click save. After that go to 'Service accounts roles' and assign role '(account) manage-account' and 'admin', then go to 'Credentials' tab and copy 'Client secret' to ./build/keycloak/InitializeKaizenKeycloakUserUtil/Program.cs, replace &lt;code&gt; with it.
+  8 create realm 'kaizen'
+  9 start project 'dotnet run ./build/keycloak/InitializeKaizenKeycloakUserUtil/' (this will init clients and users for testing). Ensure it returns without errors.
+  10 in keycloak go to 'Clients' to 'kaizen-skills' client - get 'Client secret' from 'Credentials' section and paste it into ./src/Skills/Kaizen.Skills.Service/KeycloakModule.cs' replacing current token in 3 sections
+  11 remove additional roles assigned on step '7' as a cleanup.
+  12 go to services API project ./src/Skills/Kaizen.Skills.Service and launch project (``` dotnet run ```)
+  13 go to web-app project ./src/Ui.Angular/ and execute ``` npm i -f ``` then start it ``` npm start ```
