@@ -1,0 +1,1 @@
+docker run -d --name kaizen-postgres -v ./postgres-data:/var/lib/postgresql/data -p 5016:5432 kaizen-postgres

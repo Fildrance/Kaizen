@@ -23,6 +23,35 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{15228A5D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaizen.Skills.Service.Tests", "tests\Kaizen.Skills.Service.Tests\Kaizen.Skills.Service.Tests.csproj", "{9160FA10-14E6-43CD-92F0-EAFE5166FAF0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "keycloak", "keycloak", "{01DD4474-9F18-429D-8831-8157F3070742}"
+	ProjectSection(SolutionItems) = preProject
+		build\keycloak\build.bat = build\keycloak\build.bat
+		build\keycloak\Dockerfile = build\keycloak\Dockerfile
+		build\keycloak\start.bat = build\keycloak\start.bat
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InitializeKaizenKeycloakUserUtil", "build\keycloak\InitializeKaizenKeycloakUserUtil\InitializeKaizenKeycloakUserUtil.csproj", "{6A5D3896-8835-4FE3-9A2F-B72620A5F054}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AB9AF6D3-0887-49FC-B18D-B92D83A713F0}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postgres", "postgres", "{14AA815D-A48B-4741-9DAF-782DF95A6E94}"
+	ProjectSection(SolutionItems) = preProject
+		build\postgres\build.bat = build\postgres\build.bat
+		build\postgres\Dockerfile = build\postgres\Dockerfile
+		build\postgres\start.bat = build\postgres\start.bat
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{DF90572C-BAC4-4736-9429-347B86CC959B}"
+	ProjectSection(SolutionItems) = preProject
+		build\postgres\scripts\basic-skills-restore.sql = build\postgres\scripts\basic-skills-restore.sql
+		build\postgres\scripts\init-comments-samples.sql = build\postgres\scripts\init-comments-samples.sql
+		build\postgres\scripts\init-db-and-app-user.sql = build\postgres\scripts\init-db-and-app-user.sql
+		build\postgres\scripts\init-keycloak-role.sql = build\postgres\scripts\init-keycloak-role.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +78,10 @@ Global
 		{9160FA10-14E6-43CD-92F0-EAFE5166FAF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9160FA10-14E6-43CD-92F0-EAFE5166FAF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9160FA10-14E6-43CD-92F0-EAFE5166FAF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A5D3896-8835-4FE3-9A2F-B72620A5F054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A5D3896-8835-4FE3-9A2F-B72620A5F054}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A5D3896-8835-4FE3-9A2F-B72620A5F054}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A5D3896-8835-4FE3-9A2F-B72620A5F054}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +94,10 @@ Global
 		{3891FEF8-B347-426D-88AD-0824F672E201} = {895FF57E-BB87-4077-BAAF-9E03A5DB600B}
 		{A9FF23D8-A10B-4D89-8ACA-37A565BC98A1} = {895FF57E-BB87-4077-BAAF-9E03A5DB600B}
 		{9160FA10-14E6-43CD-92F0-EAFE5166FAF0} = {15228A5D-9838-4F20-B463-C1440004D51E}
+		{01DD4474-9F18-429D-8831-8157F3070742} = {150A3AEE-2281-47D4-8B5D-6F8456FF68DC}
+		{6A5D3896-8835-4FE3-9A2F-B72620A5F054} = {01DD4474-9F18-429D-8831-8157F3070742}
+		{14AA815D-A48B-4741-9DAF-782DF95A6E94} = {150A3AEE-2281-47D4-8B5D-6F8456FF68DC}
+		{DF90572C-BAC4-4736-9429-347B86CC959B} = {14AA815D-A48B-4741-9DAF-782DF95A6E94}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D1201BC8-B8C3-4C53-9D04-E7C4D73D0CE1}

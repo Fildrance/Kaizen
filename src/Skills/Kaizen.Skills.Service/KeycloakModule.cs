@@ -30,21 +30,21 @@ public class KeycloakModule : ISwaggerGenAwareModule, IAfterRoutingAwareModule, 
                 {
                     VerifyTokenAudience = false,
                     AuthServerUrl = "http://localhost:8080",
-                    Realm = "kaizen-realm",
+                    Realm = "kaizen",
                     Resource = "kaizen-skills",
                     Credentials = new KeycloakClientInstallationCredentials
                     {
-                        Secret = "29anrg2MXcONXtWbVMpLpX3jlobhDjdk"
+                        Secret = "wWqvazBkk6FfR41dAz8cjQGn7XBecY90"
                     },
                 }).AddKeycloakAuthentication(new KeycloakAuthenticationOptions
                 {
                     VerifyTokenAudience = false,
                     AuthServerUrl = "http://localhost:8080",
-                    Realm = "kaizen-realm",
+                    Realm = "kaizen",
                     Resource = "kaizen-skills",
                     Credentials = new KeycloakClientInstallationCredentials
                     {
-                        Secret = "29anrg2MXcONXtWbVMpLpX3jlobhDjdk"
+                        Secret = "wWqvazBkk6FfR41dAz8cjQGn7XBecY90"
                     },
                 }, options => options.RequireHttpsMetadata = false);
 
@@ -52,11 +52,11 @@ public class KeycloakModule : ISwaggerGenAwareModule, IAfterRoutingAwareModule, 
         {
             VerifyTokenAudience = false,
             AuthServerUrl = "http://localhost:8080",
-            Realm = "kaizen-realm",
+            Realm = "kaizen",
             Resource = "kaizen-skills",
             Credentials = new KeycloakClientInstallationCredentials
             {
-                Secret = "29anrg2MXcONXtWbVMpLpX3jlobhDjdk"
+                Secret = "wWqvazBkk6FfR41dAz8cjQGn7XBecY90"
             },
         });
     }

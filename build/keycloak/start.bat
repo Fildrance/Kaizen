@@ -1,0 +1,1 @@
+docker run --name kaizen-keycloak -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -e KC_DB_URL=jdbc:postgresql://host.docker.internal:5016/keycloak -e KC_DB_SCHEMA=default_keycloak -d keycloak-for-kaizen-test start-dev
