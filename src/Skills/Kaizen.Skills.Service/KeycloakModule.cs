@@ -5,6 +5,7 @@ using System.Reflection;
 using Enterprise.ApplicationBootstrap.Core.Api.Modules;
 using Enterprise.ApplicationBootstrap.WebApi.Modules;
 using Enterprise.ApplicationBootstrap.WebApi.OpenAPi;
+using Kaizen.Skills.Service.Extensions;
 using Keycloak.AuthServices.Authentication;
 using Keycloak.AuthServices.Authorization;
 using Keycloak.AuthServices.Common;
@@ -17,7 +18,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Kaizen.Skills.Service;
 
-public class KeycloakModule : ISwaggerGenAwareModule, IAfterRoutingAwareModule, IServiceCollectionAwareModule
+/// <summary> Keycloak integration method. </summary>
+public class KeycloakModule(IConfiguration configuration) : ISwaggerGenAwareModule, IAfterRoutingAwareModule, IServiceCollectionAwareModule
 {
     /// <inheritdoc />
     public string ModuleIdentity => "KeycloakModule";
@@ -25,6 +27,11 @@ public class KeycloakModule : ISwaggerGenAwareModule, IAfterRoutingAwareModule, 
     /// <inheritdoc />
     public void Configure(IServiceCollection services, IConfiguration configuration)
     {
+        if (configuration.IsDryRun())
+        {
+            return;
+        }
+
         services.AddAuthorization()
                 .AddKeycloakAuthorization(new KeycloakProtectionClientOptions
                 {
@@ -64,6 +71,11 @@ public class KeycloakModule : ISwaggerGenAwareModule, IAfterRoutingAwareModule, 
     /// <inheritdoc />
     public void Configure(IApplicationBuilder app)
     {
+        if (configuration.IsDryRun())
+        {
+            return;
+        }
+
         app.UseAuthentication();
         app.UseAuthorization();
     }

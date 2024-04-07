@@ -6,7 +6,6 @@ using Enterprise.ApplicationBootstrap.DataAccessLayer.Repository;
 using Kaizen.Skills.Api.SkillCategory;
 using Kaizen.Skills.Api.SkillTree;
 using Kaizen.Skills.Service.DAL.Entities;
-using static Kaizen.Skills.Service.DAL.Skill.SkillCategoryRepository;
 
 namespace Kaizen.Skills.Service.DAL.Skill;
 

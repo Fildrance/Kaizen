@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup> 
+    <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    
+        <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,38 +13,43 @@
         <PackageReference Include="Enterprise.ApplicationBootstrap.Telemetry" Version="0.0.47" />
         <PackageReference Include="Enterprise.ApplicationBootstrap.WebApi" Version="0.0.47" />
         <PackageReference Include="AutoMapper" Version="12.0.1" />
-        
+
         <PackageReference Include="Keycloak.AuthServices.Authentication" Version="1.6.0" />
         <PackageReference Include="Keycloak.AuthServices.Authorization" Version="1.6.0" />
         <PackageReference Include="IdentityModel.AspNetCore" Version="4.3.0" />
         <PackageReference Include="Refit" Version="7.0.0" />
         <PackageReference Include="Refit.HttpClientFactory" Version="7.0.0" />
-        
+
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Kaizen.Skills.Api\Kaizen.Skills.Api.csproj" />
     </ItemGroup>
-    
+
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Exec Command="dotnet tool install -g --version 6.5.0 Swashbuckle.AspNetCore.Cli" IgnoreExitCode="true"/>
-      <Exec Command="swagger tofile --output .\swagger.json &quot;$(OutputPath)$(AssemblyName).dll&quot; latest" />
-      <DownloadFile
+        <Exec Command="dotnet tool install -g --version 6.5.0 Swashbuckle.AspNetCore.Cli" IgnoreExitCode="true" />
+        <Exec Command="swagger tofile --output .\swagger.json &quot;$(OutputPath)$(AssemblyName).dll&quot; latest" />
+        <DownloadFile
             SourceUrl="https://repo1.maven.org/maven2/io/swagger/codegen/v3/swagger-codegen-cli/3.0.54/swagger-codegen-cli-3.0.54.jar"
             DestinationFolder="$(OutputPath)">
-        <Output TaskParameter="DownloadedFile" ItemName="Content" />
-      </DownloadFile>
-      <Exec Command="java -jar $(OutputPath)swagger-codegen-cli-3.0.54.jar generate -l typescript-angular -i $(OutputPath)swagger.json -o $(MSBuildProjectFile)../../../../Ui.Angular/src/app/shared/generated --additional-properties kebab-file-name=true modelPropertyNaming=original" />
+            <Output TaskParameter="DownloadedFile" ItemName="Content" />
+        </DownloadFile>
+        <Exec
+            Command="java -jar $(OutputPath)swagger-codegen-cli-3.0.54.jar generate -l typescript-angular -i $(OutputPath)swagger.json -o $(MSBuildProjectFile)../../../../Ui.Angular/src/app/shared/generated --additional-properties kebab-file-name=true modelPropertyNaming=original" />
     </Target>
 
     <ItemGroup>
-      <None Update="appsettings.Development.json">
-          <DependentUpon>appsettings.json</DependentUpon>
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="appsettings.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Update="appsettings.Development.json">
+            <DependentUpon>appsettings.json</DependentUpon>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="appsettings.Testing.json">
+            <DependentUpon>appsettings.json</DependentUpon>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>

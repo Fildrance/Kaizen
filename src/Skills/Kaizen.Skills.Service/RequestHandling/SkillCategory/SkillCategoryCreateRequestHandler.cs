@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Kaizen.Skills.Service.RequestHandling.SkillCategory;
 
+/// <summary> Handler for <see cref="SkillCategoryCreateRequest"/>. </summary>
 public class SkillCategoryCreateRequestHandler(ISkillCategoryRepository repository, IMapper mapper, ILogger<SkillCategoryCreateRequestHandler> logger)
     : IRequestHandler<SkillCategoryCreateRequest, SkillCategoryItem>
 {

@@ -1,9 +1,7 @@
 ﻿using Enterprise.ApplicationBootstrap.Core;
-using Enterprise.ApplicationBootstrap.DataAccessLayer.Discover;
 using Enterprise.ApplicationBootstrap.DataAccessLayer.PgSql;
 using FluentMigrator.Runner.VersionTableInfo;
-using Kaizen.Skills.Api.Skill;
-using Kaizen.Skills.Service.DAL.Entities;
+using Kaizen.Skills.Service.DAL;
 using Kaizen.Skills.Service.DAL.Grade;
 using Kaizen.Skills.Service.DAL.Skill;
 using Kaizen.Skills.Service.DAL.Way;
