@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Enterprise.ApplicationBootstrap.Core;
 using Enterprise.ApplicationBootstrap.DataAccessLayer.Discover.EntityExtractor;

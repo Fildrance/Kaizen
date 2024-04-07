@@ -11,10 +11,10 @@ using MediatR;
 
 namespace Kaizen.Skills.Service.RequestHandling.SkillCategory;
 
-public class SkillTreeQueryRequestHandler(ISkillCategoryRepository repository, IMapper mapper) : IRequestHandler<SkillTreeFilter, SkillTreeItem[]>
+/// <summary> Handler for <see cref="SkillTreeFilter"/>. </summary>
+public class SkillTreeQueryRequestHandler(ISkillCategoryRepository repository) : IRequestHandler<SkillTreeFilter, SkillTreeItem[]>
 {
     private readonly ISkillCategoryRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-    private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc />
     public async Task<SkillTreeItem[]> Handle(SkillTreeFilter request, CancellationToken cancellationToken)

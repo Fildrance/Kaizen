@@ -10,26 +10,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Kaizen.Skills.Service.RequestHandling.Grade;
 
-public class GradeCreateRequestHandler : IRequestHandler<GradeCreateRequest, GradeItem>
+/// <summary> Handler <see cref="GradeCreateRequest"/>. </summary>
+public class GradeCreateRequestHandler(IGradeRepository repository, IMapper mapper, ILogger<GradeCreateRequestHandler> logger)
+    : IRequestHandler<GradeCreateRequest, GradeItem>
 {
-    private readonly IGradeRepository _repository;
-    private readonly IMapper _mapper;
-    private readonly ILogger<GradeCreateRequestHandler> _logger;
-
-    public GradeCreateRequestHandler(IGradeRepository repository, IMapper mapper, ILogger<GradeCreateRequestHandler> logger)
-    {
-        _repository = repository;
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        _logger = logger;
-    }
+    private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc />
     public async Task<GradeItem> Handle(GradeCreateRequest request, CancellationToken cancellationToken)
     {
         var mapped = _mapper.Map<GradeEntity>(request);
         mapped.IsActive = true;
-        await _repository.Add(mapped, cancellationToken);
-        _logger.LogTrace($"Created record for SkillCategory, id = {mapped.Id}.");
+        await repository.Add(mapped, cancellationToken);
+        logger.LogTrace($"Created record for SkillCategory, id = {mapped.Id}.");
         return _mapper.Map<GradeItem>(mapped);
     }
 }

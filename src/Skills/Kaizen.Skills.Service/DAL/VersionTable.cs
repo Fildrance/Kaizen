@@ -1,6 +1,6 @@
 ﻿using FluentMigrator.Runner.VersionTableInfo;
 
-namespace Kaizen.Skills.Service;
+namespace Kaizen.Skills.Service.DAL;
 
 /// <summary> Metadata for redirecting FluentMigrator VersionInfo to 'infrastructure' schema.</summary>
 [VersionTableMetaData]

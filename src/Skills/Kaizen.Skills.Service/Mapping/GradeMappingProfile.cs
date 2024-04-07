@@ -23,16 +23,7 @@ public class GradeMappingProfile : Profile
         CreateMap<GradeUpdateRequest, GradeEntity>()
             .ForMember(x => x.Requirements, opts => opts.Ignore())
             .ForMember(x => x.InWays, opts => opts.Ignore())
-            .ForMember(x => x.IsActive, opts => opts.MapFrom((src, dest) =>
-                {
-                    if (!src.IsActive.HasValue)
-                    {
-                        return dest.IsActive;
-                    }
-
-                    return src.IsActive.Value;
-                })
-            );
+            .ForMember(x => x.IsActive, opts => opts.MapFrom((src, dest) => src.IsActive ?? dest.IsActive));
 
         CreateMap<WayEntity, WayItem>()
             .ReverseMap()
@@ -44,16 +35,7 @@ public class GradeMappingProfile : Profile
 
         CreateMap<WayUpdateRequest, WayEntity>()
             .ForMember(x => x.Grades, opts => opts.Ignore())
-            .ForMember(x => x.IsActive, opts => opts.MapFrom((src, dest) =>
-                {
-                    if (!src.IsActive.HasValue)
-                    {
-                        return dest.IsActive;
-                    }
-
-                    return src.IsActive.Value;
-                })
-            );
+            .ForMember(x => x.IsActive, opts => opts.MapFrom((src, dest) => src.IsActive ?? dest.IsActive));
 
         CreateMap<GradeRequirementEntity, GradeRequirementItem>()
             .ForMember(x => x.SkillLevelName, opts => opts.MapFrom(src => src.SkillLevel.Name))

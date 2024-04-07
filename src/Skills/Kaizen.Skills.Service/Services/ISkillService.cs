@@ -20,7 +20,7 @@ public interface ISkillService
     /// <param name="filter">Filter contract with data for filtering logic. </param>
     /// <param name="ct">Token for operation cancellation.</param>
     /// <returns>Promise of paged items. </returns>
-    /// <exception cref="ArgumentNullException">Thrown if <see cref="filter"/> is null. </exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref cref="filter"/> is null. </exception>
     [NotNull]
     Task<SkillTreeItem[]> Query([NotNull] SkillTreeFilter filter, CancellationToken ct);
 
@@ -29,7 +29,7 @@ public interface ISkillService
     /// </summary>
     /// <param name="request">Contract to be used in creation.</param>
     /// <param name="ct">Token for operation cancellation.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <see cref="request"/> is null. </exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref cref="request"/> is null. </exception>
     /// <returns>Promise of created record. </returns>
     [NotNull]
     Task<SkillCategoryItem> Create([NotNull] SkillCategoryCreateRequest request, CancellationToken ct);
@@ -38,7 +38,7 @@ public interface ISkillService
     /// Updates existing skill category.
     /// </summary>
     /// <param name="request">Contract to be used in update. Contains selector of object to be updated. </param>
-    /// <exception cref="ArgumentNullException">Thrown if <see cref="request"/> is null. </exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref cref="request"/> is null. </exception>
     /// <param name="ct">Token for operation cancellation.</param>
     /// <returns>Promise of created record. </returns>
     [NotNull]
@@ -57,7 +57,7 @@ public interface ISkillService
     /// Creates skill.
     /// </summary>
     /// <param name="request">Contract to be used in creation.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <see cref="request"/> is null. </exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref cref="request"/> is null. </exception>
     /// <param name="ct">Token for operation cancellation.</param>
     /// <returns>Promise of created record. </returns>
     [NotNull]
@@ -67,7 +67,7 @@ public interface ISkillService
     /// Updates existing skill.
     /// </summary>
     /// <param name="request">Contract to be used in update. Contains selector of object to be updated. </param>
-    /// <exception cref="ArgumentNullException">Thrown if <see cref="request"/> is null. </exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref cref="request"/> is null. </exception>
     /// <param name="ct">Token for operation cancellation.</param>
     /// <returns>Promise of created record. </returns>
     [NotNull]
@@ -95,7 +95,7 @@ public interface ISkillService
     /// Creates skill level.
     /// </summary>
     /// <param name="request">Contract to be used in creation.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <see cref="request"/> is null. </exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref cref="request"/> is null. </exception>
     /// <param name="ct">Token for operation cancellation.</param>
     /// <returns>Promise of created record. </returns>
     [NotNull]
@@ -105,7 +105,7 @@ public interface ISkillService
     /// Updates existing skill level.
     /// </summary>
     /// <param name="request">Contract to be used in update. Contains selector of object to be updated. </param>
-    /// <exception cref="ArgumentNullException">Thrown if <see cref="request"/> is null. </exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref cref="request"/> is null. </exception>
     /// <param name="ct">Token for operation cancellation.</param>
     /// <returns>Promise of created record. </returns>
     [NotNull]

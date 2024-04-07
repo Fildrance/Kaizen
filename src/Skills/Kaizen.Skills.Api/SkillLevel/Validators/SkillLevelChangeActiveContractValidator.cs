@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Kaizen.Skills.Api.SkillLevel;
 
 namespace Kaizen.Skills.Api.SkillLevel.Validators;
 

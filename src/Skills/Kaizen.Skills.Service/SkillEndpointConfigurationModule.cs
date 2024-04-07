@@ -6,7 +6,6 @@ using Kaizen.Skills.Api.SkillCategory;
 using Kaizen.Skills.Api.SkillLevel;
 using Kaizen.Skills.Api.SkillTree;
 using Kaizen.Skills.Service.Services;
-using Keycloak.AuthServices.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

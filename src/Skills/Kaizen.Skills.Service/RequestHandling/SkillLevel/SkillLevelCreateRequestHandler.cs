@@ -10,16 +10,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Kaizen.Skills.Service.RequestHandling.SkillLevel;
 
+/// <summary> Handler for <see cref="SkillLevelCreateRequest"/>. </summary>
 public class SkillLevelCreateRequestHandler(
         ISkillRepository skillRepository,
-        ISkillLevelRepository skillLevelepository,
+        ISkillLevelRepository skillLevelRepository,
         IMapper mapper,
         ILogger<SkillLevelCreateRequestHandler> logger
     )
     : IRequestHandler<SkillLevelCreateRequest, SkillLevelItem>
 {
     private readonly ISkillRepository _skillRepository = skillRepository ?? throw new ArgumentNullException(nameof(skillRepository));
-    private readonly ISkillLevelRepository _skillLevelRepository = skillLevelepository ?? throw new ArgumentNullException(nameof(skillLevelepository));
+    private readonly ISkillLevelRepository _skillLevelRepository = skillLevelRepository ?? throw new ArgumentNullException(nameof(skillLevelRepository));
     private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc />

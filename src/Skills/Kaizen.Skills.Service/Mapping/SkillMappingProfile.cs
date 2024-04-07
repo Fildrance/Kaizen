@@ -17,16 +17,7 @@ public class SkillMappingProfile : Profile
             .ForMember(x => x.Skils, opts => opts.Ignore());
         CreateMap<SkillCategoryUpdateRequest, SkillCategoryEntity>()
             .ForMember(x => x.Skils, opts => opts.Ignore())
-            .ForMember(x => x.IsActive, opts => opts.MapFrom((src, dest) =>
-                {
-                    if (!src.IsActive.HasValue)
-                    {
-                        return dest.IsActive;
-                    }
-
-                    return src.IsActive.Value;
-                })
-            );
+            .ForMember(x => x.IsActive, opts => opts.MapFrom((src, dest) => src.IsActive ?? dest.IsActive));
         CreateMap<SkillCategoryEntity, SkillCategoryItem>()
             .ForMember(x => x.Items, opts => opts.MapFrom(src => src.Skils));
 
@@ -34,16 +25,7 @@ public class SkillMappingProfile : Profile
             .ForMember(x => x.Category, opts => opts.Ignore());
         CreateMap<SkillUpdateRequest, SkillEntity>()
             .ForMember(x => x.Category, opts => opts.Ignore())
-            .ForMember(x => x.IsActive, opts => opts.MapFrom((src, dest) =>
-                {
-                    if (!src.IsActive.HasValue)
-                    {
-                        return dest.IsActive;
-                    }
-
-                    return src.IsActive.Value;
-                })
-            );
+            .ForMember(x => x.IsActive, opts => opts.MapFrom((src, dest) => src.IsActive ?? dest.IsActive));
         CreateMap<SkillEntity, SkillItem>()
             .ForMember(x => x.Items, opts => opts.MapFrom(src => src.SkillLevels));
 
@@ -51,16 +33,7 @@ public class SkillMappingProfile : Profile
             .ForMember(x => x.Skill, opts => opts.Ignore());
         CreateMap<SkillLevelUpdateRequest, SkillLevelEntity>()
             .ForMember(x => x.Skill, opts => opts.Ignore())
-            .ForMember(x => x.IsActive, opts => opts.MapFrom((src, dest) =>
-                {
-                    if (!src.IsActive.HasValue)
-                    {
-                        return dest.IsActive;
-                    }
-
-                    return src.IsActive.Value;
-                })
-            );
+            .ForMember(x => x.IsActive, opts => opts.MapFrom((src, dest) => src.IsActive ?? dest.IsActive));
         CreateMap<SkillLevelEntity, SkillLevelItem>()
             .ForMember(
                 x => x.Prerequisites,
