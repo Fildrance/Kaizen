@@ -12,8 +12,8 @@
         <PackageReference Include="Enterprise.ApplicationBootstrap.DataAccessLayer.PgSql" Version="0.0.47" />
         <PackageReference Include="Enterprise.ApplicationBootstrap.Telemetry" Version="0.0.47" />
         <PackageReference Include="Enterprise.ApplicationBootstrap.WebApi" Version="0.0.47" />
-        <PackageReference Include="AutoMapper" Version="12.0.1" />
 
+        <PackageReference Include="AutoMapper" Version="12.0.1" />
         <PackageReference Include="Keycloak.AuthServices.Authentication" Version="1.6.0" />
         <PackageReference Include="Keycloak.AuthServices.Authorization" Version="1.6.0" />
         <PackageReference Include="IdentityModel.AspNetCore" Version="4.3.0" />
