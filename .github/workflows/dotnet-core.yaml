@@ -19,7 +19,7 @@ jobs:
         # Docker Hub image
         image: postgres
         volumes:
-          - /build/postgres/scripts:/docker-entrypoint-initdb.d
+          - ./build/postgres/scripts:/docker-entrypoint-initdb.d
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
