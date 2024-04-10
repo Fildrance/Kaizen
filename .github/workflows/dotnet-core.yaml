@@ -5,16 +5,29 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  build-and-test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres-local:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5016:5432
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.203
+        dotnet-version: | 
+          8.0.203
+          7.0.315
     - name: Install dependencies
       env:
         GITHUB_PACKAGE_USER_NAME: ${{ github.actor }}
@@ -22,5 +35,10 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
+      env:
+        DOTNET_ROLL_FORWARD: LatestMajor
+    - name: Enable Postgres Trigram Extension
+      run: |
+        PGPASSWORD=postgres psql -U postgres -h localhost -p 5016 -f ./build/postgres/scripts/init-db-and-app-user.sql
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet vstest ./**/*.Tests/bin/Release/**/*.Tests.dll
