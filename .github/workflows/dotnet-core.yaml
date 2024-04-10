@@ -18,8 +18,6 @@ jobs:
       postgres-local:
         # Docker Hub image
         image: postgres
-        volumes:
-          - ./build/postgres/scripts:/docker-entrypoint-initdb.d
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
@@ -49,5 +47,8 @@ jobs:
       run: dotnet build --configuration Release --no-restore
       env:
         DOTNET_ROLL_FORWARD: LatestMajor
+    - name: Enable Postgres Trigram Extension
+      run: |
+        PGPASSWORD=postgres psql -U postgres -h localhost -p 5016 -f ./build/postgres/scripts/init-db-and-app-user.sql
     - name: Test
       run: dotnet vstest ./**/*.Tests/bin/Release/**/*.Tests.dll
